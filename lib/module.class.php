@@ -110,7 +110,12 @@ class Module {
 				// Autoload plugin files
 				spl_autoload_register(array('autoLoading', 'classLoader'));
 
-				$plugin = new $pluginInfo['name']($pluginData['plugin_operation']);
+				if ($pluginInfo['name']::$instanceCount == 0)
+					$plugin = new $pluginInfo['name']($pluginData['plugin_operation']);
+				else {
+					$plugin = $pluginInfo['name']::$instance;
+					$plugin->pluginProcess($pluginData['plugin_operation']);
+				}
 				$this->moduleOutput[$modulename] .= $plugin->getOutput();
 			}
 
