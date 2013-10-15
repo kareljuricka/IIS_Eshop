@@ -1,0 +1,40 @@
+div.header {
+width: 1000px;
+height: 200px;
+background: black;
+margin: auto;
+}
+
+div.main {
+margin: auto;
+width: 1000px;
+}
+
+div.left-column {
+width: 250px;
+height: 500px;
+background: red;
+float: left;
+}
+
+div.content {
+width: 500px;
+height: 500px;
+background: green;
+float: left;
+}
+
+div.right-column {
+width: 250px;
+height: 500px;
+background: orange;
+float: left;
+}
+
+div.footer {
+clear: both;
+width: 1000px;
+height: 200px;
+background: pink;
+margin: auto;
+}

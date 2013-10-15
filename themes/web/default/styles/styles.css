@@ -1,0 +1,503 @@
+/* 
+    CSS pro web LoveArt.cz
+    vytvoril Karel Juricka
+*/
+
+html, body
+{
+font-family: Arial;
+font-size: 12px;
+text-align: left; 
+color: #858585;  
+background: #0c0c0c url("../images/slideshow_bg.png") 0px 489px repeat-x;
+margin: 0px;
+padding: 0px;
+border: 0px;
+}
+ 
+img
+{
+margin: 0px;
+padding: 0px;
+border: 0px;
+}
+
+p
+{
+text-align: left;
+}
+
+div.def-footer
+{
+clear: both;
+}
+
+.pointer
+{
+cursor: pointer;
+}
+
+a.link-up	{
+display: block;
+float: right;
+height: 13px;
+cursor: pointer;
+background: url("../images/arrow_up") right top no-repeat;
+
+padding: 3px 25px 0px 0px;
+}
+
+a.link-up:hover	{
+background-position: right -16px;
+color: #d72695;
+}
+
+div.part-top
+{
+background: url("../images/header_bg.png") left top no-repeat;
+width: 960px;
+height: 469px;
+}
+
+div.part-top div.logo
+{
+float: left;
+}
+
+div.part-top div.logo img
+{
+margin: 0px 0px 0px 22px;
+}
+
+div.part-top div.top-right
+{
+float: right;
+}
+
+div.part-top ul.social-network-links
+{
+margin: 30px 0px 0px 0px;
+padding: 0px;
+float: right;
+}
+
+div.part-top ul.social-network-links li
+{
+list-style-type: none;
+float: left;
+
+margin: 0px 10px 0px -30px;
+}
+
+div.part-top ul.menu
+{
+margin: 30px 0px 0px 0px;
+padding: 0px;
+}
+
+div.part-top ul.menu li
+{
+list-style-type: none;
+float: left;
+
+margin: 0px 40px 0px 0px;
+}
+
+div.part-top ul.menu li a	{
+cursor: pointer;
+}
+
+div.about
+{
+float: left;
+}
+
+div.about div.about-title
+{
+background: url("../images/about_title.png") left top no-repeat;
+width: 65px;
+height: 9px;
+float: left;
+
+margin: 0px 0px 0px 30px;
+}
+
+img.photoshop-bubble
+{
+display: block;
+margin: -5px 0px 0px 180px;
+float: left;
+}
+
+div.about div.about-text
+{
+background: url('../images/about_text.png') left top no-repeat;
+width: 699px;
+height: 168px;
+float: left;
+
+margin: -20px 0px 0px 0px;
+}
+
+div.profil-photo img {
+margin: -50px 0px 0px 0px;
+}
+
+div.pink-line	{
+background: url("../images/slideshow_bg_center.png") center top no-repeat;
+width: 100%;
+height: 271px;
+
+margin: 20px 0px 20px 0px;
+}
+
+div.pink-line div.slideshow	{
+width: 960px;
+}
+
+
+div.pink-line div.slideshow	div.arrow-left	{
+float: left;
+margin: 0px 0px 0px 0px;
+}
+
+div.pink-line div.slideshow div.arrow-left img	{
+position: absolute;
+margin: 105px 0px 0px -40px;
+}
+
+
+
+div.pink-line div.slideshow	div.arrow-right	{
+float: right;
+}
+
+div.pink-line div.slideshow div.arrow-right img	{
+position: absolute;
+margin: 105px 0px 0px 0px;
+}
+
+
+
+div.pink-line	div.slideshow	div.slideshow-image {
+width: 432px;
+height: 219px;
+background: url("../images/slideshow_image_bg.png") left top no-repeat;
+
+float: left;
+
+margin: 30px 0px 0px 50px;
+
+padding: 5px 0px 5px 4px;
+text-align: left;
+}
+
+div.slideshow div.slideshow-data	{
+width: 450px;
+float: left;
+text-align: left;
+}
+
+div.slideshow div.slideshow-data h2	{
+color: #fff;
+font-size: 18px;
+font-weight: normal;
+
+margin: 40px 0px 0px 25px;
+}
+
+div.slideshow div.slideshow-data p	{
+color: #e3b0fd;
+margin: 10px 0px 10px 25px;
+width: 370px;
+line-height: 18px;
+}
+
+
+div.slideshow-used-technology {
+margin: 25px 0px 0px 25px;
+}
+
+div.slideshow-used-technology span	{
+
+padding: 7px 20px;
+background: #804a72;
+color: #fff;
+
+margin: 0px 5px 0px 0px;
+}
+
+div.gallery	{
+text-align: left;
+width: 928px;
+padding: 30px 0px 0px 0px;
+}
+
+div.gallery div.gallery-title	{
+
+background: url("../images/gallery_title.png") left top no-repeat;
+width: 68px;
+height: 12px;
+
+margin: 0px 0px 0px 30px;
+}
+
+div.gallery div.gallery-item	{
+margin: 20px 0px 40px 0px;
+padding: 0px 0px 30px 40px;
+background: url("../images/content_line.png") left bottom no-repeat;
+}
+
+div.gallery div.gallery-item-data {
+width: 565px;
+float: left;
+
+padding: 40px 10px;
+}
+
+div.gallery div.gallery-item-data p	{
+width: 450px;
+font-size: 11px;
+}
+
+div.gallery div.gallery-item-data h2	{
+color: #fff;
+font-size: 12px;
+}
+
+div.gallery div.gallery-item-data a.view-more	{
+color: #df1863;
+text-decoration: none;
+display: block;
+float: left;
+font-size: 11px;
+margin: 10px 0px 0px 0px;
+
+}
+
+div.gallery div.gallery-item-image	{
+float: left;
+}
+
+div.skills	{
+text-align: center;
+width: 928px;
+
+padding: 30px 0px;
+margin: 0px 0px 20px 0px;
+}
+
+div.skills div.skills-title	{
+background: url("../images/skills_title.png") left top no-repeat;
+width: 55px;
+height: 9px;
+margin: 0px 0px 0px 30px;
+}
+
+div.skills-line	{
+width: 100%;
+min-height: 18px;
+background: url("../images/skills_line.png") left bottom repeat-x;
+
+margin: 0px 0px 50px 0px;
+}
+
+div.skills-line ul.skills-content	{
+margin: 0px;
+padding: 0px;
+text-align: left;
+width: 928px;
+
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 0px 90px;
+}
+
+div.skills-line ul.skills-content li	{
+list-style-type: none;
+float: left;
+
+margin: 0px 25px 15px 0px;
+}
+
+div.contact	{
+width: 928px;
+text-align: left;
+
+padding: 0px 0px 50px 0px;
+}
+
+div.contact div.contact-title	{
+background: url("../images/contact_title.png") left top no-repeat;
+width: 78px;
+height: 9px;
+margin: 0px 0px 0px 30px;
+}
+
+div.contact div.letter	{
+width: 567px;
+float: left;
+margin: 40px 0px 0px 40px;
+}
+
+div.contact div.letter div.letter-main	{
+width: 540px;
+background: url("../images/letter_bg.png") left top repeat-y;
+margin: 0px 0px 0px 9px;
+}
+
+div.contact div.letter div.letter-main div.letter-content	{
+width: 510px;
+min-height: 206px;
+background: url("../images/letter_content.png") left bottom no-repeat;
+
+padding: 78px 0px 0px 30px;
+}
+
+div.contact div.letter div.letter-bottom	{
+width: 567px;
+height: 305px;
+background: url("../images/letter_bottom.png") left top no-repeat;
+}
+
+div.contact div.letter div.letter-main div.letter-content div.line-input	{
+margin: 0px 0px 0px 0px;
+padding: 0px 0px 30px 0px;
+}
+
+div.contact div.letter div.letter-main div.letter-content div.line-input label	{
+margin: 5px 15px 0px 0px;
+font-family: Verdana;
+color: #d1d1d1;
+width: 50px;
+display: block;
+float: left;
+
+
+}
+
+div.contact div.letter div.letter-main div.letter-content div.line-input input	{
+margin: 0px 20px 0px 0px;
+font-family: Verdana;
+float: left;
+
+border: 1px dashed #b50264;
+background: #0c0c0c;
+color: #eb4f92;
+
+width: 125px;
+height: 24px;
+
+padding: 0px 10px;
+}
+
+
+div.contact div.letter div.letter-main div.letter-content div.line-input textarea {
+margin: 0px 20px 0px 0px;
+font-family: Verdana;
+float: left;
+
+border: 1px dashed #b50264;
+resize: none;
+background: #0c0c0c;
+color: #eb4f92;
+
+width: 372px;
+height: 86px;
+
+padding: 10px 10px;
+}
+
+div.contact div.letter div.letter-bottom	div.line-submit	{
+
+}
+
+div.contact div.letter div.letter-bottom	div.line-submit input {
+width: 172px;
+height: 81px;
+background: url("../images/submit_bg.png") left top no-repeat;
+
+border: 0px;
+margin: 44px 0px 0px 193px;
+cursor: pointer;
+font-weight: bold;
+color: #fff;
+
+padding: 20px 0px 0px 0px;
+
+}
+
+div.contact div.contact-data	{
+float: left;
+width: 290px;
+text-align: left;
+
+
+margin: 50px 0px 0px 0px;
+padding: 0px 0px 0px 0px;
+}
+
+div.contact div.contact-data div.contact-data-title	{
+background: url("../images/contact_data_title.png") left top no-repeat;
+width: 91px;
+height: 9px;
+margin: 0px 0px 0px 40px;
+}
+
+div.contact div.contact-data h2	{
+color: #fff;
+font-size: 14px;
+
+margin: 30px 0px 0px 40px;
+}
+
+div.contact div.contact-data ul.list-of-data	{
+margin: 25px 0px 0px 40px;
+padding: 0px;
+}
+
+div.contact div.contact-data ul.list-of-data	li	{
+list-style-type: none;
+margin: 0px 0px 17px 0px;
+}
+
+div.contact div.contact-data ul.list-of-data	li strong	{
+display: block;
+float: left;
+color: #505050;
+width: 70px;
+font-weight: normal;
+}
+
+div.contact div.contact-data ul.list-of-links	{
+margin: 30px 0px 0px 20px;
+padding: 0px;
+}
+
+div.contact div.contact-data ul.list-of-links	li	{
+list-style-type: none;
+float: left;
+
+margin: 0px 5px 0px 0px;
+}
+
+div.footer p {
+text-align: center;
+color: #333333;
+
+margin: 0px 0px 10px 0px;
+}
+
+::-webkit-input-placeholder {
+color: #505050;
+}
+:-moz-placeholder {
+color: #505050;
+}
+::-moz-placeholder {
+color: #505050;
+}
+:-ms-input-placeholder {
+color: #505050;
+}
+
+
