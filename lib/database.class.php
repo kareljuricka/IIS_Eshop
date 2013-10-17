@@ -147,6 +147,10 @@ class Database {
 		return $this->qHandler->debugDumpParams();
 	}
 
+	public function showErrors() {
+		return $this->db->errorInfo();
+	}
+
 }
 
 ?>
