@@ -27,80 +27,86 @@ class Products {
 
 		switch($operation_id) {
 			case 1:
-				$this->vypisProduktu();
+				$this->output = $this->vypisProduktu();
 				break;
 			case 2:
-				$this->detailProduktu();
+				$this->output = $this->detailProduktu();
 				break;
 		}	
 	}
 
 	private function vypisProduktu() {
 
+		$output= "<h2>Vypis kategorie:</h2>";
+		
 		$td_counter = 0;
 		$id_produktu = 0;
 
 		if(isset($_GET['kategorie']))
-			web::$db->query("SELECT id,jmeno_produktu FROM love_eshop_produkt WHERE produkt_kategorie =" .$_GET['kategorie']);
+			web::$db->query("SELECT id,jmeno_produktu FROM love_eshop_produkt WHERE kategorie =" .$_GET['kategorie']);
 		else
 			web::$db->query("SELECT id,jmeno_produktu FROM love_eshop_produkt");
+		
 
 		$this->resultSet = web::$db->resultset();
 
-		$this->output .= "<table>";
-		$this->output .= "<tr>";
+		$output .= "<table>";
+		$output .= "<tr>";
 
 		foreach($this->resultSet as $row) {
 
 			if($td_counter == 3)
-				$this->output .= "<tr>";		
+				$output .= "<tr>";		
 
-			$this->output .= "<td>";
-			$this->output .= "<div class=\"produkt\">";
+			$output .= "<td>";
+			$output .= "<div class=\"produkt\">";
 
 			foreach($row as $key => $value) {
 				if($key == 'id')
 					$id_produktu = $value;
 				else
-					$this->output .= "<a href=\"?produkt=" .$id_produktu. "\">" .$value. "</a>";
+					$output .= "<a href=\"".web::$serverDir."produkt/id\\" .$id_produktu. "\">" .$value. "</a>";
 			}
 
-			$this->output .= "</div>";
-			$this->output .= "</td>";
+			$output .= "</div>";
+			$output .= "</td>";
 
 			$td_counter++;
 
 			if($td_counter == 3) {
-				$this->output .= "</tr>";
+				$output .= "</tr>";
 				$td_counter = 0;
 			}
 		}
 
 		if($td_counter != 0)
-			$this->output .= "</tr>";	
+			$output .= "</tr>";	
 
-		$this->output .= "</table>";
+		$output .= "</table>";
 
-		return $this->output;
+		return $output;
 
 	}
 
 	private function detailProduktu() {
 
+		$output = "<h2>Detail produktu</h2>";
+
+
 		web::$db->query("SELECT jmeno_produktu, kategorie, popis_produktu FROM love_eshop_produkt WHERE id =" .$_GET['produkt']);
 
 		$this->resultSet = web::$db->single();
 
-		$this->output .= "<div>";
+		$output .= "<div>";
 
 		foreach($this->resultSet as $key => $value) {
-				$this->output .= $value;
-				$this->output .= "</br>";
+				$output .= $value;
+				$output .= "</br>";
 		}
 
-		$this->output .= "</div>";
+		$output .= "</div>";
 
-		return $this->output;
+		return $output;
 	}
 
 
