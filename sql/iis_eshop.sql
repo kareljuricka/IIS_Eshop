@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Počítač: localhost
--- Vygenerováno: Úte 15. říj 2013, 10:29
+-- Vygenerováno: Čtv 17. říj 2013, 12:43
 -- Verze MySQL: 5.5.29
 -- Verze PHP: 5.4.10
 
@@ -47,12 +47,12 @@ CREATE TABLE `love_admin_content` (
 
 CREATE TABLE `love_admin_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL,
-  `title` varchar(50) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
+  `title` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `rank` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf32 COLLATE=utf32_czech_ci AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=7 ;
 
 --
 -- Vypisuji data pro tabulku `love_admin_menu`
@@ -162,7 +162,7 @@ CREATE TABLE `love_content` (
   `static_data` varchar(50) COLLATE utf8_czech_ci DEFAULT NULL,
   `rank` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=4 ;
 
 --
 -- Vypisuji data pro tabulku `love_content`
@@ -170,7 +170,8 @@ CREATE TABLE `love_content` (
 
 INSERT INTO `love_content` (`id`, `page_id`, `module_id`, `plugin_id`, `plugin_instance_id`, `plugin_operation`, `static_data`, `rank`) VALUES
 (1, 1, 2, 2, 1, 1, NULL, 1),
-(2, 2, 2, 2, 1, 2, NULL, 1);
+(2, 2, 2, 2, 1, 2, NULL, 1),
+(3, 1, 3, 2, 1, 2, NULL, 0);
 
 -- --------------------------------------------------------
 
