@@ -35,7 +35,7 @@ class Products {
 
 	private function vypisProduktu() {
 
-		$output = "Vypis produktu" + self::$instanceCount;
+		$output = "Vypis produktu";
 
 		return $output;
 
@@ -43,7 +43,7 @@ class Products {
 
 	private function detailProduktu() {
 
-		$this->output = "Detail produktu" + self::$instanceCount;
+		$this->output = "Detail produktu";
 	}
 
 
