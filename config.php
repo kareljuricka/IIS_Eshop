@@ -5,7 +5,7 @@
 
 	/* DB Configuration */
 
-	$_config['db']['server'] = 'localhosta';
+	$_config['db']['server'] = 'localhost';
 
 	$_config['db']['dbname'] = 'iis_eshop';
 	
