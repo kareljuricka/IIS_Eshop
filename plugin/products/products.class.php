@@ -3,8 +3,6 @@
 class Products {
 
 	private $output = "";
-	private $resultSet;
-	private $single;
 
 	public static $instance = "";
 	public static $instanceCount = 0;
@@ -64,8 +62,10 @@ class Products {
 			foreach($row as $key => $value) {
 				if($key == 'id')
 					$id_produktu = $value;
-				else
+				else {
 					$output .= "<a href=\"".web::$serverDir."produkt/id\\" .$id_produktu. "\">" .$value. "</a>";
+					$output .= "<a href=\"".web::$serverDir."?page=".$_GET['page']."&addCart=1\">Pridat do kosiku</a>";
+				}
 			}
 
 			$output .= "</div>";

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 define("REGISTER_FORM", 0);
 define("REGISTER_SUCCESS", 1);
