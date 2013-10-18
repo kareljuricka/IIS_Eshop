@@ -140,13 +140,37 @@ class Users {
 	}
 
 	private function loginUser() {
+
+		$error_output = "";
+
+		if (isset($_POST['prihlasit'])) {
+			if (empty($_POST['email']) || empty($_POST['heslo'])) $this->errors['login'][] = "Nevyplněný email nebo heslo";
+			else {
+				web::$db->query("SELECT id, heslo FROM ".database::$prefix."eshop_uzivatel WHERE email=:email");
+				web::$db->bind(":email", $_POST['email']);
+
+				$userLoginData = web::$db->single();
+				if ($userLoginData['heslo'] != $_POST['heslo'])
+					$this->errors['login'][] = "Neplatné uživatelské heslo";
+				else {
+					$_SESSION['user-id'] = $userLoginData['id'];
+					globals::redirect("http://www.google.com");
+				}
+			}
+		}
+
+		if (!empty($this->errors['login'])) {
+			$error_output = $this->getErrors();
+		}
+
 		$output = "
 			<h2>Přihlášení uživatele</h2>
+			".$error_output."
 			<form method='POST'>
 				<fieldset>
 					<legend>Přihlašovací formulář</legend>
 					<div>
-						<label for='email'>Email:</label><input type='text' name='mesto' id='mesto'/>
+						<label for='email'>Email:</label><input type='text' name='email' id='email'/>
 						<label for='heslo'>Heslo:</label><input type='password' name='heslo' id='heslo'/>
 					</div>
 				</fieldset>

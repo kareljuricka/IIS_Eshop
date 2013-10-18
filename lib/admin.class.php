@@ -1,8 +1,7 @@
-<?php
+﻿<?php
 
 define("DEFAULT_ADMIN_PAGE", "about");
 define("ADMIN_BOOL", true);
-
 
 
 class Admin extends Web {

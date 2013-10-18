@@ -16,6 +16,9 @@ class Module {
 		// Array due to module 
 		$this->moduleOutput[$modulename] = "";
 
+		globals::hell();
+
+
 		// Load plugins to module
 		switch($modulename) {
 			
@@ -105,7 +108,7 @@ class Module {
 				$pluginInfo = web::$db->single();
 
 				autoLoading::$basedir = web::$dir;
-				autoloading::$classdir = "plugin/".strtolower($pluginInfo['name']);
+				autoLoading::$classdir = "plugin/".strtolower($pluginInfo['name']);
 
 				// Autoload plugin files
 				spl_autoload_register(array('autoLoading', 'classLoader'));

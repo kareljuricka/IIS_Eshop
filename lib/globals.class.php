@@ -2,10 +2,16 @@
 	
 abstract class Globals {
 
+	public static function hell() {
+		return 0;
+	}
 
-	public static function redirect($url, $statusCode = 303)	{
+	public static function redirect($url = NULL, $statusCode = 303)	{
    		
-   		header('Location: ' . $url, true, $statusCode);
+   		if (!isset($url)) 
+   			header("Refresh: 0;");
+   		else
+   			header('Location: ' . $url, true, $statusCode);
    		die();
 	}
 }

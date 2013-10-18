@@ -1,4 +1,6 @@
 <?php
+
+	session_start();
 	
 	// Error reporting on
 	ini_set('display_errors',1); 
