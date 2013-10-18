@@ -35,7 +35,35 @@ class Users {
 				$this->output = $this->loginUser();
 				break;
 
+			case 3:
+				$this->output = $this->userPanel();
+
+				break;
+
 		}
+	}
+
+	public function userPanel() {
+
+		// pretahnout parametrem z modulu
+		$act_page = (!empty($_GET['page'])) ?  $_GET['page'] : "";
+
+		$output = "";
+
+		if (isset($_SESSION['user-id'])) {
+			$output = "Přihlášeno <br /><a href='".web::$serverDir."?page=".$act_page."&action=logout' title='log out'>Odhlásit</a>";
+			if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+
+				session_unset();
+				globals::redirect();
+			}
+			
+		}
+		else
+			$output = "<a href='".web::$serverDir."prihlaseni' title='login'>Přihlásit</a>";
+
+		return $output;
+
 	}
 
 	private function registerUser() {
@@ -154,7 +182,7 @@ class Users {
 					$this->errors['login'][] = "Neplatné uživatelské heslo";
 				else {
 					$_SESSION['user-id'] = $userLoginData['id'];
-					globals::redirect("http://www.google.com");
+					globals::redirect('index.php');
 				}
 			}
 		}

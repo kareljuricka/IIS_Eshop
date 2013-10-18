@@ -16,9 +16,6 @@ class Module {
 		// Array due to module 
 		$this->moduleOutput[$modulename] = "";
 
-		globals::hell();
-
-
 		// Load plugins to module
 		switch($modulename) {
 			
@@ -59,7 +56,7 @@ class Module {
 						".database::$prefix . $contentTable ."
 				WHERE 	
 						".database::$prefix . $moduletable . ".name = :modulename AND
-						page_id = :pageid AND
+						(page_id = :pageid || page_id = 0) AND
 						module_id = ".database::$prefix . $moduletable . ".id
 				ORDER BY rank
 				 ");
@@ -108,10 +105,10 @@ class Module {
 				$pluginInfo = web::$db->single();
 
 				autoLoading::$basedir = web::$dir;
-				autoLoading::$classdir = "plugin/".strtolower($pluginInfo['name']);
+				autoLoading::$classPluginDir = "plugin/".strtolower($pluginInfo['name']);
 
 				// Autoload plugin files
-				spl_autoload_register(array('autoLoading', 'classLoader'));
+				spl_autoload_register(array('autoLoading', 'classPluginLoader'));
 
 				if ($pluginInfo['name']::$instanceCount == 0)
 					$plugin = new $pluginInfo['name']($pluginData['plugin_operation']);

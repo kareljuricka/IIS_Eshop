@@ -14,10 +14,10 @@
 	
 	// Set autoloading dirs
 	autoLoading::$basedir = $_config['web']['basedir'];
-	autoloading::$classdir = 'lib';
+	autoloading::$classLibDir = 'lib';
 
 	// Autoload files
-	spl_autoload_register(array('autoLoading', 'classLoader'));
+	spl_autoload_register(array('autoLoading', 'classLibLoader'));
 
 	// Set web dir
 	admin::$dir = $_config['web']['basedir'];
