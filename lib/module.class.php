@@ -104,11 +104,13 @@ class Module {
 
 				$pluginInfo = web::$db->single();
 
-				autoLoading::$basedir = web::$dir;
-				autoLoading::$classPluginDir = "plugin/".strtolower($pluginInfo['name']);
+				if (!class_exists($pluginInfo['name'])) {
+					autoLoading::$basedir = web::$dir;
+					autoLoading::$classPluginDir = "plugin/".strtolower($pluginInfo['name']);
 
-				// Autoload plugin files
-				spl_autoload_register(array('autoLoading', 'classPluginLoader'));
+					// Autoload plugin files
+					spl_autoload_register(array('autoLoading', 'classPluginLoader'));
+				}
 
 				if ($pluginInfo['name']::$instanceCount == 0)
 					$plugin = new $pluginInfo['name']($pluginData['plugin_operation']);

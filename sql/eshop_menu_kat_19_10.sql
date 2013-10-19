@@ -8,7 +8,8 @@ INSERT INTO `love_content` (`id`, `page_id`, `module_id`, `plugin_id`, `plugin_i
 (10, 8, 2, 3, 1, 5, NULL, 1),
 (11, 0, 5, 4, 1, 1, NULL, 1),
 (12, 9, 2, 4, 1, 2, NULL, 1),
-(13, 0, 4, 7, 1, 1, NULL, 1);
+(13, 0, 4, 7, 1, 1, NULL, 1),
+(14, 1, 2, 1, 1, 1, NULL, 1);
 
 CREATE TABLE `love_eshop_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,7 +56,10 @@ INSERT INTO `love_page` (`id`, `name`, `title`, `theme`) VALUES
 (6, 'upravit-osobni-udaje', 'Upravit osobní údaje', ''),
 (7, 'uzivatel', 'Uživatel', ''),
 (8, 'zmena-hesla', 'Změna hesla', ''),
-(9, 'kosik', 'Košik', '');
+(9, 'kosik', 'Košik', ''),
+(10, 'novinky', 'Novinky', ''),
+(11, 'obchodni-podminky', 'Obchodní podmínky', ''),
+(12, 'kontakt', 'Kontakt', '');
 
 INSERT INTO `love_plugin` (`id`, `name`) VALUES
 (1, 'StaticContent'),
@@ -65,3 +69,17 @@ INSERT INTO `love_plugin` (`id`, `name`) VALUES
 (5, 'Orders'),
 (6, 'Storage'),
 (7, 'EshopMenu');
+
+CREATE TABLE `love_plugin_static_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
+  `data` text COLLATE utf8_czech_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=2 ;
+
+--
+-- Vypisuji data pro tabulku `love_plugin_static_content`
+--
+
+INSERT INTO `love_plugin_static_content` (`id`, `name`, `data`) VALUES
+(1, 'homepage-text', 'Vítejte na naší stránce');
