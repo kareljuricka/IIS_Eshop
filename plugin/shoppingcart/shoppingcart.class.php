@@ -36,46 +36,58 @@ class ShoppingCart {
 
 	public function vytvorKosik () {
 
-		session_start();
+		$produkt_mnozstvi = 0;
+		$produkt_cena = 0;
 
-		if(!empty($_GET['addCart']))	
-			if(isset($_SESSION['user-id]')) {
-				//Pokud uz produkt s id je v kosiku - aktualizuj mnozstvi/Jinak pridej
-				web::$db->query("SELECT id, mnozstvi FROM " .database::$prefix. "produkt WHERE id = " .$_GET['addCart']. "AND uzivatel = " .$_SESSION['user-id']);
+		//Aktualizace kosiku
+		if(isset($_GET['addCart']))
+			if(isset($_SESSION['user-id'])) {
+				web::$db->query("SELECT mnozstvi FROM love_eshop_nakupni_kosik WHERE produkt = '" .$_GET['addCart']. "' AND uzivatel = '" .$_SESSION['user-id']. "'");
+				$result = web::$db->single();
 
-				$resultSet = web::$db->single();
-
-				if(!empty($resultSet['mnozstvi']))
-					web::$db->query("UPDATE" .database::$prefix. "nakupni_kosik SET mnozstvi = " ++$resultSet['mnozstvi']. "WHERE id = " .$resultSet['mnozstvi']. "AND uzivatel = " .$_SESSION['user-id']);
-				else
-					web::$db->query("INSERT INTO" .database::$prefix. "nakupni_kosik (produkt, mnozstvi, uzivatel) VALUES('" .$_GET['addCart']. "', '1', '" .$_SESSION['user-id']. "')");
+				if(!empty($result['mnozstvi'])) {
+					web::$db->query("UPDATE love_eshop_nakupni_kosik SET mnozstvi = '" .++$result['mnozstvi']. "' WHERE produkt = '" .$_GET['addCart']. "' AND uzivatel = '" .$_SESSION['user-id']. "'");
+					web::$db->execute();
+				}
+				else {
+					web::$db->query("INSERT INTO love_eshop_nakupni_kosik (produkt, mnozstvi, uzivatel) VALUES(:produkt, '1', '" .$_SESSION['user-id']. "')");
+					web::$db->bind(":produkt", htmlspecialchars($_GET['addCart']));
+					web::$db->execute();
+				}
 
 			}
 			else {
-				if($_SESSION['shopping-cart'][0] == $_GET['addCart'])
-					$_SESSION['shopping-cart'][0]++;
-				else 
-					$_SESSION['shopping-cart'][] = array($_GET['addCart'], 1);
+				if(!empty($_SESSION['nakupni_kosik'][$_GET['addCart']]))
+					$_SESSION['nakupni_kosik'][$_GET['addCart']]++;
+				else
+					$_SESSION['nakupni_kosik'][] = array($_GET['addCart'] => 1);
 			}
 
 
-		//Pocet produktu v kosiku
-		if(isset($_SESSION['user-id]')) {
-			web::$db->query("SELECT COUNT(*) FROM " .database::$prefix. "produkt WHERE uzivatel = " .$_SESSION['user-id']);
-
-			$resultSet = web::$db->single();
-
-			$produkty_pocet = $resultSet['mnozstvi'];
+		//Zjisteni obsahu kosiku
+		if(isset($_SESSION['user-id'])){
+			web::$db->query("SELECT SUM(mnozstvi) as mnozstvi FROM love_eshop_nakupni_kosik WHERE uzivatel = '" .$_SESSION['user-id']. "' GROUP BY uzivatel");
+			$result = web::$db->single();
+			$produkt_mnozstvi = $result['mnozstvi'];
+		}
+		else {
+			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
+				$produkt_mnozstvi++;
+			}
 		}
 
 
-		$output = "
-		<div class=\"nakupni_kosik_widget\">
-			Nakupni kosik<\br>
-			V kosiku nyni mate " .. "produktu<\br>
+		$this->output = 
+		"
+		<div class=\"nakupni_kosik\">
+			Nakupni kosik</br>
+			Pocet produktu " .$produkt_mnozstvi. "
+			Celkova cena " .$produkt_cena. "
 		</div>
 		";
 
+
+		return $this->output;
 	}
 
 	public function vytvorKosikDetail() {

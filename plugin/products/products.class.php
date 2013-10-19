@@ -63,8 +63,8 @@ class Products {
 				if($key == 'id')
 					$id_produktu = $value;
 				else {
-					$output .= "<a href=\"".web::$serverDir."produkt/id\\" .$id_produktu. "\">" .$value. "</a>";
-					$output .= "<a href=\"".web::$serverDir."?page=".$_GET['page']."&addCart=1\">Pridat do kosiku</a>";
+					$output .= "<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\">" .$value. "</a>";
+					$output .= "<a href=\"".web::$serverDir."?page=".$_GET['page']."&addCart=" .$id_produktu. "\">Pridat do kosiku</a>";
 				}
 			}
 
