@@ -27,7 +27,7 @@ class ShoppingCart {
 			case 1:
 				$this->output = $this->vytvorKosik();
 				break;
-			case 1:
+			case 2:
 				$this->output = $this->vytvorKosikDetail();
 				break;
 		}	
@@ -66,14 +66,14 @@ class ShoppingCart {
 
 		//Zjisteni obsahu kosiku
 		if(isset($_SESSION['user-id'])){
-			web::$db->query("SELECT SUM(mnozstvi) as mnozstvi FROM love_eshop_nakupni_kosik WHERE uzivatel = '" .$_SESSION['user-id']. "' GROUP BY uzivatel");
+			web::$db->query("SELECT SUM(mnozstvi) AS mnozstvi, SUM(cena*mnozstvi) AS cena FROM love_eshop_nakupni_kosik, love_eshop_produkt 
+							 WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']. "'
+							 GROUP BY uzivatel");
 			$result = web::$db->single();
 			$produkt_mnozstvi = $result['mnozstvi'];
+			$produkt_cena = $result['cena'];
 		}
 		else {
-			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
-				$produkt_mnozstvi++;
-			}
 		}
 
 
@@ -92,6 +92,65 @@ class ShoppingCart {
 
 	public function vytvorKosikDetail() {
 
+		$produkt_cena_celkem = 0;
+		$col_ide = 0;
+
+		if(isset($_SESSION['user-id'])) {
+			web::$db->query("SELECT jmeno_produktu, mnozstvi, cena, cena*mnozstvi FROM love_eshop_nakupni_kosik, love_eshop_produkt WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']."'");
+			$result = web::$db->resultset();
+		}
+		else {
+		}	
+
+		$this->output .= "
+		<table>
+			<tr>
+				<td>
+					Nazev produktu
+				</td>
+				<td>
+					Mnozstvi
+				</td>
+				<td>
+					Cena/kus
+				</td>
+				<td>
+					Cena celkem
+				</td>
+			</tr>
+		";
+
+		foreach($result as $row) {
+			$this->output .= "<tr>";
+			foreach($row as $k => $v) {
+				$col_ide++;
+
+				$this->output .= "<td>";
+				$this->output .= $v;
+				
+				switch($col_ide) {
+					case 2:
+						$this->output .= "<a href=#>+</a>";
+						$this->output .= "<a href=#>-</a>";
+						break;
+					case 4:
+						$produkt_cena_celkem += $v;
+						break;
+				}
+
+				$this->output .= "</td>";
+			}			
+
+			$this->output .= "<tr>";
+			$col_ide = 0;
+		}
+
+		$this->output .= "
+			Suma: " .$produkt_cena_celkem. "
+		</table>
+		";
+
+		return $this->output;
 	}
 
 
