@@ -4,6 +4,8 @@ define("REGISTER_FORM", 0);
 define("UPDATE_FORM", 1);
 define("REGISTER_SUCCESS", 2);
 define("UPDATE_SUCCESS", 3);
+define("CHANGE_PASSWORD_FORM", 4);
+define("CHANGE_PASSWORD_SUCCESS", 5);
 
 class Users {
 
@@ -88,7 +90,7 @@ class Users {
 	}
 
 	/* Registracni formular */
-	private function registerUser($update_id = NULL) {
+	private function registerUser() {
 
 		try {
 			if (isset($_SESSION['user-id']))
@@ -112,12 +114,9 @@ class Users {
 
 				// Check errors
 				if (empty($_POST['email'])) $this->errors['register'][] = "Nevyplněná emailová adresa";
-
-				// Při registraci zkontroluj hesla
-				if (!isset($update_id)) {
-					if (empty($_POST['heslo']) || empty($_POST['heslo2'])) $this->errors['register'][] = "Nevyplněné heslo nebo heslo pro kontrolu";
-					if ($_POST['heslo'] != $_POST['heslo2']) $this->errors['register'][] = "Zadané hesla se liší";	
-				}
+				if (empty($_POST['heslo']) || empty($_POST['heslo2'])) $this->errors['register'][] = "Nevyplněné heslo nebo heslo pro kontrolu";
+				if ($_POST['heslo'] != $_POST['heslo2']) $this->errors['register'][] = "Zadané hesla se liší";	
+			
 
 				// If no errors
 				if (!empty($this->errors['register']))
@@ -213,14 +212,12 @@ class Users {
 			'cislo_popisne' => '', 'mesto' => '', 'psc' => '', 'novinky' => ''
 			);
 
-			$update_id = $_SESSION['user-id'];
-
 			$state = UPDATE_FORM;
 			$error_output = "";
 			$password_input = "";
 
 			web::$db->query("SELECT email, jmeno, prijmeni, mobil, ulice, cislo_popisne, mesto, psc, novinky
-				FROM " .database::$prefix ."eshop_uzivatel WHERE id='".$update_id."'");
+				FROM " .database::$prefix ."eshop_uzivatel WHERE id='".$_SESSION['user-id']."'");
 			
 			$userdata = web::$db->single();
 
@@ -240,7 +237,7 @@ class Users {
 				
 					web::$db->query("UPDATE ". database::$prefix ."eshop_uzivatel SET email = :email,
 						jmeno = :jmeno, prijmeni = :prijmeni, mobil = :mobil, ulice = :ulice, cislo_popisne = :cislo_popisne,
-						mesto = :mesto, psc = :psc, novinky = :novinky WHERE id = '".$update_id."'");
+						mesto = :mesto, psc = :psc, novinky = :novinky WHERE id = '".$_SESSION['user-id']."'");
 					$output = "Údaje byly úspěšně upraveny";
 
 					web::$db->bind(":email", htmlspecialchars($_POST['email']));
@@ -304,31 +301,66 @@ class Users {
 			$output = $e->getMessage();
 		}
 		
-
 		return $output;
 
 	}
 
 	private function passwordChange () {
 
-		$error_output = "";
+		try {
+			if (!isset($_SESSION['user-id']))
+				throw new Exception('Unautorized access');
 
-		$output = "
-			<h2>Změnit heslo</h2>
-			".$error_output."
-			<form method='POST'>
-				<fieldset>
-					<legend>Přihlašovací údaje</legend>
-					<div>
-						<label for='heslo_old'>*Aktuální heslo:</label><input type='password' name='heslo_old' id='heslo_old'/>
-					</div>
-					<div>
-						<label for='heslo'>*Heslo:</label><input type='password' name='heslo' id='heslo'/>
-						<label for='heslo2'>*Heslo pro kontrolu:</label><input type='password' name='heslo2' id='heslo2'/>
-					</div>
-				</fieldset>
-				<div><input type='submit' value='Změnit heslo' name='password_change'/></div>
-			</form>";
+			$output = "";
+			$error_output = "";
+			$state= CHANGE_PASSWORD_FORM;
+
+			if (isset($_POST['password_change'])) {
+
+				web::$db->query("SELECT heslo FROM ". database::$prefix ."eshop_uzivatel WHERE id='".$_SESSION['user-id']."'");
+				$passwordData =	web::$db->single();
+
+				if (empty($_POST['heslo_old']) || empty($_POST['heslo']) || empty($_POST['heslo2'])) $this->errors['password-change'][] = "Nejsou vyplněny všechny položky";
+				if ($_POST['heslo'] != $_POST['heslo2']) $this->errors['password-change'][] = "Zadané hesla se liší";	
+					
+				if (!empty($_POST['heslo_old']) && $passwordData['heslo'] != $_POST['heslo_old']) $this->errors['password-change'][] = "Chybné původní heslo";
+					
+				if (!empty($this->errors['password-change']))
+					$error_output = $this->getErrors();
+				else {
+					web::$db->query("UPDATE ". database::$prefix ."eshop_uzivatel SET heslo = :heslo WHERE id = '".$_SESSION['user-id']."'");		
+					web::$db->bind(":heslo", $_POST['heslo']);
+					
+					web::$db->execute();
+					$output = "Heslo bylo úspěšně změněno";
+					$state = CHANGE_PASSWORD_SUCCESS;
+				}
+			}
+
+			if ($state == CHANGE_PASSWORD_FORM) {
+				$output = "
+					<h2>Změnit heslo</h2>
+					".$error_output."
+					<form method='POST'>
+						<fieldset>
+							<legend>Heslo</legend>
+							<div>
+								<label for='heslo_old'>*Aktuální heslo:</label><input type='password' name='heslo_old' id='heslo_old'/>
+							</div>
+							<div>
+								<label for='heslo'>*Heslo:</label><input type='password' name='heslo' id='heslo'/>
+								<label for='heslo2'>*Heslo pro kontrolu:</label><input type='password' name='heslo2' id='heslo2'/>
+							</div>
+						</fieldset>
+						<div><input type='submit' value='Změnit heslo' name='password_change'/></div>
+					</form>";
+			}
+		}
+		catch (Exception $e) {
+			$output = $e->getMessage();
+		}
+
+
 		return $output;
 	}
 
