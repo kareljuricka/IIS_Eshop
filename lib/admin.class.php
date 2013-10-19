@@ -141,6 +141,7 @@ class Admin extends Web {
 		$data = self::$db->resultset();
 
 		foreach($data as $key => $value) {
+			// Prvně zobrazí všechny rodiče
 			if (is_null($value['parent_id'])) {
 				$menuLi .= "<li><a href=\"". admin::$adminUrl . "/" . $value['name']."\" title=\"". $value['title']."\">" . $value['title'] . "</a>";
 				$submenuLi = "";
