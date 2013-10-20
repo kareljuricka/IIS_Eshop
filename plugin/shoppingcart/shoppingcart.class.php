@@ -182,10 +182,16 @@ class ShoppingCart {
 	}
 
 
-	public function preklop() {
+	public static function preklop() {
 		if(!empty($_SESSION['nakupni_kosik'])){
 			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
-				web::$db->query("INSERT INTO love_eshop_nakupni_kosik SET produkt = '" .$key. "', mnozstvi = '" .$value. "', uzivatel = '"  .$_SESSION['user-id']. "'");
+				web::$db->query("SELECT mnozstvi FROM love_eshop_nakupni_kosik WHERE produkt = '" .$key. "' AND uzivatel = '" .$_SESSION['user-id']. "'");
+				$result = web::$db->single();
+
+				if($result == NULL)
+					web::$db->query("INSERT INTO love_eshop_nakupni_kosik (produkt, mnozstvi, uzivatel) VALUES ('" .$key. "', '" .$value. "', '" .$_SESSION['user-id']. "')");
+				else
+					web::$db->query("UPDATE love_eshop_nakupni_kosik SET mnozstvi = '" .$result['mnozstvi'] + $value. "' WHERE produkt = '" .$key. "' AND uzivatel = '"  .$_SESSION['user-id']. "'");
 			}
 		}
 
