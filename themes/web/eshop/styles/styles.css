@@ -1,40 +1,395 @@
+@import url("fonts.css");
+
+html, body
+{
+font-family: Arial;
+font-size: 12px;
+text-align: left; 
+color: #3d413c;  
+margin: 0px;
+padding: 0px;
+border: 0px;
+}
+ 
+img
+{
+margin: 0px;
+padding: 0px;
+border: 0px;
+}
+
+p
+{
+text-align: left;
+}
+
+div.def-footer
+{
+clear: both;
+}
+
 div.header {
-width: 1000px;
-height: 200px;
-background: #ABABAB;
+width: 100%;
+height: 240px;
+background: #55cd43;
+}
+
+div.header div.header-content {
+width: 960px;
 margin: auto;
+}
+
+div.header div.header-content div.logo {
+float: left;
+}
+
+div.header div.header-content div.logo h1 {
+font-family: 'BebasNeue';
+font-size: 60px;
+margin: 0px;
+font-weight: normal;
+}
+
+div.header div.header-content div.logo h1 span {
+display: block;
+float: left;
+height: 70px;
+padding: 60px 10px 0px 10px;
+color: #00693e;
+}
+
+div.header div.header-content div.logo h1 span.white-bg {
+background: #fff;
+color: #55cd43;
+}
+
+div.header div.header-content strong.subtitle {
+font-family: 'BebasNeue';
+font-size: 30px;
+font-weight: normal;
+color: #fff;
+display: block;
+margin-top: 8px;
+}
+
+div.header div.header-content div.login {
+float: right;
+margin-top: 20px;
+}
+
+div.header div.header-content div.login div.login-input {
+float: left;
+margin-right: 10px;
+}
+
+div.header div.header-content div.login label {
+display: block;
+margin-bottom: 5px;
+color: #c5fdbd;
+font-size: 11px;
+}
+
+div.header div.header-content div.login input {
+padding: 6px 3px;
+width: 130px;
+border: 0px;
+}
+
+div.header div.header-content div.login div.login-password {
+float: left;
+}
+
+div.header div.header-content div.login div.login-password  label {
+display: block;
+}
+
+div.header div.header-content div.login div.login-submit {
+text-align: right;
+margin-top: 3px;
+}
+
+div.header div.header-content div.login div.login-submit input {
+width: 90px;
+height: 30px;
+background: #145006 url("../images/login_submit_icon.png") 15px 10px no-repeat;
+border: 0px;
+color: #fff;
+font-size: 10px;
+font-weight: bold;
+cursor: pointer;
+padding-left: 33px;
+text-align: left;
+}
+
+div.header div.header-content div.login div.user-links {
+margin: 15px 0px 0px 10px;
+text-align: right;
+}
+
+div.header div.header-content div.login div.user-links a {
+color: #fff;
+}
+
+div.line-1 {
+width: 100%;
+height: 1px;
+background: #4b9740;
 }
 
 div.main {
-margin: auto;
-width: 1000px;
-}
-
-div.left-column {
-width: 250px;
-height: 500px;
-background: red;
-float: left;
-}
-
-div.content {
-width: 500px;
-height: 500px;
-background: green;
-float: left;
-}
-
-div.right-column {
-width: 250px;
-height: 500px;
-background: orange;
-float: left;
-}
-
-div.footer {
-clear: both;
-width: 1000px;
-height: 200px;
-background: pink;
+width: 960px;
 margin: auto;
 }
+
+div.main div.left-column {
+width: 195px;
+padding-top: 20px;
+float: left;
+}
+
+div.main div.left-column div.menu {
+margin: 0px 0px 20px 0px;
+}
+
+div.main div.left-column div.menu strong {
+width: 155px;
+height: 14px;
+display: block;
+background: #55cd43;
+color: #fff;
+
+padding: 13px 20px;
+}
+
+div.main div.left-column div.menu ul.main-menu {
+margin: 0px;
+padding: 0px;
+list-style: none;
+}
+
+div.main div.left-column div.menu ul.main-menu > li > a {
+display: block;
+width: 153px;
+height: 11px;
+border: 1px solid #9f9f9f;
+
+padding: 11px 20px;
+margin-top: 5px;
+color: #2f312f;
+text-decoration: none;
+font-size: 11px;
+}
+
+div.main div.left-column div.menu ul.main-menu > li > a:hover {
+border: 1px solid #55cd43;
+color: #55cd43;
+}
+
+div.main div.left-column div.menu ul.main-menu li ul.submenu {
+list-style-type: square;
+}
+
+div.main div.left-column div.menu ul.main-menu li ul.submenu li a {
+color: #313331;
+text-decoration: none;
+display: block;
+margin: 10px 0px;
+}
+
+div.main div.left-column div.menu ul.main-menu li ul.submenu li a:hover {
+color: #55cd43;
+}
+
+div.main div.content {
+width: 490px;
+padding-top: 20px;
+float: left;
+margin: 0px 40px;
+}
+
+div.main div.content div.section-title {
+
+}
+
+div.main div.content div.section-title h2 {
+
+}
+
+div.main div.content div.section-title div.content-horizontal-line {
+height: 1px;
+width: 490px;
+background: #788e74;
+}
+
+div.main div.content table.products {
+margin: 50px 0px 0px 0px;
+padding: 0px;
+}
+
+
+div.main div.content table.products tr td {
+padding: 0px 15px 30px 0px;
+}
+
+div.main div.content table.products tr td div.product {
+
+}
+
+div.main div.content table.products tr td div.product {
+width: 147px;
+}
+
+div.main div.content table.products tr td div.product a.product-title {
+color: #2f312f;
+text-decoration: none;
+display: block;
+height: 30px;
+}
+
+div.main div.content table.products tr td div.product a.product-title:hover {
+text-decoration: underline;
+}
+
+
+div.main div.content table.products tr td div.product a.product-image {
+display: block;
+margin-top: 20px;
+
+}
+
+div.main div.content table.products tr td div.product a.product-image img {
+max-width: 147px;
+}
+
+div.main div.content table.products tr td div.product div.product-stats {
+margin-top: 10px;
+}
+
+div.main div.content table.products tr td div.product div.product-stats div.rating {
+float: left;
+width: 90px;
+}
+
+div.main div.content table.products tr td div.product div.product-stats div.rating ul {
+list-style: none;
+margin: 0px;
+padding: 0px;
+}
+
+div.main div.content table.products tr td div.product div.product-stats div.rating ul li {
+float: left;
+margin-right: 4px;
+}
+
+div.main div.content table.products tr td div.product div.product-stats div.comments {
+float: right;
+margin-right: 5px;
+}
+
+
+div.main div.content table.products tr td div.product div.product-prize {
+margin-top: 10px;
+}
+
+div.main div.content table.products tr td div.product div.product-prize span {
+display: block;
+float: left;
+margin-top: 2px;
+}
+
+div.main div.content table.products tr td div.product div.product-prize strong {
+display: block;
+float: left;
+text-align: right;
+margin-left: 20px;
+font-size: 14px;
+color: #9bc005;
+}
+
+div.main div.content table.products tr td div.product div.product-nav {
+margin-top: 15px;
+}
+
+div.main div.content table.products tr td div.product div.product-nav a {
+color: #ff2a00;
+font-size: 11px;
+}
+
+div.main div.content table.products tr td div.product a.add-cart-button {
+display: block;
+width: 147px;
+height: 32px;
+background: #66bc29;
+color: #fff;
+text-decoration: none;
+margin-top: 15px;
+}
+
+div.main div.content table.products tr td div.product a.add-cart-button img {
+float: left;
+margin: 7px 0px 0px 8px;
+}
+
+div.main div.content table.products tr td div.product a.add-cart-button span {
+float: left;
+margin: 9px 0px 0px 10px;
+} 
+
+div.main div.right-column {
+width: 195px;
+padding-top: 20px;
+float: left;
+}
+
+div.main div.right-column div.cart-widget {
+
+}
+
+div.main div.right-column div.cart-widget div.cart-title {
+background: #3d4543;
+padding: 10px 0px;
+color: #fff;
+}
+
+div.main div.right-column div.cart-widget div.cart-title img {
+float: left;
+margin: 5px 20px;
+}
+
+div.main div.right-column div.cart-widget div.cart-title strong {
+float: left;
+margin: 11px 0px;
+}
+
+div.main div.right-column div.cart-widget div.cart-data {
+background: #6aca04;
+margin-top: 1px;
+padding: 10px 10px;
+}
+
+div.main div.right-column div.cart-widget div.cart-data div.cart-data-content {
+float: left;
+width: 120px;
+
+}
+
+div.main div.right-column div.cart-widget div.cart-data div.cart-data-content strong {
+display: block;
+}
+
+div.main div.right-column div.cart-widget div.cart-data div.cart-data-content strong.kusu {
+color: #2c5204;
+}
+
+div.main div.right-column div.cart-widget div.cart-data div.cart-data-content strong.cena {
+color: #fff;
+margin-top: 5px;
+}
+
+div.main div.right-column div.cart-widget div.cart-data a.cart-link {
+display: block;
+float: left;
+margin-left: 10px;
+margin-top: 2px;
+}
+

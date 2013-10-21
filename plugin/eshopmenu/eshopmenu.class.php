@@ -33,7 +33,6 @@ class EshopMenu {
 	private function genMenu()	{
 
 		$menuLi = "";
-		$output = "<h2>Menu</h2>";
 
 		web::$db->query("SELECT id, name, title, parent_id, rank FROM ".database::$prefix . "eshop_menu ORDER BY rank");
 
@@ -69,7 +68,7 @@ class EshopMenu {
 									$kat_submenu_li .= "<li><a href=\"". web::$webUrl . "/kategorie/id/" . $value_kat_child['id'] ."\" title=\"".$value_kat_child['jmeno_kategorie']."\">" . $value_kat_child['jmeno_kategorie'] ."</a></li>";
 									
 							}
-							$kat_menu_li .= (!empty($kat_submenu_li)) ? "<ul>" . $kat_submenu_li . "</ul>" : "";
+							$kat_menu_li .= (!empty($kat_submenu_li)) ? "<ul class=\"submenu\">" . $kat_submenu_li . "</ul>" : "";
 
 							$kat_menu_li .= "</li>";	
 						}
@@ -83,19 +82,23 @@ class EshopMenu {
 							
 					}
 				}
-				$menuLi .= (!empty($submenuLi)) ? "<ul>" . $submenuLi . "</ul>" : "";
+				$menuLi .= (!empty($submenuLi)) ? "<ul class=\"submenu\">" . $submenuLi . "</ul>" : "";
 
 				$menuLi .= "</li>";
 			}
 
 		}
 
+
+
+
 		$output = "
-			<ul>
-				"
-					. $menuLi .
-				"
-			</ul>";
+			<div class=\"menu\">
+  				<strong>MENU</strong>
+  				<ul class=\"main-menu\">
+  					".$menuLi ."
+  				</ul>
+  			</div>";
 
 		return $output;
 	}

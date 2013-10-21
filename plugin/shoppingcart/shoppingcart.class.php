@@ -84,12 +84,23 @@ class ShoppingCart {
 
 		$this->output = 
 		"
-		<div class=\"nakupni_kosik\">
-			<a href=\"" .web::$serverDir. "kosik\">Nakupni kosik</a></br>
-			Pocet produktu " .$produkt_mnozstvi. "
-			Celkova cena " .$produkt_cena. "
-		</div>
-		";
+		<div class=\"cart-widget\">
+  			<div class=\"cart-title\">
+  				<img src=\"". theme::$completeThemeWebDir . "/images/cart_icon.png\" alt=\"cart\"/>
+  				<strong>Nákupní košik</strong>
+  				<div class=\"def-footer\"></div>
+  			</div>
+  			<div class=\"cart-data\">
+  				<div class=\"cart-data-content\">
+  					<strong class=\"kusu\">".$produkt_mnozstvi." ks zboží za</strong>
+  					<strong class=\"cena\">".$produkt_cena.",- Kč</strong>
+  				</div>
+  				<a href=\"" .web::$serverDir. "kosik\" title=\"nakupni kosik\" class=\"cart-link\">
+  					<img src=\"". theme::$completeThemeWebDir . "/images/arrow_right.png\" alt=\"open cart\"/>
+  				</a>
+  				<div class=\"def-footer\"></div>
+  			</div>
+  		</div>";
 
 
 		return $this->output;

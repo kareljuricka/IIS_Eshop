@@ -83,7 +83,27 @@ class Users {
 		}
 		// Uzivatel není přihlášen
 		else
-			$output = "<a href='".web::$serverDir."prihlaseni' title='login'>Přihlásit</a>";
+			$output = "
+				<div class=\"login\">
+					<form method=\"POST\" action=\"".web::$serverDir."prihlaseni\">
+	  					<div class=\"login-input\">
+	  						<label for=\"email\">Váš email:</label>
+	  						<input type=\"text\" name=\"email\" id=\"email\"/>
+	  					</div>
+	  					<div class=\"login-password\">
+	  						<label for=\"heslo\">Heslo:</label>
+	  						<input type=\"password\" name=\"heslo\" id=\"heslo\"/>
+	  					</div>
+	  					<div class=\"def-footer\"></div>
+	  					<div class=\"login-submit\">
+	  						<input type=\"submit\" value=\"Přihlásit\" name=\"prihlasit\"/>	
+	  					</div>
+	  					<div class=\"user-links\">
+	  						<span>Nemáte ještě účet? </span>
+	  						<a href=\"".web::$serverDir."registrace\" title=\"registrovat\">Zaregistrujte se</a>
+	  					</div>
+	  				</form>
+  				</div>";
 
 		return $output;
 
@@ -396,7 +416,7 @@ class Users {
 				<fieldset>
 					<legend>Přihlašovací formulář</legend>
 					<div>
-						<label for='email'>Email:</label><input type='text' name='email' id='email'/>
+						<label for='email'>Email:</label><input type='text' name='email' id='email' value='".$_POST['email']."'/>
 						<label for='heslo'>Heslo:</label><input type='password' name='heslo' id='heslo'/>
 					</div>
 				</fieldset>

@@ -35,7 +35,12 @@ class Products {
 
 	private function vypisProduktu() {
 
-		$output= "<h2>Vypis kategorie:</h2>";
+		$output= "
+			<div class=\"section-title\">
+				<h2>Vypis kategorie:</h2>
+				<div class=\"content-horizontal-line\"></div>
+			</div>
+		";
 		
 		$td_counter = 0;
 		$id_produktu = 0;
@@ -48,7 +53,7 @@ class Products {
 
 		$this->resultSet = web::$db->resultset();
 
-		$output .= "<table>";
+		$output .= "<table class=\"products\" cellspacing=\"0\" celpading=\"0\">";
 		$output .= "<tr>";
 
 		foreach($this->resultSet as $row) {
@@ -57,14 +62,45 @@ class Products {
 				$output .= "<tr>";		
 
 			$output .= "<td>";
-			$output .= "<div class=\"produkt\">";
+			$output .= "<div class=\"product\">";
 
 			foreach($row as $key => $value) {
 				if($key == 'id')
 					$id_produktu = $value;
 				else {
-					$output .= "<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\">" .$value. "</a>";
-					$output .= "<a href=\"".web::$serverDir."?page=".$_GET['page']."&addCart=" .$id_produktu. "\">Pridat do kosiku</a>";
+					$output .= " 
+						<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\" class=\"product-title\">" .$value. "</a>
+						<a href=\"images/golf-club-image.png\" title=\"club image\" class=\"product-image\">
+			  				<img src=\"".theme::$completeThemeWebDir."/images/club_image.png\" alt=\"golf club image\"/> 
+			  			</a>
+			  			<div class=\"product-stats\">
+			  				<div class=\"rating\">
+			  					<ul>
+			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_off.png\" alt=\"star icon off\"/></li>
+			  					</ul>
+			  				</div>
+			  				<div class=\"comments\">
+			  					<img src=\"".theme::$completeThemeWebDir."/images/comment_icon.png\" alt=\"comment icon\"/>
+			  					<span>10</span>
+			  				</div>
+			  				<div class=\"def-footer\"></div>
+			  			</div>
+			  			<div class=\"product-prize\">
+			  				<span>Cena: </span>
+			  				<strong>5000,- Kč</strong>
+			  				<div class=\"def-footer\"></div>
+			  			</div>
+			  			<div class=\"product-nav\">
+			  				<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\" title=\"product id\">více informací</a>
+			  			</div>
+						<a href=\"".web::$serverDir."?page=".$_GET['page']."&addCart=" .$id_produktu. "\" title=\"add to cart\" class=\"add-cart-button\">
+			  				<img src=\"".theme::$completeThemeWebDir."/images/car_2_icon.png\" alt=\"car icon\"/>
+			  				<span>Přidat do košíku</span>
+			  			</a>";
 				}
 			}
 

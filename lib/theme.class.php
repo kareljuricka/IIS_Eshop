@@ -15,6 +15,13 @@ class Theme {
 	// Active admin theme
 	public static $activeAdminTheme = 'default';
 
+	// Full path to web theme
+	public static $completeThemeWebDir = "";
+
+	// Full path to admin theme
+	public static $completeThemeAdminDir = "";
+
+
 	// Filename of page theme
 	private $filename = '';
 
@@ -42,6 +49,10 @@ class Theme {
 		}
 		else
 			self::$activeAdminTheme = admin::$settings['theme'];
+
+
+		self::$completeThemeWebDir = web::$serverDir . theme::$themesWebDir . "/" . theme::$activeTheme;
+		self::$completeThemeAdminDir = admin::$serverDir . theme::$themesAdminDir . "/" . theme::$activeAdminTheme;
 
 
 		// Set theme full directory
