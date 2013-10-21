@@ -63,7 +63,7 @@ class Users {
 	public function userPanel() {
 
 		// pretahnout parametrem z modulu
-		$act_page = (!empty($_GET['page'])) ?  $_GET['page'] : "";
+		$act_page = (!empty($_GET['page'])) ?  $_GET['page'] : "homepage/";
 
 		$output = "";
 
@@ -72,13 +72,13 @@ class Users {
 			$output = "Přihlášeno <br />
 			<a href='".web::$serverDir."upravit-osobni-udaje' title='upravit'>Upravit osobní údaje</a><br />
 			<a href='".web::$serverDir."zmena-hesla' title='zmenit heslo'>Změnit heslo</a><br />
-			<a href='".web::$serverDir."?page=".$act_page."&action=logout' title='log out'>Odhlásit</a><br />
+			<a href='".web::$serverDir.$act_page."/action/logout' title='log out'>Odhlásit</a><br />
 			";
 			
 			// Odhlaseni uzivatele
 			if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 				session_unset();
-				globals::redirect();
+				globals::redirect(web::$serverDir);
 			}	
 		}
 		// Uzivatel není přihlášen
@@ -400,7 +400,7 @@ class Users {
 					$this->errors['login'][] = "Neplatné uživatelské heslo";
 				else {
 					$_SESSION['user-id'] = $userLoginData['id'];
-					globals::redirect('index.php');
+					globals::redirect(web::$serverDir);
 				}
 			}
 		}

@@ -97,11 +97,11 @@ class Products {
 			  			<div class=\"product-nav\">
 			  				<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\" title=\"product id\">více informací</a>
 			  			</div>
-						<a href=\"".web::$serverDir."?page=".$_GET['page']."&addCart=" .$id_produktu. "\" title=\"add to cart\" class=\"add-cart-button\">
+						<a href=\"".web::$serverDir.$_GET['page']."/id/".$_GET['id']."/addCart/" .$id_produktu. "\" title=\"add to cart\" class=\"add-cart-button\">
 			  				<img src=\"".theme::$completeThemeWebDir."/images/car_2_icon.png\" alt=\"car icon\"/>
 			  				<span>Přidat do košíku</span>
 			  			</a>";
-				}
+				}	
 			}
 
 			$output .= "</div>";
@@ -129,7 +129,7 @@ class Products {
 		$output = "<h2>Detail produktu</h2>";
 
 
-		web::$db->query("SELECT jmeno_produktu, kategorie, popis_produktu FROM love_eshop_produkt WHERE id =" .$_GET['produkt']);
+		web::$db->query("SELECT jmeno_produktu, kategorie, popis_produktu FROM love_eshop_produkt WHERE id =" .$_GET['id']);
 
 		$this->resultSet = web::$db->single();
 

@@ -4,4 +4,5 @@ RewriteEngine On
 RewriteCond $2 !^admin
 
 RewriteRule ^([a-zA-Z0-9]/)*([a-zA-Z0-9\-]+)(/site-([a-zA-Z0-9]+))?/?$ index.php?page=$2&site=$4
-RewriteRule ^([a-zA-Z0-9]/)*([a-zA-Z0-9\-]+)(/id/([a-zA-Z0-9]+))(/site-([a-zA-Z0-9]+))?/?$ index.php?page=$2&$2=$4&site=$6
+RewriteRule ^([a-zA-Z0-9]/)*([a-zA-Z0-9\-]+)(/([a-zA-Z0-9]+)/([a-zA-Z0-9]+))(/site-([a-zA-Z0-9]+))?/?$ index.php?page=$2&$4=$5&site=$7
+RewriteRule ^([a-zA-Z0-9]/)*([a-zA-Z0-9\-]+)(/([a-zA-Z0-9]+)/([a-zA-Z0-9]+))(/([a-zA-Z0-9]+)/([a-zA-Z0-9]+))(/site-([a-zA-Z0-9]+))?/?$ index.php?page=$2&$4=$5&$7=$8&site=$10

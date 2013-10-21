@@ -63,6 +63,7 @@ class ShoppingCart {
 				else
 					$_SESSION['nakupni_kosik'][$_GET['addCart']] = 1;
 			}
+
 		}
 
 
