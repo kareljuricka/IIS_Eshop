@@ -21,6 +21,8 @@
 	/* DIR Configuration */
 	$_config['web']['serverdir'] = '/skola/iis_eshop/';
 
+	$_config['admin']['serverdir'] = '/skola/iis_eshop/admin/';
+
 	$_config['web']['basedir'] = ROOTPATH;
 
 	$_config['web']['url'] = 'http://localhost/skola/iis_eshop';

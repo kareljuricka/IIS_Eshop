@@ -33,7 +33,7 @@ class Users {
 			
 			// Registrace
 			case 1:
-				$this->output = $this->registerUser();
+				$this->output = $this->addUser();
 				break;
 
 			// Přihlášení
@@ -48,7 +48,7 @@ class Users {
 
 			// Úprava osobních dat
 			case 4:
-				$this->output = $this->updateUser();
+				$this->output = $this->editUser($_SESSION['user-id']);
 				break;
 
 			// Úprava hesla
@@ -110,7 +110,7 @@ class Users {
 	}
 
 	/* Registracni formular */
-	private function registerUser() {
+	protected function addUser() {
 
 		try {
 			if (isset($_SESSION['user-id']))
@@ -222,22 +222,24 @@ class Users {
 	}
 
 	/* Update formular */
-	private function updateUser() {
+	protected function editUser($user_id) {
 
 		try {
-			if (!isset($_SESSION['user-id']))
-				throw new Exception('Unautorized access');
+			//if (!isset($_SESSION['user-id']))
+			//	throw new Exception('Unautorized access');
 
 			$userdata = array('email' => '', 'jmeno' => '', 'prijmeni' => '', 'mobil' => '', 'ulice' => '',
 			'cislo_popisne' => '', 'mesto' => '', 'psc' => '', 'novinky' => ''
 			);
+
 
 			$state = UPDATE_FORM;
 			$error_output = "";
 			$password_input = "";
 
 			web::$db->query("SELECT email, jmeno, prijmeni, mobil, ulice, cislo_popisne, mesto, psc, novinky
-				FROM " .database::$prefix ."eshop_uzivatel WHERE id='".$_SESSION['user-id']."'");
+				FROM " .database::$prefix ."eshop_uzivatel WHERE id='".$user_id."'");
+
 			
 			$userdata = web::$db->single();
 
@@ -257,7 +259,7 @@ class Users {
 				
 					web::$db->query("UPDATE ". database::$prefix ."eshop_uzivatel SET email = :email,
 						jmeno = :jmeno, prijmeni = :prijmeni, mobil = :mobil, ulice = :ulice, cislo_popisne = :cislo_popisne,
-						mesto = :mesto, psc = :psc, novinky = :novinky WHERE id = '".$_SESSION['user-id']."'");
+						mesto = :mesto, psc = :psc, novinky = :novinky WHERE id = '".$user_id."'");
 					$output = "Údaje byly úspěšně upraveny";
 
 					web::$db->bind(":email", htmlspecialchars($_POST['email']));
@@ -409,6 +411,8 @@ class Users {
 			$error_output = $this->getErrors();
 		}
 
+		$user_email = (!empty($_POST['email'])) ? $_POST['email'] : "";
+
 		$output = "
 			<h2>Přihlášení uživatele</h2>
 			".$error_output."
@@ -416,7 +420,7 @@ class Users {
 				<fieldset>
 					<legend>Přihlašovací formulář</legend>
 					<div>
-						<label for='email'>Email:</label><input type='text' name='email' id='email' value='".$_POST['email']."'/>
+						<label for='email'>Email:</label><input type='text' name='email' id='email' value='".$user_email."'/>
 						<label for='heslo'>Heslo:</label><input type='password' name='heslo' id='heslo'/>
 					</div>
 				</fieldset>

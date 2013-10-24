@@ -140,16 +140,28 @@ class Admin extends Web {
 
 		$data = self::$db->resultset();
 
+		self::$db->query("SELECT id, name, title FROM ".database::$prefix . "plugin WHERE admin != 0");
+
+		$plugindata = self::$db->resultset();
+
 		foreach($data as $key => $value) {
 			// Prvně zobrazí všechny rodiče
 			if (is_null($value['parent_id'])) {
 				$menuLi .= "<li><a href=\"". admin::$adminUrl . "/" . $value['name']."\" title=\"". $value['title']."\">" . $value['title'] . "</a>";
 				$submenuLi = "";
-				foreach ($data as $key_child => $value_child) {
-					if ($value_child['parent_id'] == $value['id'])
-						$submenuLi .= "<li><a href=\"". admin::$adminUrl . "/" . $value_child['name']."\" title=\"\">" . $value_child['title'] ."</a></li>";
-						
-				}
+
+				// Vypis pluginu
+				if ($value['name'] == 'plugins')
+					foreach($plugindata as $key_child => $value_child) {
+						$submenuLi .= "<li><a href=\"". admin::$adminUrl . "/plugins/type/" . $value_child['name']."\" title=\"\">" . $value_child['title'] ."</a></li>";
+					}
+				// Vypis ostatnich submenu
+				else
+					foreach ($data as $key_child => $value_child) {
+						if ($value_child['parent_id'] == $value['id'])
+							$submenuLi .= "<li><a href=\"". admin::$adminUrl . "/" . $value_child['name']."\" title=\"\">" . $value_child['title'] ."</a></li>";
+							
+					}
 				$menuLi .= (!empty($submenuLi)) ? "<ul>" . $submenuLi . "</ul>" : "";
 
 				$menuLi .= "</li>";

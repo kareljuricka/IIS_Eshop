@@ -18,7 +18,8 @@ class autoLoading
 	}
 
 	public static function classPluginLoader($class) {
-		$filename = strtolower($class). '.class.php';
+
+		$filename = str_replace("_","", strtolower($class)). '.class.php';
 		$file = self::$basedir . '/'. self::$classPluginDir .'/' .$filename;
 			if(!file_exists($file))
 				return false;

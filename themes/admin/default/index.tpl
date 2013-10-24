@@ -21,7 +21,7 @@
 				<td colspan="3" width="1000" align="right"><% admin_user_status %></td>
 			</tr>
 			<tr>
-				<td width="200"  align="left" valign="top"><% menu %></td><td><% content %></td>
+				<td width="200"  align="left" valign="top"><% menu %></td><td align="left" style="padding-left: 20px;"><% content %></td>
 			</tr>
 		</table>
 		

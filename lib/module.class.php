@@ -113,7 +113,7 @@ class Module {
 				}
 
 				if ($pluginInfo['name']::$instanceCount == 0)
-					$plugin = new $pluginInfo['name']($pluginData['plugin_operation']);
+					$plugin = new $pluginInfo['name']($pluginData['plugin_operation'], $pluginData['plugin_instance_id']);
 				else {
 					$plugin = $pluginInfo['name']::$instance;
 					$plugin->pluginProcess($pluginData['plugin_operation']);
@@ -128,6 +128,41 @@ class Module {
 						$this->moduleOutput[$modulename] .= admin::settingContent();
 						break;
 
+					case 'plugins_admin':
+						$pluginInfo['name'] = (isset($_GET['type'])) ? $_GET['type'] : "default";
+						$pluginInfo['admin'] =  (isset($_GET['type'])) ? $_GET['type']."Admin" : "";
+
+						switch($pluginInfo['name']) {
+							case "default":
+								$this->moduleOutput[$modulename] .= "Administrace pluginů";
+								break;
+							case "StaticContent":
+								$this->moduleOutput[$modulename] .= "Administrace statického pluginu";
+								break;
+
+							default:
+
+								if (!class_exists($pluginInfo['admin'])) {
+									autoLoading::$basedir = web::$dir;
+									autoLoading::$classPluginDir = "plugin/".strtolower($pluginInfo['name']);
+
+									// Autoload plugin files
+									spl_autoload_register(array('autoLoading', 'classPluginLoader'));
+								}
+
+
+								if ($pluginInfo['admin']::$instanceCount == 0)
+									$plugin = new $pluginInfo['admin']();
+								else {
+									$plugin = $pluginInfo['admin']::$instance;
+									$plugin->pluginProcess();
+								}
+								
+								$this->moduleOutput[$modulename] .= $plugin->getOutput();
+								break;
+						}
+
+						break;
 				}
 
 			}
