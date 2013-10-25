@@ -136,10 +136,7 @@ class Module {
 							case "default":
 								$this->moduleOutput[$modulename] .= "Administrace pluginů";
 								break;
-							case "StaticContent":
-								$this->moduleOutput[$modulename] .= "Administrace statického pluginu";
-								break;
-
+								
 							default:
 
 								if (!class_exists($pluginInfo['admin'])) {

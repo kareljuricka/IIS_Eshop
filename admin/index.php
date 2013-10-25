@@ -21,7 +21,8 @@
 
 	// Set web dir
 	admin::$dir = $_config['web']['basedir'];
-	admin::$serverDir = $_config['admin']['serverdir'];
+	admin::$serverDir = $_config['web']['serverdir'];
+	admin::$serverAdminDir = $_config['admin']['serverdir'];
 	admin::$webUrl = $_config['web']['url'];
 	admin::$adminUrl = $_config['admin']['url'];
 

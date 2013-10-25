@@ -10,6 +10,9 @@ class Web {
 	// Server dir
 	public static $serverDir;
 
+	// Server admin dir
+	public static $serverAdminDir;
+
 	// Web url
 	public static $webUrl;
 

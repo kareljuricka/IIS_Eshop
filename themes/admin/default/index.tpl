@@ -11,6 +11,7 @@
 
 	    <meta name="revisit-after" content="7 days">
 	    <meta name="copyright" content="(c)2013 design & code by Karel Juřička">
+	    <link rel="stylesheet" href="<% absolute_path %>/styles/styles.css" type="text/css" media="screen"/>
 			     
 	    <title><% title %></title>
   	</head>

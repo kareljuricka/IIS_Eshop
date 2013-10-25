@@ -50,9 +50,6 @@ class StaticContent {
 		return $output;
 	}
 
-
-
-
 	public function getOutput() {
 		return $this->output;
 	}

@@ -76,7 +76,9 @@ class Admin extends Web {
 
 		$userStatus = "Admin user status <br />";
 
-		$userStatus .= "<a href=\"".admin::$adminUrl ."/signout\" title=\" Sign Out \">Sign out</a>";
+		$userStatus .= "
+		<a href=\"".admin::$webUrl ."\" target=\"_blank\" title=\" Sign Out \">Show page</a><br />
+		<a href=\"".admin::$adminUrl ."/signout\" title=\" Sign Out \">Sign out</a>";
 
 		return $userStatus;
 	}

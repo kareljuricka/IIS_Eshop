@@ -24,8 +24,8 @@ class UsersAdmin extends Users {
 		$action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 		$this->output = "
-			<a href='".admin::$serverDir."plugins/type/".$_GET['type']."/action/add' title='add user'>Přidat uživatele</a>
-			<a href='".admin::$serverDir."plugins/type/".$_GET['type']."' title='add user'>Výpis uživatelů</a><br />
+			<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/add' title='add user'>Přidat uživatele</a>
+			<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add user'>Výpis uživatelů</a><br />
 		";
 
 		if (isset($action))
@@ -65,7 +65,7 @@ class UsersAdmin extends Users {
 					<td>".$userData['aktivni']."</td>
 					<td>Objednávky</td>
 					<td>
-						<a href='".admin::$serverDir."plugins/type/".$_GET['type']."/edit/".$userData['id']."' title='add user'>Upravit</a>
+						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/edit/".$userData['id']."' title='add user'>Upravit</a>
 					</td>
 					<td>Smazat</td>
 				</tr>
