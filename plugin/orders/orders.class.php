@@ -73,7 +73,56 @@ class Orders {
 
 	private function personalData() {
 
-		$output = "<h3>Doručovací údaje</h3>";
+		$query = web::$db->query("SELECT jmeno, prijmeni, mobil, ulice, cislo_popisne, mesto, psc, email FROM ".database::$prefix."eshop_uzivatel WHERE id = :uzivatel_id");
+		
+		web::$db->bind(":uzivatel_id", $_SESSION['user-id']);
+		
+		$userdata = web::$db->single();
+
+		$output = "
+			<h3>Doručovací údaje</h3>
+			<fieldset>
+				<legend>Fakturační údaje</legend>
+				<div>
+					<label for='jmeno'>Jméno:</label><input type='text' name='jmeno' id='jmeno' value='".$userdata['jmeno']."'/>
+					<label for='prijmeni'>Přijmení:</label><input type='text' name='prijmeni' id='prijmeni' value='".$userdata['prijmeni']."'/>
+				</div>
+				<div>
+					<label for='ulice'>Ulice:</label><input type='text' name='ulice' id='ulice' value='".$userdata['ulice']."' />
+					<label for='cislo_popisne'>Číslo popisné</label><input type='text' name='cislo_popisne' id='cislo_popisne' value='".$userdata['cislo_popisne']."'/>
+				</div>
+				<div>
+					<label for='mesto'>Město:</label><input type='text' name='mesto' id='mesto' value='".$userdata['mesto']."'/>
+					<label for='psc'>PSČ:</label><input type='text' name='psc' id='psc' value='".$userdata['psc']."'/>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Kontaktní údaje</legend>
+				<div>
+					<label for='email'>Email:</label><input type='text' name='email' id='email' value='".$userdata['email']."'/>
+				</div>
+				<div>
+					<label for='mobil'>Mobil:</label><input type='text' name='mobil' id='mobil' value='".$userdata['mobil']."'/>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Doručovací údaje (pokud jsou odlišné od fakturačních)</legend>
+				<div>
+					<label for='jmeno'>Jméno:</label><input type='text' name='jmeno' id='jmeno' value='".$userdata['jmeno']."'/>
+					<label for='prijmeni'>Přijmení:</label><input type='text' name='prijmeni' id='prijmeni' value='".$userdata['prijmeni']."'/>
+				</div>
+				<div>
+					<label for='ulice'>Ulice:</label><input type='text' name='ulice' id='ulice' value='".$userdata['ulice']."' />
+					<label for='cislo_popisne'>Číslo popisné</label><input type='text' name='cislo_popisne' id='cislo_popisne' value='".$userdata['cislo_popisne']."'/>
+				</div>
+				<div>
+					<label for='mesto'>Město:</label><input type='text' name='mesto' id='mesto' value='".$userdata['mesto']."'/>
+					<label for='psc'>PSČ:</label><input type='text' name='psc' id='psc' value='".$userdata['psc']."'/>
+				</div>
+			</fieldset>
+		";
+
+
 
 
 
