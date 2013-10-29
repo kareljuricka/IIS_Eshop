@@ -66,7 +66,6 @@ class ShoppingCart {
 
 		}
 
-
 		if(isset($_SESSION['user-id'])){
 			web::$db->query("SELECT SUM(mnozstvi) AS mnozstvi, SUM(cena*mnozstvi) AS cena FROM love_eshop_nakupni_kosik, love_eshop_produkt WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']. "' GROUP BY uzivatel");
 			$result = web::$db->single();
@@ -112,6 +111,32 @@ class ShoppingCart {
 		$produkt_cena_celkem = 0;
 		$col_ide = 0;
 		$produkt_counter = 0;
+		$produkt_id = 0;
+		$produkt_mnozstvi = 0;
+
+		if(isset($_GET['id']) && isset($_GET['action']))
+			if(isset($_SESSION['user-id'])) {
+				web::$db->query("SELECT mnozstvi FROM love_eshop_nakupni_kosik WHERE produkt = '" .$_GET['id']. "' AND uzivatel = '"  .$_SESSION['user-id']. "'");
+				$result = web::$db->single();
+
+				if($_GET['action'])
+					$result['mnozstvi']++;
+				else
+					$result['mnozstvi']--;
+
+				web::$db->query("UPDATE love_eshop_nakupni_kosik SET mnozstvi = '" .$result['mnozstvi']. "' WHERE produkt = '" .$_GET['id']. "' AND uzivatel = '"  .$_SESSION['user-id']. "'");
+				web::$db->execute();
+			}
+			else {
+				$result = $_SESSION['nakupni_kosik'][$_GET['id']];
+
+				if($_GET['action'])
+					$result++;
+				else
+					$result--;
+
+				$_SESSION['nakupni_kosik'][$_GET['id']] = $result;
+			}
 
 		$this->output .= "
 		<table>
@@ -132,7 +157,7 @@ class ShoppingCart {
 		";
 
 		if(isset($_SESSION['user-id'])) {
-			web::$db->query("SELECT jmeno_produktu, mnozstvi, cena, cena*mnozstvi FROM love_eshop_nakupni_kosik, love_eshop_produkt WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']."'");
+			web::$db->query("SELECT love_eshop_produkt.id, jmeno_produktu, mnozstvi, cena, cena*mnozstvi FROM love_eshop_nakupni_kosik, love_eshop_produkt WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']."'");
 			$result = web::$db->resultset();
 
 			foreach($result as $row) {
@@ -140,12 +165,22 @@ class ShoppingCart {
 				foreach($row as $k => $v) {
 					$produkt_counter++;
 
+					if($produkt_counter == 1) {
+						$produkt_id = $v;
+						continue;
+					}
+
 					$this->output .= "<td>";
 					$this->output .= $v;
 
-					if($produkt_counter == 2) {
-						$this->output .= "<a href=#>+</a>";
-						$this->output .= "<a href=#>-</a>";
+					if($produkt_counter == 3) {
+						$produkt_mnozstvi = $v;
+						$this->output .= "<a href=\"/skola/iis_eshop/kosik/id/" .$produkt_id. "/action/1" . "\">+</a>";
+						$this->output .= "<a href=\"/skola/iis_eshop/kosik/id/" .$produkt_id. "/action/0" . "\">-</a>";
+					}
+
+					if($produkt_counter == 5) {
+						$produkt_cena_celkem += $v;
 					}
 
 					$this->output .= "</td>";	
@@ -156,7 +191,7 @@ class ShoppingCart {
 		}
 		else if(!empty($_SESSION['nakupni_kosik'])) {
 			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
-				web::$db->query("SELECT jmeno_produktu, cena FROM love_eshop_produkt WHERE id = '" .$key. "'");
+				web::$db->query("SELECT jmeno_produktu, cena, id FROM love_eshop_produkt WHERE id = '" .$key. "'");
 				$result = web::$db->single();
 				$produkt_cena_celkem += $value*$result['cena'];
 
@@ -167,8 +202,8 @@ class ShoppingCart {
 					</td>
 					<td>
 						" .$value. "
-						<a href=#>+</a>
-						<a href=#>-</a>
+						<a href=\"/skola/iis_eshop/kosik/id/" .$result['id']."/action/1\">+</a>
+						<a href=\"/skola/iis_eshop/kosik/id/" .$result['id']."/action/0\">-</a>
 					</td>
 					<td>
 						" .$result['cena']. "
