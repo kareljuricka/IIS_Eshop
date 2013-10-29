@@ -70,7 +70,7 @@ class ShoppingCart {
 			web::$db->query("SELECT SUM(mnozstvi) AS mnozstvi, SUM(cena*mnozstvi) AS cena FROM love_eshop_nakupni_kosik, love_eshop_produkt WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']. "' GROUP BY uzivatel");
 			$result = web::$db->single();
 			$produkt_mnozstvi = $result['mnozstvi'];
-			$produkt_cena = $result['cena'];
+			$produkt_cena += $result['cena'];
 		}
 		else if(!empty($_SESSION['nakupni_kosik'])){
 			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
