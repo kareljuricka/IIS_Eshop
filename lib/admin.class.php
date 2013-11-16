@@ -130,10 +130,12 @@ class Admin extends Web {
 		return $formOutput;
 	}
 
+
 	/* Generate menu
 	 * @return menu output
 	 */
 
+	/* autoload from DB
 	public static function genMenu()	{
 
 		$menuLi = "";
@@ -180,6 +182,37 @@ class Admin extends Web {
 
 		return $menuOutput;
 	}
+	*/
+
+	public static function genMenu() {
+		return "
+			<ul>
+  				<li class=\"basic-settings-button\">
+  					<a href=\"".admin::$adminUrl ."/basic-settings\" title=\"zakladní nastavení\">
+  						<img src=\"". theme::$completeThemeAdminDir . "/images/basic_settings_icon.png\" alt=\"basic settings\"/>
+						<span>Základní nastavení</span>
+  					</a>
+  				</li>
+  				<li class=\"theme-settings-button\">
+  					<a href=\"".admin::$adminUrl ."/template\" title=\"nastavení vzhledu\">
+  						<img src=\"". theme::$completeThemeAdminDir . "/images/theme_settings_icon.png\" alt=\"themes settings\"/>
+						<span>Nastavení vzhledu</span>
+  					</a>
+  				</li>
+  				<li class=\"module-settings-button\">
+  					<a href=\"".admin::$adminUrl ."/modules\" title=\"nastavení modulů\">
+  						<img src=\"". theme::$completeThemeAdminDir . "/images/modules_settings_icon.png\" alt=\"modules settings\"/>
+						<span>Nastavení modulů</span>
+  					</a>
+  				</li>
+  				<li class=\"plugin-settings-button\">
+  					<a href=\"".admin::$adminUrl ."/plugins\" title=\"nastavení pluginů\">
+  						<img src=\"". theme::$completeThemeAdminDir . "/images/plugins_settings_icon.png\" alt=\"plugin settings\"/>
+						<span>Nastavení pluginů</span>
+  					</a>
+  				</li>
+  			</ul>";
+	}
 
 	/* Init modules on webpage
 	*/
@@ -202,19 +235,25 @@ class Admin extends Web {
 	public static function settingContent()	{
 
 		$settingsOutput = "
-			<br />
-			<form>
-				Title: <input type=\"text\" name=\"title\"/><br />
-				Descriptions: <input type=\"text\" name=\"title\"/><br />
-				Keywords: <input type=\"text\" name=\"title\"/><br />
-				Descriptions: <input type=\"text\" name=\"title\"/><br />
-				Author: <input type=\"text\" name=\"title\" disabled/><br />
-				Copyrights: <input type=\"text\" name=\"title\"/><br />
-				<input type=\"submit\" value=\"Save\"/>
-			</form>
-			<br />
-
-		";
+			<h2>Základní nastavení</h2>
+  			<div class=\"sub-nav\">
+  				<ul>
+  					<li><a href=\"\" title=\"Obecné nastavení\">Obecné nastavení</a></li>
+  					<li><a href=\"\" title=\"Obecné nastavení\">Nastavení databáze</a></li>
+  				</ul>
+  			</div>
+  			<div class=\"content\">
+  				<section class=\"obecne-nastaveni\">
+  					<div class=\"content-title blue\">
+  						<h3>Obecné nastavení</h3>
+  						<span class=\"datum\">datum posl. změny: 7.11:2013</span>
+  						<div class=\"def-footer\"></div>
+  					</div>
+  					<div class=\"content-data\">
+  					</div>
+  				</section>
+  			</div>
+  			<div class=\"def-footer\"></div>";
 
 		return $settingsOutput;
 	}

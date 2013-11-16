@@ -1,6 +1,6 @@
 ﻿<?php
 
-class ProductsAdmin {
+class ProductsAdmin extends PluginAdmin {
 
 	private $output = "";
 

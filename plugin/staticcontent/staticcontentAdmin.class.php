@@ -3,7 +3,7 @@
 define("UPDATE_FORM", 0);
 define("UPDATE_SUCCESS", 1);
 
-class StaticContentAdmin extends StaticContent {
+class StaticContentAdmin extends PluginAdmin {
 
 	private $output = "";
 

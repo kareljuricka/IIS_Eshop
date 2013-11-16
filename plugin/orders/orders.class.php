@@ -39,6 +39,7 @@ class Orders {
 
 		$output = "";
 
+
 		if (!isset($_SESSION['user-id']))
 			$output = "Pro zpracování procesu objednávek musíte být přihlášen";
 

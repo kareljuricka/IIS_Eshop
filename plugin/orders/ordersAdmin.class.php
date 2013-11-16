@@ -1,6 +1,6 @@
 <?php
 
-class OrdersAdmin {
+class OrdersAdmin extends PluginAdmin {
 
 	private $output = "";
 

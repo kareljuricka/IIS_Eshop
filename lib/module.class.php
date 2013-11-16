@@ -134,7 +134,8 @@ class Module {
 
 						switch($pluginInfo['name']) {
 							case "default":
-								$this->moduleOutput[$modulename] .= "Administrace pluginů";
+								$plugin = new PluginAdmin();
+								$this->moduleOutput[$modulename] .= $plugin->generatePluginTheme("Správa pluginů", "Administrace pluginů");
 								break;
 								
 							default:
@@ -155,7 +156,7 @@ class Module {
 									$plugin->pluginProcess();
 								}
 								
-								$this->moduleOutput[$modulename] .= $plugin->getOutput();
+								$this->moduleOutput[$modulename] .= $plugin->generatePluginTheme("Správa pluginů", $plugin->getOutput());
 								break;
 						}
 

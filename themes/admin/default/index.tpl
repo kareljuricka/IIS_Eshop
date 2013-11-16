@@ -1,4 +1,4 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 	  	<meta name="keywords" content="home page" lang="cs">
@@ -11,20 +11,25 @@
 
 	    <meta name="revisit-after" content="7 days">
 	    <meta name="copyright" content="(c)2013 design & code by Karel Juřička">
+	    
 	    <link rel="stylesheet" href="<% absolute_path %>/styles/styles.css" type="text/css" media="screen"/>
-			     
-	    <title><% title %></title>
+			  
+	    <title>Admin</title>
   	</head>
-  	<body align="center">
-		<h3>Administrace</h3>
-		<table border="1" cellpading="0" cellspacing="0" align="center">
-			<tr>
-				<td colspan="3" width="1000" align="right"><% admin_user_status %></td>
-			</tr>
-			<tr>
-				<td width="200"  align="left" valign="top"><% menu %></td><td align="left" style="padding-left: 20px;"><% content %></td>
-			</tr>
-		</table>
-		
-	</body>
+  	<body>
+  		<header>
+  			<nav class="main-nav">
+  				<% menu %>
+  			</nav>
+  			<div class="title">
+  				<h1>Administrace <span>LoveCMS</span></h1>
+  				<span class="version">v 1.2</span>
+  			</div>
+  			<div class="def-footer"></div>
+  		</header>
+  		<div class="horizontal-line"></div>
+  		<div class="main">
+  			<% content %>
+  		</div>
+  	</body>
 </html>
