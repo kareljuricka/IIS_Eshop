@@ -88,7 +88,6 @@ class Admin extends Web {
 	// TODO: REBUILD TO BETTER VERSION
 	public static function loginForm() {
 
-
 		$errors = "";
 
 		// Login programming
@@ -118,13 +117,21 @@ class Admin extends Web {
 			<em>
 				".$errors."
 			</em>
-			<br />
-			<br />
-			<form method=\"POST\">
-				Login: <input type=\"text\" name=\"username\"\><br />
-				Password: <input type=\"password\" name=\"password\"\><br />
-				<input type=\"submit\" value=\"LOGIN\"/>
-			</form>
+			<form method=\"POST\" action=\"\" autocomplete=\"off\">
+  				<div class=\"input-line username\">
+  					<label for=\"username\"><img src=\"".Theme::$completeThemeAdminDir."/images/login/username_icon.png\" alt=\"username\"/></label>
+  					<input type=\"text\" name=\"username\"/>
+  					<div class=\"def-footer\"></div>
+  				</div>
+  				<div class=\"input-line password\">
+  					<label for=\"password\"><img src=\"".Theme::$completeThemeAdminDir."/images/login/password_icon.png\" alt=\"password\"/></label>
+  					<input type=\"password\" name=\"password\"/>
+  					<div class=\"def-footer\"></div>
+  				</div>
+  				<div class=\"submit-line\">
+  					<input type=\"submit\" name=\"login-submit\" value=\"Přihlásit se\"/>
+  				</div>
+  			</form>
 		";
 
 		return $formOutput;

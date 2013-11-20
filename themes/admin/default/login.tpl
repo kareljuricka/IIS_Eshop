@@ -1,4 +1,4 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 	  	<meta name="keywords" content="home page" lang="cs">
@@ -11,12 +11,20 @@
 
 	    <meta name="revisit-after" content="7 days">
 	    <meta name="copyright" content="(c)2013 design & code by Karel Juřička">
-
-			     
-	    <title><% title %></title>
+	    
+	    <link rel="stylesheet" href="<% absolute_path %>/styles/login.css" type="text/css" media="screen"/>
+			  
+	    <title>Admin</title>
   	</head>
-  	<body align="center">
-  		<h2>Login</h2>
-  		<% admin_login %>
+  		<div class="login-bg"></div>
+  		<div class="login-block">
+  			<span class="version">Aktuální verze: 1.2</span>
+  			<div class="login-box">
+  				<div class="login-box-title">Prihlášení do administrace LoveCMS</div>
+  				<% admin_login %>
+  			</div>
+  		</div>
+  		
 	</body>
 </html>
+

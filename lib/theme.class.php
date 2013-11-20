@@ -53,8 +53,7 @@ class Theme {
 
 		self::$completeThemeWebDir = web::$serverDir . theme::$themesWebDir . "/" . theme::$activeTheme;
 		self::$completeThemeAdminDir = admin::$serverDir . theme::$themesAdminDir . "/" . theme::$activeAdminTheme;
-
-
+		
 		// Set theme full directory
 		$this->themedir = ($this->admin) ? self::$themesAdminDir . '/' . self::$activeAdminTheme : self::$themesWebDir . '/' . self::$activeTheme;
 

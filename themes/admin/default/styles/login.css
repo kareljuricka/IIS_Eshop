@@ -1,0 +1,135 @@
+body {
+font-family: Helvetica;
+font-size: 10px;
+margin: 0px;
+padding: 0px;
+}
+
+div.def-footer {
+clear: both;
+}
+
+div.login-bg {
+background: #00b1c1;
+position: absolute;
+z-index: -9999;
+width: 100%;
+height: 200px;
+top: 180px;
+}
+
+div.login-block {
+width: 360px;
+margin: auto;
+margin-top: 120px;
+}
+
+div.login-block span.version {
+display: block;
+text-align: right;
+margin-bottom: 10px;
+margin-right: 10px;
+font-style: oblique;
+color: #797979;
+font-size: 10px;
+}
+
+div.login-box {
+width: 360px;
+height: 240px;
+-webkit-box-shadow:  0px -10px 10px 1px rgba(0, 0, 0, 0.2);
+box-shadow:  0px -10px 10px 1px rgba(0, 0, 0, 0.2);
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+margin: auto;
+background: #fff;
+padding-top: 30px;
+}
+
+div.login-box-title {
+width: 240px;
+height: 26px;
+background: #00b1c1;
+border-radius: 5px;
+color: #fff;
+font-size: bold;
+font-weight: lighter;
+font-size: 12px;
+text-align: center;
+padding-top: 14px;
+margin: auto;
+}
+
+div.input-line {
+margin: auto;
+width: 240px;
+}
+
+div.input-line.username {
+margin-top: 20px;
+}
+
+div.input-line.password {
+margin-top: 10px;
+}
+
+div.input-line label {
+width: 30px;
+height: 22px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+text-align: center;
+float: left;
+padding-top: 8px;
+}
+
+div.input-line.username label {
+background: #00b1c1;
+}
+
+div.input-line.password label {
+background: #ff5858;
+}
+
+div.input-line input {
+float: left;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+width: 170px;
+height: 28px;
+padding: 0px 5px;
+margin: 0px 0px 0px 10px;
+}
+
+div.input-line.username input {
+border: 1px solid #00b1c1;
+}
+
+div.input-line.password input {
+border: 1px solid #ff5858;
+}
+
+div.submit-line {
+margin-left: 117px;
+margin-top: 15px;
+}
+
+div.submit-line input {
+width: 165px;
+height: 30px;
+background: #ff5c5e;
+border: 0px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+color: #fff;
+font-weight: bold;
+font-size: 11px;
+cursor: pointer;
+}
+
+
+
