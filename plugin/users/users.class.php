@@ -7,7 +7,7 @@ define("UPDATE_SUCCESS", 3);
 define("CHANGE_PASSWORD_FORM", 4);
 define("CHANGE_PASSWORD_SUCCESS", 5);
 
-class Users {
+class Users extends Plugin {
 
 	private $output = "";
 
@@ -431,36 +431,6 @@ class Users {
 		return $output;
 	}
 
-	private function getErrors($type = NULL) {
-
-		$output = "<h3>Výpis chyb:</h3>";
-
-		if (!isset($type)) {
-			foreach($this->errors as $type => $errors_array) {
-				$output .= "
-					<ul>
-				";
-
-				foreach($errors_array as $key => $error_data)
-					$output .= "<li>".$error_data."</li>";
-
-				$output .= "</ul>";
-			}
-		}
-		else {
-			$output .= "
-				<ul>
-			";
-
-			foreach($this->errors[$type] as $key => $error_data)
-					$output .= "<li>".$error_data."</li>";
-
-				$output .= "</ul>";
-		}
-
-		return $output;
-
-	}
 
 	public function getOutput() {
 		return $this->output;

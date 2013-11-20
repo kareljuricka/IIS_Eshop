@@ -437,37 +437,6 @@ class Orders {
 		return $output;
 	}
 
-	private function getErrors($type = NULL) {
-
-		$output = "<h3>Výpis chyb:</h3>";
-
-		if (!isset($type)) {
-			foreach($this->errors as $type => $errors_array) {
-				$output .= "
-					<ul>
-				";
-
-				foreach($errors_array as $key => $error_data)
-					$output .= "<li>".$error_data."</li>";
-
-				$output .= "</ul>";
-			}
-		}
-		else {
-			$output .= "
-				<ul>
-			";
-
-			foreach($this->errors[$type] as $key => $error_data)
-					$output .= "<li>".$error_data."</li>";
-
-				$output .= "</ul>";
-		}
-
-		return $output;
-
-	}
-
 	public function getOutput() {
 		return $this->output;
 	}
