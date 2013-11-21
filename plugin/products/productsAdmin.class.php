@@ -1,5 +1,10 @@
 ﻿<?php
 
+define("REGISTER_FORM", 0);
+define("UPDATE_FORM", 1);
+define("REGISTER_SUCCESS", 2);
+define("UPDATE_SUCCESS", 3);
+
 class ProductsAdmin extends Plugin {
 
 	private $output = "";
@@ -24,9 +29,13 @@ class ProductsAdmin extends Plugin {
 		$action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 		$this->output = "
-			<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/add' title='add product'>Přidat produkt</a>
-			<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add product'>Výpis produktů</a><br />
-		";
+		<div class=\"action-nav\">
+			<ul>
+				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/add' title='add product'>Přidat produkt</a></li>
+				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add product'>Výpis produktů</a></li>
+			</ul>	
+			<div class=\"def-footer\"></div>
+		</div>";
 
 		if (isset($action))
 			switch($action) {
@@ -47,33 +56,80 @@ class ProductsAdmin extends Plugin {
 
 	function addProduct() {
 
-		if(isset($_POST['addProduct'])) {
-			web::$db->query("INSERT INTO love_eshop_produkt (jmeno_produktu, kategorie, popis_produktu, vyrobce, akce, novinka, mnoztvi_na_sklade, cena) VALUES('" .$_POST['jmeno']. "', '" .$_POST['kategorie']. "', '" .$_POST['popis']. "', '" .$_POST['vyrobce']. "', '" .$_POST['akce']. "', '" .$_POST['novinka']. "', '" .$_POST['mnozstvi']. "', '" .$_POST['cena']. "')");
-			web::$db->execute();
-			globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
+		$state = REGISTER_FORM;
+
+		$product_data = array('jmeno_produktu' => '', 'kategorie' => '', 'popis_produktu' => '', 'vyrobce' => '', 'akce' => '', 'novinka' => '',
+		'mnozstvi_na_sklade' => '', 'cena' => ''
+		);
+
+		$error_output = "";
+
+		if(isset($_POST['submit-add-product'])) {
+
+			// Get POST data
+			foreach($_POST as $key => $value) {
+				if (array_key_exists($key, $product_data))
+					$product_data[$key] = $value;
+			}
+
+			$novinka = (isset($_POST['novinka']) && $_POST['novinka']) ? 1 : 0;
+			$akce = (isset($_POST['akce']) && $_POST['akce']) ? 1 : 0;
+
+			if (empty($_POST['jmeno_produktu'])) $this->errors['produkt'][] = "Nevyplněné jméno";
+
+			if (!empty($this->errors))
+				$error_output = $this->getErrors();
+
+			else {
+				web::$db->query("INSERT INTO love_eshop_produkt (jmeno_produktu, kategorie, popis_produktu, vyrobce, akce, novinka, mnozstvi_na_sklade, cena)
+				VALUES(:jmeno_produktu, :kategorie, :popis_produktu, :vyrobce, :akce, :novinka, :mnozstvi_na_sklade, :cena)");
+
+				web::$db->bind(":jmeno_produktu", htmlspecialchars($_POST['jmeno_produktu']));
+				web::$db->bind(":kategorie", htmlspecialchars($_POST['kategorie']));
+				web::$db->bind(":popis_produktu", htmlspecialchars($_POST['popis_produktu']));
+				web::$db->bind(":vyrobce", htmlspecialchars($_POST['vyrobce']));
+				web::$db->bind(":akce", $akce);
+				web::$db->bind(":novinka", $novinka);
+				web::$db->bind(":cena", htmlspecialchars($_POST['cena']));
+				web::$db->bind(":mnozstvi_na_sklade", htmlspecialchars($_POST['mnozstvi_na_sklade']));
+				
+				web::$db->execute();
+
+				$this->success = "Produkt byl úspěšně přidán do databáze";
+
+				$output = $this->getSuccess();
+
+				$state = REGISTER_SUCCESS;
+			}
+
+			//globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
 		}
 
-		return "
-		<div class=\"login\">
+		if ($state == REGISTER_FORM) {
+			$output = "
+			<h3>Přidat nový produkt</h3>
+			".$error_output."
 			<form method=\"POST\">
-				<input type='hidden' name='addProduct' value='1'/>
 				<fieldset>
 					<legend>Obecné informace</legend>
 					<div>
-						<label for='jmeno'>Jmeno:</label>
-						<input type='text' name='jmeno' id='jmeno'/>
+						<label for='jmeno_produktu'>Jmeno:</label>
+						<input type='text' name='jmeno_produktu' id='jmeno_produktu' value='".$product_data['jmeno_produktu']."'/>
 					</div>
 					<div>
 						<label for='vyrobce'>Vyrobce:</label>
-						<input type='text' name='vyrobce' id='vyrobce'/>
+						<input type='text' name='vyrobce' id='vyrobce' value='".$product_data['vyrobce']."'/>
+						<div class='def-footer'></div>
 					</div>
 					<div>
 						<label for='kategorie'>Kategorie:</label>
-						<input type='text' name='kategorie' id='kategorie'/>
+						<input type='text' name='kategorie' id='kategorie' value='".$product_data['kategorie']."'/>
+						<div class='def-footer'></div>
 					</div>
 					<div>
-						<label for='popis'>Popis:</label>
-						<input type='text' name='popis' id='popis'/>
+						<label for='popis_produktu'>Popis:</label>
+						<textarea name='popis_produktu' id='popis_produktu'/>".$product_data['popis_produktu']."</textarea>
+						<div class='def-footer'></div>
 					</div>
 				</fieldset>
 				<fieldset>
@@ -81,89 +137,139 @@ class ProductsAdmin extends Plugin {
 					<div>
 						<label for='akce'>Akce:</label>
 						<input type='checkbox' name='akce' id='akce' value='1'/>
+						<div class='def-footer'></div>
 					</div>
 					<div>
 						<label for='novinka'>Novinka:</label>
 						<input type='checkbox' name='novinka' id='novinka' value='1'/>
-					</div>
-					<div>
-						<label for='mnozstvi'>Mnozstvi:</label>
-						<input type='text' name='mnozstvi' id='mnozstvi'/>
+						<div class='def-footer'></div>
 					</div>
 					<div>
 						<label for='cena'>Cena:</label>
 						<input type='text' name='cena' id='cena'/>
+						<div class='def-footer'></div>
 					</div>
 					<div>
-						<input type='submit' name='submit' id='submit'/>
+						<label for='mnozstvi_na_sklade'>Mnozstvi na skladě:</label>
+						<input type='text' name='mnozstvi_na_sklade' id='mnozstvi_na_sklade'/>
+						<div class='def-footer'></div>
 					</div>
 				</fieldset>
-			</form>
-		</div>
-		";
+				<div>
+					<input type='submit' name='submit-add-product' id='submit'/>
+				</div>
+			</form>";
+		}
+
+		return $output;
 	}
 
 	function editProduct($product_id) {
 
-		if(isset($_POST['editProduct'])) {
-			web::$db->query("UPDATE love_eshop_produkt SET jmeno_produktu='" .$_POST['jmeno']. "', vyrobce='" .$_POST['vyrobce']. "', kategorie='" .$_POST['kategorie']. "', popis_produktu='" .$_POST['popis']. "', akce='" .$_POST['akce']. "', novinka='" .$_POST['novinka']. "', mnoztvi_na_sklade='" .$_POST['mnozstvi']. "', cena='" .$_POST['cena']. "' WHERE id='" .$product_id. "'");
-			web::$db->execute();
-			globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
+		$state = UPDATE_FORM;
+
+		$error_output = "";
+
+		if(isset($_POST['submit-edit-product'])) {
+
+			$novinka = (isset($_POST['novinka']) && $_POST['novinka']) ? 1 : 0;
+			$akce = (isset($_POST['akce']) && $_POST['akce']) ? 1 : 0;
+
+			if (empty($_POST['jmeno_produktu'])) $this->errors['produkt'][] = "Nevyplněné jméno";
+
+			if (!empty($this->errors))
+				$error_output = $this->getErrors();
+
+			else {
+
+				web::$db->query("UPDATE love_eshop_produkt SET
+				jmeno_produktu=:jmeno_produktu, vyrobce=:vyrobce, kategorie=:kategorie,
+				popis_produktu=:popis_produktu, akce=:akce, novinka=:novinka,
+				mnozstvi_na_sklade=:mnozstvi_na_sklade, cena=:cena WHERE id='" .$product_id. "'");
+
+				web::$db->bind(":jmeno_produktu", htmlspecialchars($_POST['jmeno_produktu']));
+				web::$db->bind(":vyrobce", htmlspecialchars($_POST['vyrobce']));
+				web::$db->bind(":kategorie", htmlspecialchars($_POST['kategorie']));
+				web::$db->bind(":popis_produktu", htmlspecialchars($_POST['popis_produktu']));
+				web::$db->bind(":akce", $akce);
+				web::$db->bind(":novinka", $novinka);
+				web::$db->bind(":cena", htmlspecialchars($_POST['cena']));
+				web::$db->bind(":mnozstvi_na_sklade", htmlspecialchars($_POST['mnozstvi_na_sklade']));
+				web::$db->execute();
+				
+
+				$this->success = "Produkt byl úspěšně upraven v databázi";
+				$output = $this->getSuccess();
+
+				$state = UPDATE_SUCCESS;
+			}
+
 		}
 
+		if ($state == UPDATE_FORM) {
 
-		web::$db->query("SELECT * FROM love_eshop_produkt WHERE id='" .$product_id. "'");		
-		web::$db->execute();
-		$result = web::$db->single();
+			web::$db->query("SELECT * FROM love_eshop_produkt WHERE id='" .$product_id. "'");		
+			web::$db->execute();
 
-		return "
-		<div class=\"login\">
-			<form method=\"POST\">
-				<input type='hidden' name='editProduct' value='1'/>
-				<fieldset>
-					<legend>Obecné informace</legend>
+			$result = web::$db->single();
+
+
+			$output = "
+				<h3>Upravit informace o produktu</h3>
+				".$error_output."
+				<form method=\"POST\">
+					<input type='hidden' name='editProduct' value='1'/>
+					<fieldset>
+						<legend>Obecné informace</legend>
+						<div>
+							<label for='jmeno_produktu'>Jmeno:</label>
+							<input type='text' name='jmeno_produktu' id='jmeno_produktu' value='" .$result['jmeno_produktu']. "'/>
+						</div>
+						<div>
+							<label for='vyrobce'>Vyrobce:</label>
+							<input type='text' name='vyrobce' id='vyrobce' value='" .$result['vyrobce']. "'/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='kategorie'>Kategorie:</label>
+							<input type='text' name='kategorie' id='kategorie' value='" .$result['kategorie']. "'/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='popis_produktu'>Popis:</label>
+							<input type='text' name='popis_produktu' id='popis_produktu' value='" .$result['popis_produktu']. "'/>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Doplňující informace</legend>
+						<div>
+							<label for='akce'>Akce:</label>
+							<input type='checkbox' name='akce' id='akce' ".(($result['akce']) ? "checked" : "")."/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='novinka'>Novinka:</label>
+							<input type='checkbox' name='novinka' id='novinka' ".(($result['novinka']) ? "checked" : "")."/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='cena'>Cena:</label>
+							<input type='text' name='cena' id='cena' value='".$result['cena']."'/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='mnozstvi_na_sklade'>Mnozstvi na skladě:</label>
+							<input type='text' name='mnozstvi_na_sklade' id='mnozstvi_na_sklade' value='".$result['mnozstvi_na_sklade']."'/>
+							<div class='def-footer'></div>
+						</div>
+					</fieldset>
 					<div>
-						<label for='jmeno'>Jmeno:</label>
-						<input type='text' name='jmeno' id='jmeno' value='" .$result['jmeno_produktu']. "'/>
+						<input type='submit' name='submit-edit-product' id='submit'/>
 					</div>
-					<div>
-						<label for='vyrobce'>Vyrobce:</label>
-						<input type='text' name='vyrobce' id='vyrobce' value='" .$result['vyrobce']. "'/>
-					</div>
-					<div>
-						<label for='kategorie'>Kategorie:</label>
-						<input type='text' name='kategorie' id='kategorie' value='" .$result['kategorie']. "'/>
-					</div>
-					<div>
-						<label for='popis'>Popis:</label>
-						<input type='text' name='popis' id='popis' value='" .$result['popis_produktu']. "'/>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend>Doplňující informace</legend>
-					<div>
-						<label for='akce'>Akce:</label>
-						<input type='text' name='akce' id='akce' value='" .$result['akce']. "'/>
-					</div>
-					<div>
-						<label for='novinka'>Novinka:</label>
-						<input type='text' name='novinka' id='novinka' value='" .$result['novinka']. "'/>
-					</div>
-					<div>
-						<label for='mnozstvi'>Mnozstvi:</label>
-						<input type='text' name='mnozstvi' id='mnozstvi' value='" .$result['mnoztvi_na_sklade']. "'/>
-					</div>
-					<div>
-						<label for='cena'>Cena:</label>
-						<input type='text' name='cena' id='cena' value='" .$result['cena']. "'/>
-					</div>
-					<div>
-						<input type='submit' name='submit' id='submit'/>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-		";
+				</form>";
+		}
+
+		return $output;
 	}
 
 	function deleteProduct() {
@@ -184,39 +290,18 @@ class ProductsAdmin extends Plugin {
 		$result = web::$db->resultset();
 
 		$vypis .= "
-		<div>
-			<table>
-				<tr>
-				<td>
-					Jmeno
-				</td>
-				<td>
-					Vyrobce
-				</td>
-				<td>
-					Kategorie
-				</td>
-				<td>
-					Popis
-				</td>
-				<td>
-					Akce
-				</td>
-				<td>
-					Novinka
-				</td>
-				<td>
-					Mnozstvi
-				</td>
-				<td>
-					Cena
-				</td>
-				<td>
-					Editovat
-				</td>
-				<td>
-					Smazat
-				</td>
+		<h3>Výpis produktů</h3>
+		<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
+			<tr>
+				<th>Jméno produktu</th>
+				<th>Kategorie</th>
+				<th>Výrobce</th>
+				<th>Popis</th>
+				<th>Akce</th>
+				<th>Novinka</th>
+				<th>Cena</th>
+				<th>Mnozstvi na skladě</th>
+				<th>Upravit</th>
 			</tr>
 		";
 
@@ -227,10 +312,10 @@ class ProductsAdmin extends Plugin {
 					" .$row['jmeno_produktu']. "
 				</td>
 				<td>
-					" .$row['vyrobce']. "
+					" .$row['kategorie']. "
 				</td>
 				<td>
-					" .$row['kategorie']. "
+					" .$row['vyrobce']. "
 				</td>
 				<td>
 					" .$row['popis_produktu']. "
@@ -242,16 +327,13 @@ class ProductsAdmin extends Plugin {
 					" .$row['novinka']. "
 				</td>
 				<td>
-					" .$row['mnoztvi_na_sklade']. "
-				</td>
-				<td>
 					" .$row['cena']. "
 				</td>
 				<td>
-					<a href=\"".admin::$serverAdminDir."plugins/type/Products/edit/" .$row['id']. "\">Editovat</a>
+					" .$row['mnozstvi_na_sklade']. "
 				</td>
 				<td>
-					<a href=\"".admin::$serverAdminDir."plugins/type/Products/delete/" .$row['id']. "\">Smazat</a>
+					<a href=\"".admin::$serverAdminDir."plugins/type/Products/edit/" .$row['id']. "\">Editovat</a>
 				</td>
 			</tr>
 			";

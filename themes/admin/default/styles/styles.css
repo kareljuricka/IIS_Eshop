@@ -34,10 +34,14 @@ color: #323e48;
 }
 
 form fieldset label {
-display: block;
-width: 100px;
+
+width: 130px;
 float: left;
-margin: 0px 0px 0px 0px;
+margin-top: 5px;
+}
+
+form fieldset label.unmoved {
+margin: 0px;
 }
 
 form fieldset label.longer {
@@ -46,7 +50,14 @@ width: 200px;
 
 form fieldset input {
 float: left;
-margin: 0px 50px 20px 0px;
+margin: 0px 80px 20px 0px;
+border: 1px dotted #323e48;
+padding: 5px 5px;
+}
+
+form fieldset select {
+float: left;
+margin: 0px 80px 20px 0px;
 border: 1px dotted #323e48;
 padding: 5px 5px;
 }
@@ -213,10 +224,14 @@ padding: 11px 15px 0px 0px;
 }
 
 
+div.main div.content div.db-output-scroll {
+overflow-x: scroll;
+}
 
 div.main div.content table.db-output {
 border: 1px dotted #323e48;	
 border-collapse: collapse;
+overflow-x: scroll;
 }
 
 div.main div.content table.db-output th, td {
@@ -224,6 +239,7 @@ padding: 7px 10px;
 font-size: 11px;
 border: 1px dotted #323e48;
 font-weight: normal;
+text-align: center;
 }
 
 div.main div.content table.db-output th {
@@ -234,6 +250,7 @@ color: #fff;
 
 div.main div.content div.action-nav {
 border-bottom: 1px dotted #323e48;
+width: 100%;
 }
 
 div.main div.content div.action-nav ul {
@@ -249,12 +266,12 @@ margin: 0px 10px 10px 0px;
 
 div.main div.content div.action-nav ul li a {
 display: block;
-width: 100px;
+width: 110px;
 
 color: #93c800;
 text-decoration: none;
 font-size: 12px;
-text-align: center;
+
 font-weight: bold;
 }
 

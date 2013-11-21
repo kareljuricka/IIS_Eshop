@@ -89,7 +89,6 @@ class Admin extends Web {
 
 
 	// ADMIN LOGIN FORM
-	// TODO: REBUILD TO BETTER VERSION
 	public static function loginForm() {
 
 		$errors = "";

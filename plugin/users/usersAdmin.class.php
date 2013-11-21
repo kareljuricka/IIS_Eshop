@@ -24,6 +24,106 @@ class UsersAdmin extends Plugin {
 
 	}
 
+	public function pluginAdminProcess() {
+
+		$action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
+
+		$this->output = "
+		<div class=\"action-nav\">
+			<ul>
+				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/add' title='add user'>Přidat uživatele</a></li>
+				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add user'>Výpis uživatelů</a></li>
+			</ul>
+			<div class=\"def-footer\"></div>
+		</div>";
+
+		if (!empty($_GET['activate'])) {
+			$this->setUserStatus($_GET['activate'], 1);
+		}
+
+		else if (!empty($_GET['deactivate'])) {
+			$this->setUserStatus($_GET['deactivate'], 0);
+		}
+
+		if (isset($action))
+			switch($action) {
+				case 'add':
+					$this->output .= $this->addUser();
+					break;
+			}
+
+		else if (!empty($_GET['edit']))
+			$this->output .= $this->editUser($_GET['edit']);
+
+		else if (!empty($_GET['delete']))
+			$this->output .= $this->deleteUser();
+		
+		else 
+			$this->output .= $this->usersList();
+		
+
+	}
+
+	/* Vypis uzivatelu */
+	private function usersList() {
+
+		$users_output = "";
+
+		$query = web::$db->query("SELECT id, email, jmeno, prijmeni, novinky, aktivni FROM ".database::$prefix."eshop_uzivatel");
+
+		$users = web::$db->resultset();
+
+		$aktivni_output = "";
+
+		foreach($users as $key => $user_data) {
+
+			if ($user_data['aktivni'] == 0)
+				$aktivni_output = "
+					<span>Neaktivní</span><br/>
+					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/activate/".$user_data['id']."\" title=\"aktivovat\">Aktivovat</a>
+				";
+
+			else {
+				$aktivni_output = "
+					<span>Aktivni</span><br />
+					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/deactivate/".$user_data['id']."\" title=\"aktivovat\">Deaktivovat</a>
+				";
+			}
+
+			$users_output .= "
+				<tr>
+					<td>".$user_data['email']."</td>
+					<td>".$user_data['jmeno']." ".$user_data['prijmeni']."</td>
+					<td>".$aktivni_output."</td>
+					<td>".$user_data['novinky']."</td>
+					<td>Objednávky</td>
+					<td>
+						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/edit/".$user_data['id']."' title='add user'>Upravit</a>
+					</td>
+
+				</tr>
+			";
+		}
+
+		$output = "
+		<h3>Výpis uživatelů</h3>
+		<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
+			<tr>
+				<th>Email</th>
+				<th>Jméno a příjmení</th>
+				<th>Aktivní</th>
+				<th>Novinky mailem</th>
+				<th>Objednávky uživatele</th>
+				<th>Editovat</th>
+
+			</tr>
+				".$users_output."				
+		</table>";
+
+		return $output;
+
+	}
+
 	/* Registracni formular */
 	protected function addUser() {
 
@@ -123,7 +223,7 @@ class UsersAdmin extends Plugin {
 					<fieldset>
 						<legend>Nastavení</legend>
 						<div>
-							<label for='novinky' class='longer'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
+							<label for='novinky' class='longer unmoved'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
 						</div>
 					</fieldset>
 					<div><input type='submit' value='Přidat uživatele' name='register_update'/></div>
@@ -135,220 +235,106 @@ class UsersAdmin extends Plugin {
 	}
 
 
-	public function pluginAdminProcess() {
-
-		$action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
-
-		$this->output = "
-		<div class=\"action-nav\">
-			<ul>
-				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/add' title='add user'>Přidat uživatele</a></li>
-				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add user'>Výpis uživatelů</a></li>
-			</ul>
-			<div class=\"def-footer\"></div>
-		</div>
-		";
-
-		if (!empty($_GET['activate'])) {
-			$this->setUserStatus($_GET['activate'], 1);
-		}
-
-		else if (!empty($_GET['deactivate'])) {
-			$this->setUserStatus($_GET['deactivate'], 0);
-		}
-
-		if (isset($action))
-			switch($action) {
-				case 'add':
-					$this->output .= $this->addUser();
-					break;
-			}
-
-		else if (!empty($_GET['edit']))
-			$this->output .= $this->editUser($_GET['edit']);
-
-		else if (!empty($_GET['delete']))
-			$this->output .= $this->deleteUser();
-		
-		else 
-			$this->output .= $this->usersList();
-		
-
-	}
-
-	/* Vypis uzivatelu */
-	private function usersList() {
-
-		$users_output = "";
-
-		$query = web::$db->query("SELECT id, email, jmeno, prijmeni, aktivni FROM ".database::$prefix."eshop_uzivatel");
-
-		$users = web::$db->resultset();
-
-		$aktivni_output = "";
-
-		foreach($users as $key => $user_data) {
-
-			if ($user_data['aktivni'] == 0)
-				$aktivni_output = "
-					<span>Neaktivní</span><br/>
-					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/activate/".$user_data['id']."\" title=\"aktivovat\">Aktivovat</a>
-				";
-
-			else {
-				$aktivni_output = "
-					<span>Aktivni</span><br />
-					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/deactivate/".$user_data['id']."\" title=\"aktivovat\">Deaktivovat</a>
-				";
-			}
-
-			$users_output .= "
-				<tr>
-					<td>".$user_data['email']."</td>
-					<td>".$user_data['jmeno']." ".$user_data['prijmeni']."</td>
-					<td>".$aktivni_output."</td>
-					<td>Objednávky</td>
-					<td>
-						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/edit/".$user_data['id']."' title='add user'>Upravit</a>
-					</td>
-					<td>Smazat</td>
-				</tr>
-			";
-		}
-
-		$output = "
-		<h3>Výpis uživatelů</h3>
-		<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
-			<tr>
-				<th>Email</th>
-				<th>Jméno a příjmení</th>
-				<th>Akvitvní</th>
-				<th>Objednávky uživatele</th>
-				<th>Editovat</th>
-				<th>Smazat</th>
-			</tr>
-				".$users_output."				
-		</table>";
-
-		return $output;
-
-	}
-
 		/* Update formular */
 	protected function editUser($user_id) {
 
-		try {
-			//if (!isset($_SESSION['user-id']))
-			//	throw new Exception('Unautorized access');
+		$state = UPDATE_FORM;
+		$error_output = "";
+		$password_input = "";
 
-			$userdata = array('email' => '', 'jmeno' => '', 'prijmeni' => '', 'mobil' => '', 'ulice' => '',
-			'cislo_popisne' => '', 'mesto' => '', 'psc' => '', 'novinky' => ''
-			);
+		web::$db->query("SELECT email, jmeno, prijmeni, mobil, ulice, cislo_popisne, mesto, psc, aktivni, novinky
+			FROM " .database::$prefix ."eshop_uzivatel WHERE id='".$user_id."'");
 
+		$userdata = web::$db->single();
 
-			$state = UPDATE_FORM;
-			$error_output = "";
-			$password_input = "";
+		if (isset($_POST['register_update'])) {	
 
-			web::$db->query("SELECT email, jmeno, prijmeni, mobil, ulice, cislo_popisne, mesto, psc, aktivni, novinky
-				FROM " .database::$prefix ."eshop_uzivatel WHERE id='".$user_id."'");
+			// Check errors
+			if (empty($_POST['email'])) $this->errors['update'][] = "Nevyplněná emailová adresa";
 
-			
-			$userdata = web::$db->single();
+			// If no errors
+			if (!empty($this->errors['update']))
+				$error_output = $this->getErrors();
 
-			if (isset($_POST['register_update'])) {	
-
-				// Check errors
-				if (empty($_POST['email'])) $this->errors['update'][] = "Nevyplněná emailová adresa";
-
-				// If no errors
-				if (!empty($this->errors['update']))
-					$error_output = $this->getErrors();
-
-				else {
+			else {
 						
-					$novinky_mail = (isset($_POST['novinky']) && $_POST['novinky']) ? 1 : 0;
-					$aktivni = (isset($_POST['aktivni']) && $_POST['aktivni']) ? 1 : 0;
+				$novinky_mail = (isset($_POST['novinky']) && $_POST['novinky']) ? 1 : 0;
+				$aktivni = (isset($_POST['aktivni']) && $_POST['aktivni']) ? 1 : 0;
 
 				
-					web::$db->query("UPDATE ". database::$prefix ."eshop_uzivatel SET email = :email,
-						jmeno = :jmeno, prijmeni = :prijmeni, mobil = :mobil, ulice = :ulice, cislo_popisne = :cislo_popisne,
-						mesto = :mesto, psc = :psc, novinky = :novinky, aktivni = :aktivni WHERE id = '".$user_id."'");
-					
-					$this->success = "Údaje byly úspěšně upraveny";
+				web::$db->query("UPDATE ". database::$prefix ."eshop_uzivatel SET email = :email,
+					jmeno = :jmeno, prijmeni = :prijmeni, mobil = :mobil, ulice = :ulice, cislo_popisne = :cislo_popisne,
+					mesto = :mesto, psc = :psc, novinky = :novinky, aktivni = :aktivni WHERE id = '".$user_id."'");
 
-					web::$db->bind(":email", htmlspecialchars($_POST['email']));
-					web::$db->bind(":jmeno", htmlspecialchars($_POST['jmeno']));
-					web::$db->bind(":prijmeni", htmlspecialchars($_POST['prijmeni']));
-					web::$db->bind(":mobil", htmlspecialchars($_POST['mobil']));
-					web::$db->bind(":ulice", htmlspecialchars($_POST['ulice']));
-					web::$db->bind(":cislo_popisne", htmlspecialchars($_POST['cislo_popisne']));
-					web::$db->bind(":mesto", htmlspecialchars($_POST['mesto']));
-					web::$db->bind(":psc", htmlspecialchars($_POST['psc']));
-					web::$db->bind(":novinky", $novinky_mail);
-					web::$db->bind(":aktivni", $aktivni);
+				web::$db->bind(":email", htmlspecialchars($_POST['email']));
+				web::$db->bind(":jmeno", htmlspecialchars($_POST['jmeno']));
+				web::$db->bind(":prijmeni", htmlspecialchars($_POST['prijmeni']));
+				web::$db->bind(":mobil", htmlspecialchars($_POST['mobil']));
+				web::$db->bind(":ulice", htmlspecialchars($_POST['ulice']));
+				web::$db->bind(":cislo_popisne", htmlspecialchars($_POST['cislo_popisne']));
+				web::$db->bind(":mesto", htmlspecialchars($_POST['mesto']));
+				web::$db->bind(":psc", htmlspecialchars($_POST['psc']));
+				web::$db->bind(":novinky", $novinky_mail);
+				web::$db->bind(":aktivni", $aktivni);
 
-					web::$db->execute();
+				web::$db->execute();
 
-					$output = $this->getSuccess();
+				$this->success = "Údaje byly úspěšně upraveny";
 
-					$state = UPDATE_SUCCESS;
-				}
+				$output = $this->getSuccess();
+
+				$state = UPDATE_SUCCESS;
 			}
-
-			if ($state == UPDATE_FORM) {
-				$output = "
-					<h3>Upravit osobní údaje</h3>
-					".$error_output."
-					<form method='POST'>
-						<fieldset>
-							<legend>Přihlašovací údaje</legend>
-							<div>
-								<label for='email'>*Email:</label><input type='text' name='email' id='email' value='".$userdata['email']."'/>
-							</div>
-						</fieldset>
-						<fieldset>
-							<legend>Osobní údaje</legend>
-							<div>
-								<label for='jmeno'>Jméno:</label><input type='text' name='jmeno' id='jmeno' value='".$userdata['jmeno']."'/>
-								<label for='prijmeni'>Přijmení:</label><input type='text' name='prijmeni' id='prijmeni' value='".$userdata['prijmeni']."'/>
-								<div class='def-footer'></div>
-							</div>
-							<div>
-								<label for='mobil'>Mobil:</label><input type='text' name='mobil' id='mobil' value='".$userdata['mobil']."'/>
-								<div class='def-footer'></div>
-							</div>
-							<div>
-								<label for='ulice'>Ulice:</label><input type='text' name='ulice' id='ulice' value='".$userdata['ulice']."' />
-								<label for='cislo_popisne'>Číslo popisné</label><input type='text' name='cislo_popisne' id='cislo_popisne' value='".$userdata['cislo_popisne']."'/>
-								<div class='def-footer'></div>
-							</div>
-							<div>
-								<label for='mesto'>Město:</label><input type='text' name='mesto' id='mesto' value='".$userdata['mesto']."'/>
-								<label for='psc'>PSČ:</label><input type='text' name='psc' id='psc' value='".$userdata['psc']."'/>
-							</div>
-						</fieldset>
-						<fieldset>
-							<legend>Nastavení</legend>
-							<div>
-								<label for='aktivni' class='longer'>Aktivní účet:</label><input type='checkbox' name='aktivni' id='aktivni' ".($userdata['aktivni'] ? "checked" : "")."/>
-								<div class='def-footer'></div>
-							</div>
-							<div>
-								<label for='novinky' class='longer'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
-								<div class='def-footer'></div>
-							</div>
-						</fieldset>
-						<div><input type='submit' value='Upravit' name='register_update'/></div>
-					</form>
-				";
-			}
-
 		}
-		catch (Exception $e) {
-			$output = $e->getMessage();
+
+		if ($state == UPDATE_FORM) {
+			$output = "
+				<h3>Upravit osobní údaje</h3>
+				".$error_output."
+				<form method='POST'>
+					<fieldset>
+						<legend>Přihlašovací údaje</legend>
+						<div>
+							<label for='email'>*Email:</label><input type='text' name='email' id='email' value='".$userdata['email']."'/>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Osobní údaje</legend>
+						<div>
+							<label for='jmeno'>Jméno:</label><input type='text' name='jmeno' id='jmeno' value='".$userdata['jmeno']."'/>
+							<label for='prijmeni'>Přijmení:</label><input type='text' name='prijmeni' id='prijmeni' value='".$userdata['prijmeni']."'/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='mobil'>Mobil:</label><input type='text' name='mobil' id='mobil' value='".$userdata['mobil']."'/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='ulice'>Ulice:</label><input type='text' name='ulice' id='ulice' value='".$userdata['ulice']."' />
+							<label for='cislo_popisne'>Číslo popisné</label><input type='text' name='cislo_popisne' id='cislo_popisne' value='".$userdata['cislo_popisne']."'/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='mesto'>Město:</label><input type='text' name='mesto' id='mesto' value='".$userdata['mesto']."'/>
+							<label for='psc'>PSČ:</label><input type='text' name='psc' id='psc' value='".$userdata['psc']."'/>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Nastavení</legend>
+						<div>
+							<label for='aktivni' class=' unmoved'>Aktivní účet:</label><input type='checkbox' name='aktivni' id='aktivni' ".($userdata['aktivni'] ? "checked" : "")."/>
+							<div class='def-footer'></div>
+						</div>
+						<div>
+							<label for='novinky' class='longer unmoved'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
+							<div class='def-footer'></div>
+						</div>
+					</fieldset>
+					<div><input type='submit' value='Upravit' name='register_update'/></div>
+				</form>
+			";
 		}
-		
+	
 		return $output;
 
 	}
@@ -361,6 +347,7 @@ class UsersAdmin extends Plugin {
 
 
 	private function DeleteUser() {
+
 
 
 	}

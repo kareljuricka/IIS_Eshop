@@ -33,7 +33,7 @@ class Users extends Plugin {
 			
 			// Registrace
 			case 1:
-				$this->output = $this->addUser();
+				$this->output = $this->registerUser();
 				break;
 
 			// Přihlášení
@@ -54,6 +54,10 @@ class Users extends Plugin {
 			// Úprava hesla
 			case 5:
 				$this->output = $this->passwordChange();
+				break;
+
+			case 6:
+				$this->output = $this->activeAccount();
 				break;
 
 		}
@@ -81,7 +85,7 @@ class Users extends Plugin {
 			
 			// Odhlaseni uzivatele
 			if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-				session_unset();
+				unset($_SESSION['user-id']);
 				globals::redirect(web::$serverDir);
 			}	
 		}
@@ -114,7 +118,7 @@ class Users extends Plugin {
 	}
 
 	/* Registracni formular */
-	protected function addUser() {
+	protected function registerUser() {
 
 		try {
 			if (isset($_SESSION['user-id']))
@@ -154,12 +158,13 @@ class Users extends Plugin {
 						mobil, ulice, cislo_popisne, mesto, psc, aktivni, novinky)
 						VALUES (:email, :heslo, :jmeno, :prijmeni, :mobil, :ulice, :cislo_popisne, :mesto, :psc,
 						:aktivni, :novinky)");
-						
-					$output = "Registrace byla úspěšná";
+							
+        	$this->success = "Registrace byla úspěšná";
+
 					$state = REGISTER_SUCCESS;
 
 					web::$db->bind(":email", htmlspecialchars($_POST['email']));
-					web::$db->bind(":heslo", htmlspecialchars($_POST['heslo']));
+					web::$db->bind(":heslo", hash('sha256', htmlspecialchars($_POST['heslo'])));
 					web::$db->bind(":jmeno", htmlspecialchars($_POST['jmeno']));
 					web::$db->bind(":prijmeni", htmlspecialchars($_POST['prijmeni']));
 					web::$db->bind(":mobil", htmlspecialchars($_POST['mobil']));
@@ -171,6 +176,20 @@ class Users extends Plugin {
 					web::$db->bind(":novinky", $novinky_mail);
 
 					web::$db->execute();
+
+					$last_id = web::$db->lastInsertid();
+
+					$active_url = "http://localhost/skola/iis_eshop/aktivace-uctu/id/".$last_id."/data/".hash('sha256', htmlspecialchars($_POST['email']).htmlspecialchars($_POST['jmeno']).htmlspecialchars($_POST['prijmeni']));
+
+					$message = "
+						<strong>Byl vám vytvořen nový účet na jméno ".htmlspecialchars($_POST['jmeno'])." ".htmlspecialchars($_POST['prijmeni'])."</strong>
+						<p>Pro dokončení registrace je třeba provést aktivaci Vašeho účtu. To provede přejítím na odkaz:</p>	
+						<p><a href=\"".$active_url."\">".$active_url."</a></p>
+					";
+
+					Globals::sendMail(htmlspecialchars($_POST['email']), "Potvrzení registrace", $message);
+					
+					$output = $this->getSuccess();
 				}
 			}
 
@@ -398,21 +417,27 @@ class Users extends Plugin {
 		if (isset($_POST['prihlasit'])) {
 			if (empty($_POST['email']) || empty($_POST['heslo'])) $this->errors['login'][] = "Nevyplněný email nebo heslo";
 			else {
-				web::$db->query("SELECT id, heslo FROM ".database::$prefix."eshop_uzivatel WHERE email=:email");
+				web::$db->query("SELECT id, heslo, aktivni FROM ".database::$prefix."eshop_uzivatel WHERE email=:email");
 				web::$db->bind(":email", $_POST['email']);
 
 				$userLoginData = web::$db->single();
-				if ($userLoginData['heslo'] != $_POST['heslo'])
+
+				if ($userLoginData['heslo'] != hash('sha256', $_POST['heslo']))
 					$this->errors['login'][] = "Neplatné uživatelské heslo";
-				else {
+
+				else if (!$userLoginData['aktivni'])
+					$this->errors['login'][] = "Účet není aktivován. Prosím zkontrolujte svůj email";
+
+			}
+
+			if (!empty($this->errors['login'])) {
+				$error_output = $this->getErrors();
+			}
+			else {
 					$_SESSION['user-id'] = $userLoginData['id'];
 					globals::redirect(web::$serverDir);
-				}
 			}
-		}
 
-		if (!empty($this->errors['login'])) {
-			$error_output = $this->getErrors();
 		}
 
 		$user_email = (!empty($_POST['email'])) ? $_POST['email'] : "";
@@ -433,6 +458,29 @@ class Users extends Plugin {
 		";
 
 		return $output;
+	}
+
+		private function activeAccount() {
+
+			$output = $_GET['id'] ."<br />".$_GET['data'];
+
+			web::$db->query("SELECT email, jmeno, prijmeni, aktivni FROM ".database::$prefix."eshop_uzivatel WHERE id =".$_GET['id']);
+			$active_data = web::$db->single();
+
+			if ($active_data['aktivni'])
+				$output = "Tento účet už je aktivovaný";
+			
+			else if ($_GET['data'] != hash('sha256', $active_data['email'].$active_data['jmeno'].$active_data['prijmeni']))
+				$output = "Neplatný aktivační kód";
+
+			else {
+				web::$db->query("UPDATE ".database::$prefix."eshop_uzivatel SET aktivni = 1 WHERE id =".$_GET['id']);
+				web::$db->execute();
+				$output = "Váš účet byl aktivovaný. Nyní se můžete přihlásit";
+			}
+
+			return $output;	
+
 	}
 
 
