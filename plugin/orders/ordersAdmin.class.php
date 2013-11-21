@@ -16,13 +16,13 @@ class OrdersAdmin extends Plugin {
 		2 => "Doručeno"
 	);
 
-	private $doprava_types = array(
+	private $platba_types = array(
 		"osobne"	=> "Osobně na prodejně",
 		"dobirka"	=> "Dobírkou",
 		"ucet" 		=> "Převodem z účtu"
 	);
 
-	private $platba_types = array(
+	private $doprava_types = array(
 				"osobne"	=> "Osobně na prodejně",
 				"posta"		=> "Poštou (+120 Kč)",
 				"ppl" 		=> "PPL (+130 Kč)"
@@ -51,6 +51,8 @@ class OrdersAdmin extends Plugin {
 
 		if (!empty($_GET['edit']))
 			$this->output .= $this->editOrder($_GET['edit']);
+		else if (!empty($_GET['detail']))
+			$this->output .= $this->detailOrder($_GET['detail']);
 		else 
 			$this->output .= $this->orderList();
 
@@ -239,7 +241,152 @@ class OrdersAdmin extends Plugin {
 		return $output;
 	}
 
-	function orderList() {
+	private function detailOrder($product_id) {
+
+		web::$db->query("SELECT ".database::$prefix."eshop_objednavka.id, uzivatel, stav, datum_vytvoreni, datum_zaplaceni, datum_odeslani, doprava, platba,
+				dodaci_jmeno, dodaci_prijmeni,
+				dodaci_mesto, dodaci_ulice, dodaci_cislo_popisne, dodaci_PSC,
+				".database::$prefix."eshop_uzivatel.email, ".database::$prefix."eshop_uzivatel.mobil,
+				".database::$prefix."eshop_uzivatel.jmeno, ".database::$prefix."eshop_uzivatel.prijmeni, ".database::$prefix."eshop_uzivatel.ulice,
+				".database::$prefix."eshop_uzivatel.cislo_popisne, ".database::$prefix."eshop_uzivatel.mesto, ".database::$prefix."eshop_uzivatel.psc
+				FROM ".database::$prefix."eshop_objednavka
+				LEFT JOIN ".database::$prefix."eshop_uzivatel
+				ON uzivatel = ".database::$prefix."eshop_uzivatel.id
+				WHERE ".database::$prefix."eshop_objednavka.id='" .$product_id. "'");
+
+		$result = web::$db->single();
+
+		$dodaci_adresa = "";
+
+		if (!empty($result['dodaci_jmeno']) && !empty($result['dodaci_prijmeni'])) {
+			$dodaci_adresa = "
+				<div class=\"section-detail\">
+					<h4>Dodací adresa</h4>
+					<div>
+						<strong>Ulice:</strong>
+						<span>".$result['dodaci_ulice']."</span>
+						<strong>Číslo popisné:</strong>
+						<span>".$result['dodaci_ulice']."</span>
+					</div>
+					<div>
+						<strong>Město:</strong>
+						<span>".$result['dodaci_mesto']."</span>
+						<strong>PSČ:</strong>
+						<span>".$result['dodaci_PSC']."</span>
+					</div>
+				</div>
+			";
+		}
+		
+		$items_data = "";
+
+		web::$db->query("SELECT produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_produkt.id as product_id
+			FROM ".database::$prefix."eshop_objednavka_produkt
+			LEFT JOIN ".database::$prefix."eshop_produkt
+			ON ".database::$prefix."eshop_produkt.id = produkt
+			WHERE objednavka = '".$result['id']."'
+			");
+
+		$order_items = web::$db->resultset();
+
+		foreach($order_items as $item) {
+
+
+			$items_data .= "
+			<tr>
+				<td>".$item['product_id']."</td>
+				<td>".$item['jmeno_produktu']."</td>
+				<td>".$item['cena']."</td>
+				<td>".$item['mnozstvi']."</td>
+				<td></td>
+				<td></td>
+			</tr>";
+
+		}
+
+
+		$output = "
+			<h3>Detail objednávky</h3>
+			<div class=\"section-detail\">
+				<h4>Obecné informace k objednávce</h4>
+				<div>
+					<strong>Stav:</strong>
+					<span>".$this->state_array[$result['stav']]."</span>
+				</div>
+				<div>
+					<strong>Datum vytvoření:</strong>
+					<span>".$result['datum_vytvoreni']."</span>
+				</div>
+				<div>
+					<strong>Datum odeslání:</strong>
+					<span>".$result['datum_odeslani']."</span>
+				</div>
+				<div>
+					<strong>Datum zaplacení:</strong>
+					<span>".$result['datum_zaplaceni']."</span>
+				</div>
+			</div>
+			<div class=\"section-detail\">
+				<h4>Základní údaje</h4>
+				<div>
+					<strong>Uživatel:</strong>
+					<span>".$result['jmeno']."</span>
+				</div>
+				<div>
+					<strong>Email:</strong>
+					<span>".$result['email']."</span>
+					<strong>Tel. číslo:</strong>
+					<span>".$result['mobil']."</span>
+				</div>
+			</div>	
+			<div class=\"section-detail\">
+				<h4>Fakturační adresa</h4>
+				<div>
+					<strong>Ulice:</strong>
+					<span>".$result['ulice']."</span>
+					<strong>Číslo popisné:</strong>
+					<span>".$result['cislo_popisne']."</span>
+				</div>
+				<div>
+					<strong>Město:</strong>
+					<span>".$result['mesto']."</span>
+					<strong>PSČ:</strong>
+					<span>".$result['psc']."</span>
+				</div>
+			</div>
+			".$dodaci_adresa."
+			<div class=\"section-detail\">
+				<h4>Doprava a platba</h4>
+				<div>
+					<strong>Doprava:</strong>
+					<span>".$this->doprava_types[$result['doprava']]."</span>
+				</div>
+				<div>
+					<strong>Platba:</strong>
+					<span>".$this->platba_types[$result['platba']]."</span>
+				</div>
+			</div>
+			<div class=\"db-output-scroll\">
+				<h4>Položky objednávky</h4>
+				<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
+					<tr>
+						<th>ID produktu</th>
+						<th>Název produktu</th>
+						<th>Cena</th>
+						<th>Množství</th>
+						<th>Upravit</th>
+						<th>Smazat</th>
+					</tr>
+					".$items_data."
+				</table>
+			</div>
+		";
+
+		return $output;
+
+	}
+
+	private function orderList() {
 
 		$vypis = "";
 
@@ -276,6 +423,7 @@ class OrdersAdmin extends Plugin {
 						<th>Dodaci cislo popisne</th>
 						<th>Dodaci mesto</th>
 						<th>Dodaci PSC</th>
+						<th>Detail objednávky</th>
 						<th>Editovat objednavku</th>
 					</tr>
 	
@@ -337,6 +485,9 @@ class OrdersAdmin extends Plugin {
 				</td>
 				<td>
 					" .$row['dodaci_PSC']. "
+				</td>
+				<td>
+					<a href=\"".admin::$serverAdminDir."plugins/type/Orders/detail/" .$row['id']. "\">Detail objednávky</a>
 				</td>
 				<td>
 					<a href=\"".admin::$serverAdminDir."plugins/type/Orders/edit/" .$row['id']. "\">Editovat</a>

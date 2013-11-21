@@ -1,6 +1,6 @@
 <?php
 
-class Orders {
+class Orders extends Plugin {
 
 	private $output = "";
 	private $obj_state = 0;
@@ -278,7 +278,7 @@ class Orders {
 
 			if (isset($_POST['finish_order'])) {
 
-				web::$db->query("INSERT INTO ".database::$prefix."eshop_objednavka(uzivatel, doprava, platba) values(:uzivatel_id, :doprava, :platba)");
+				web::$db->query("INSERT INTO ".database::$prefix."eshop_objednavka(uzivatel, doprava, platba, stav) values(:uzivatel_id, :doprava, :platba, 0)");
 				web::$db->bind(":uzivatel_id", $_SESSION['user-id']);
 				web::$db->bind(":doprava", $_SESSION['doprava']);
 				web::$db->bind(":platba", $_SESSION['platba']);
