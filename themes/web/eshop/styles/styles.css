@@ -130,6 +130,40 @@ div.header div.header-content div.login div.user-links a {
 color: #fff;
 }
 
+div.header div.header-content div.user-panel {
+float: right;
+text-align: right;
+}
+
+div.header div.header-content div.user-panel strong.user-panel-title {
+display: block;
+padding: 10px;
+background: #fff;
+width: 150px;
+color: #55cd43;
+margin-top: 10px;
+margin-bottom: 10px;
+}
+
+div.header div.header-content div.user-panel ul {
+margin: 0px;
+padding: 0px;
+list-style: none;
+}
+
+div.header div.header-content div.user-panel ul li {
+line-height: 18px;
+}
+
+div.header div.header-content div.user-panel ul li a {
+text-decoration: none;
+color: #fff;
+}
+
+div.header div.header-content div.user-panel ul li a:hover {
+text-decoration: underline;
+}
+
 div.line-1 {
 width: 100%;
 height: 1px;
@@ -212,7 +246,7 @@ div.main div.content div.section-title {
 }
 
 div.main div.content div.section-title h2 {
-
+font-size: 12px;
 }
 
 div.main div.content div.section-title div.content-horizontal-line {
@@ -335,6 +369,65 @@ float: left;
 margin: 9px 0px 0px 10px;
 } 
 
+div.main div.content div.product-detail {
+margin-top: 30px;
+}
+
+div.main div.content div.product-detail div.product-title {
+width: 340px;
+float: left;
+}
+
+div.main div.content div.product-detail div.product-title h3 {
+font-size: 18px;
+color: #3d413c;
+margin: 0px;
+padding: 0px;
+}
+
+div.main div.content div.product-detail div.product-title span.section {
+font-size: 11px;
+}
+
+div.main div.content div.product-detail div.product-cena {
+float: right;
+text-align: left;
+}
+
+div.main div.content div.product-detail div.product-cena h4 {
+margin: 0px;
+padding: 0px;
+color: #3d413c;
+font-size: 14px;
+}
+
+div.main div.content div.product-detail div.product-cena strong.prize {
+color: #ff0000;
+font-size: 18px;
+display: block;
+margin-top: 7px;
+}
+
+div.main div.content div.product-detail div.product-cena span.prize-label {
+display: block;
+text-align: right;
+color: #7a7a7a;
+font-weight: bold;
+margin-top: 5px;
+}
+
+div.main div.content div.product-detail div.product-image {
+width: 250px;
+float: left;
+margin-top: 30px;
+}
+
+div.main div.content div.product-detail div.product-info {
+margin-top: 60px;
+line-height: 26px;
+}
+
+
 div.main div.right-column {
 width: 195px;
 padding-top: 20px;
@@ -389,7 +482,6 @@ margin-top: 5px;
 div.main div.right-column div.cart-widget div.cart-data a.cart-link {
 display: block;
 float: left;
-margin-left: 10px;
+margin-left: 25px;
 margin-top: 2px;
 }
-

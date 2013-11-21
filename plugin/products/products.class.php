@@ -45,11 +45,13 @@ class Products {
 		$td_counter = 0;
 		$id_produktu = 0;
 
-		if(isset($_GET['kategorie']))
-			web::$db->query("SELECT id,jmeno_produktu FROM love_eshop_produkt WHERE kategorie =" .$_GET['kategorie']);
+		if(isset($_GET['id']))
+			web::$db->query("SELECT id, jmeno_produktu, kategorie FROM love_eshop_produkt WHERE kategorie =" .$_GET['id']);
 		else
-			web::$db->query("SELECT id,jmeno_produktu FROM love_eshop_produkt");
+			web::$db->query("SELECT id, jmeno_produktu, kategorie FROM love_eshop_produkt");
 		
+
+
 
 		$this->resultSet = web::$db->resultset();
 
@@ -57,6 +59,10 @@ class Products {
 		$output .= "<tr>";
 
 		foreach($this->resultSet as $row) {
+ 
+			web::$db->query("SELECT cena FROM ".database::$prefix."eshop_historie_cen WHERE produkt = ".$row['id'] ." ORDER BY od_data DESC LIMIT 1");
+
+			$prize = web::$db->single();
 
 			if($td_counter == 3)
 				$output .= "<tr>";		
@@ -64,48 +70,40 @@ class Products {
 			$output .= "<td>";
 			$output .= "<div class=\"product\">";
 
-			$kat_id =  (isset($_GET['id'])) ? "id/".$_GET['id']."/" : "";
-
-
-			foreach($row as $key => $value) {
-				if($key == 'id')
-					$id_produktu = $value;
-				else {
-					$output .= " 
-						<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\" class=\"product-title\">" .$value. "</a>
-						<a href=\"images/golf-club-image.png\" title=\"club image\" class=\"product-image\">
-			  				<img src=\"".theme::$completeThemeWebDir."/images/club_image.png\" alt=\"golf club image\"/> 
-			  			</a>
-			  			<div class=\"product-stats\">
-			  				<div class=\"rating\">
-			  					<ul>
-			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
-			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
-			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
-			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
-			  						<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_off.png\" alt=\"star icon off\"/></li>
-			  					</ul>
-			  				</div>
-			  				<div class=\"comments\">
-			  					<img src=\"".theme::$completeThemeWebDir."/images/comment_icon.png\" alt=\"comment icon\"/>
-			  					<span>10</span>
-			  				</div>
-			  				<div class=\"def-footer\"></div>
+			$output .= " 
+				<a href=\"".web::$serverDir."produkt/id/" .$row['id']. "\" class=\"product-title\">" .$row['jmeno_produktu']. "</a>
+				<a href=\"images/golf-club-image.png\" title=\"club image\" class=\"product-image\">
+			  		<img src=\"".theme::$completeThemeWebDir."/images/club_image.png\" alt=\"golf club image\"/> 
+			  	</a>
+			  	<div class=\"product-stats\">
+			  		<div class=\"rating\">
+			  			<ul>
+			  				<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  				<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  				<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  				<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_on.png\" alt=\"star icon on\"/></li>
+			  				<li><img src=\"".theme::$completeThemeWebDir."/images/star_icon_off.png\" alt=\"star icon off\"/></li>
+			  			</ul>
 			  			</div>
-			  			<div class=\"product-prize\">
-			  				<span>Cena: </span>
-			  				<strong>5000,- Kč</strong>
-			  				<div class=\"def-footer\"></div>
+			  			<div class=\"comments\">
+			  				<img src=\"".theme::$completeThemeWebDir."/images/comment_icon.png\" alt=\"comment icon\"/>
+			  				<span>10</span>
 			  			</div>
-			  			<div class=\"product-nav\">
-			  				<a href=\"".web::$serverDir."produkt/id/" .$id_produktu. "\" title=\"product id\">více informací</a>
-			  			</div>
-						<a href=\"".web::$serverDir.$_GET['page']."/".$kat_id."addCart/" .$id_produktu. "\" title=\"add to cart\" class=\"add-cart-button\">
-			  				<img src=\"".theme::$completeThemeWebDir."/images/car_2_icon.png\" alt=\"car icon\"/>
-			  				<span>Přidat do košíku</span>
-			  			</a>";
-				}	
-			}
+			  			<div class=\"def-footer\"></div>
+			  		</div>
+			  		<div class=\"product-prize\">
+			  			<span>Cena: </span>
+			  			<strong>".$prize['cena']." Kč</strong>
+			  			<div class=\"def-footer\"></div>
+			  		</div>
+			  		<div class=\"product-nav\">
+			  			<a href=\"".web::$serverDir."produkt/id/" .$row['id']. "\" title=\"product id\">více informací</a>
+			  		</div>
+					<a href=\"".web::$serverDir.$_GET['page']."/id/".$row['kategorie']."/addCart/" .$row['id']. "\" title=\"add to cart\" class=\"add-cart-button\">
+			  			<img src=\"".theme::$completeThemeWebDir."/images/car_2_icon.png\" alt=\"car icon\"/>
+			  			<span>Přidat do košíku</span>
+			  		</a>";
+	
 
 			$output .= "</div>";
 			$output .= "</td>";
@@ -129,21 +127,47 @@ class Products {
 
 	private function detailProduktu() {
 
-		$output = "<h2>Detail produktu</h2>";
+		$output= "
+			<div class=\"section-title\">
+				<h2>Detail produktu:</h2>
+				<div class=\"content-horizontal-line\"></div>
+			</div>
+		";
 
 
-		web::$db->query("SELECT jmeno_produktu, kategorie, popis_produktu FROM love_eshop_produkt WHERE id =" .$_GET['id']);
+		web::$db->query("SELECT jmeno_produktu, ".database::$prefix."eshop_produkt_kategorie.jmeno_kategorie, popis_produktu, ".database::$prefix."eshop_historie_cen.cena
+			FROM ".database::$prefix."eshop_produkt
+			LEFT JOIN ".database::$prefix."eshop_historie_cen
+			ON ".database::$prefix."eshop_produkt.id = ".database::$prefix."eshop_historie_cen.produkt
+			LEFT JOIN ".database::$prefix."eshop_produkt_kategorie
+			ON ".database::$prefix."eshop_produkt.kategorie = ".database::$prefix."eshop_produkt_kategorie.id
+			WHERE ".database::$prefix."eshop_produkt.id =".$_GET['id']."
+			ORDER BY ".database::$prefix."eshop_historie_cen.od_data DESC
+			LIMIT 1"	
+			);
 
-		$this->resultSet = web::$db->single();
+		$product_data = web::$db->single();
 
-		$output .= "<div>";
-
-		foreach($this->resultSet as $key => $value) {
-				$output .= $value;
-				$output .= "</br>";
-		}
-
-		$output .= "</div>";
+		$output .= "
+			<div class=\"product-detail\">
+				<div class=\"product-title\">
+					<h3>".$product_data['jmeno_produktu']."</h3>
+					<span class=\"section\">Sekce: ".$product_data['jmeno_kategorie']."</span>
+				</div>
+				<div class=\"product-cena\">
+					<h4>Cena:</h4>
+					<strong class=\"prize\">".$product_data['cena'].",- Kč</strong>
+					<span class=\"prize-label\">s dph</span>
+				</div>
+				<div class=\"def-footer\"></div>
+				<div class=\"product-image\">
+					<img src=\"".theme::$completeThemeWebDir."/images/club_image.png\" alt=\"golf club image\" width=\"200\"/> 
+				</div>
+				<div class=\"product-info\">
+					".$product_data['popis_produktu']."
+				</div>
+				<div class=\"def-footer\"></div>
+			</div>";
 
 		return $output;
 	}

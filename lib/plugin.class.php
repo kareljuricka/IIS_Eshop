@@ -43,6 +43,8 @@
 
 		protected function getErrors($type = NULL) {
 
+			$output_ul = "";
+
 			if (!isset($type)) {
 				foreach($this->errors as $type => $errors_array) {
 					$output_ul .= "

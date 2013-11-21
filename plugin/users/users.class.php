@@ -69,11 +69,15 @@ class Users extends Plugin {
 
 		// Pokud je uzivatel prihlasen
 		if (isset($_SESSION['user-id'])) {
-			$output = "Přihlášeno <br />
-			<a href='".web::$serverDir."upravit-osobni-udaje' title='upravit'>Upravit osobní údaje</a><br />
-			<a href='".web::$serverDir."zmena-hesla' title='zmenit heslo'>Změnit heslo</a><br />
-			<a href='".web::$serverDir.$act_page."/action/logout' title='log out'>Odhlásit</a><br />
-			";
+			$output = "
+			<div class=\"user-panel\">
+				<strong class=\"user-panel-title\">Přihlášen</strong>
+				<ul>
+					<li><a href='".web::$serverDir."upravit-osobni-udaje' title='upravit'>Upravit osobní údaje</a></li>
+					<li><a href='".web::$serverDir."zmena-hesla' title='zmenit heslo'>Změnit heslo</a></li>
+					<li><a href='".web::$serverDir.$act_page."/action/logout' title='log out'>Odhlásit</a></li>
+				</ul>
+			</div>";
 			
 			// Odhlaseni uzivatele
 			if (isset($_GET['action']) && $_GET['action'] == 'logout') {
