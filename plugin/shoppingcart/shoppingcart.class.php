@@ -195,7 +195,7 @@ class ShoppingCart {
 		}
 		else if(!empty($_SESSION['nakupni_kosik'])) {
 			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
-				web::$db->query("SELECT jmeno_produktu, cena, id FROM love_eshop_produkt WHERE id = '" .$key. "'");
+				web::$db->query("SELECT jmeno_produktu, cena, id FROM ".database::$prefix."eshop_produkt WHERE id = '" .$key. "'");
 				$result = web::$db->single();
 				$produkt_cena_celkem += $value*$result['cena'];
 
@@ -227,6 +227,8 @@ class ShoppingCart {
 				</td>
 			</tr>
 		</table>
+
+		<a href=\"".web::$serverDir. "objednavky\">Přejít na objednávku</a>
 		";
 
 		return $this->output;

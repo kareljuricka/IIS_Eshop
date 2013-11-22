@@ -8,6 +8,24 @@ class Orders extends Plugin {
 	public static $instance = "";
 	public static $instanceCount = 0;
 
+	private $platba_types = array(
+		"osobne"	=> "Osobně na prodejně",
+		"dobirka"	=> "Dobírkou",
+		"ucet" 		=> "Převodem z účtu"
+	);
+
+	private $doprava_types = array(
+		"osobne"	=> "Osobně na prodejně",
+		"posta"		=> "Poštou",
+		"ppl" 		=> "PPL"
+	);
+
+
+	private $cenik = array (
+		"osobne" => 0,
+		"posta" => 120,
+		"ppl" => 130
+	);
 
 	public function __construct($operation_id) {
 
@@ -221,16 +239,11 @@ class Orders extends Plugin {
 
 			}
 
-			$doprava_types = array(
-				"osobne"	=> "Osobně na prodejně",
-				"posta"		=> "Poštou (+120 Kč)",
-				"ppl" 		=> "PPL (+130 Kč)"
-			);
 
 
-			foreach($doprava_types as $key => $value) {
+			foreach($this->doprava_types as $key => $value) {
 
-				$options_doprava .= "<option value=\"".$key."\" ".(($_SESSION['doprava'] == $key) ? "selected" : "").">".$value."</option>";
+				$options_doprava .= "<option value=\"".$key."\" ".(($_SESSION['doprava'] == $key) ? "selected" : "").">".$value." (+".$this->cenik[$_SESSION['doprava']].",- Kč)</option>";
 			}
 
 			$output = "
@@ -334,13 +347,15 @@ class Orders extends Plugin {
 						".$row['mnozstvi']."
 					</td>
 					<td>
-						".$row['cena']."
+						".$row['cena'].",- Kč
 					</td>
 					<td>
-						".$row['cam']."
+						".$row['cam'].",- Kč
 					</td>
 				</tr>";
 			}
+
+			$cena_celkem = $produkt_cena_celkem + $this->cenik[$_SESSION['doprava']];
 
 			$output = "
 				<h3>Rekapitulace objednávky</h3>
@@ -398,9 +413,9 @@ class Orders extends Plugin {
 				<table>
 					<tr>
 						<th>Doprava:</th>
-						<td>".$_SESSION['doprava']."</td>
+						<td>".$this->doprava_types[$_SESSION['doprava']]." (+".$this->cenik[$_SESSION['doprava']].",- Kč)</td>
 						<th>Platba:</th>
-						<td>".$_SESSION['platba']."</td>
+						<td>".$this->platba_types[$_SESSION['platba']]."</td>
 					</tr>
 				</table>
 				<br />
@@ -414,13 +429,14 @@ class Orders extends Plugin {
 					</tr>
 					".$produkty_list."
 				</table>
+				<hr />
 				<br />
 				<strong>Cena Celkem: </strong>
-				<span>".$produkt_cena_celkem."</span>
+				<span>".$cena_celkem.",- Kč</span>
 				<br /><br />
 				<form method=\"POST\" action=\"\">
 					<input type=\"submit\" name=\"finish_order\" value=\"Objednat\"/>
-				</form><br />";
+				</form>";
 
 		}
 		else 

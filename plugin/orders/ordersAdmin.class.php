@@ -298,7 +298,7 @@ class OrdersAdmin extends Plugin {
 				<td>".$item['jmeno_produktu']."</td>
 				<td>".$item['cena']."</td>
 				<td>".$item['mnozstvi']."</td>
-				<td></td>
+				<td><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/12\" title=\"Editovat položku\">Editovat položku</a></td>
 				<td></td>
 			</tr>";
 
