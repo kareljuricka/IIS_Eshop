@@ -132,7 +132,6 @@ color: #fff;
 
 div.header div.header-content div.user-panel {
 float: right;
-text-align: right;
 }
 
 div.header div.header-content div.user-panel strong.user-panel-title {
@@ -146,7 +145,7 @@ margin-bottom: 10px;
 }
 
 div.header div.header-content div.user-panel ul {
-margin: 0px;
+margin: 0px 0px 0px 20px;
 padding: 0px;
 list-style: none;
 }

@@ -69,8 +69,10 @@ class ShoppingCart {
 		if(isset($_SESSION['user-id'])){
 			web::$db->query("SELECT SUM(mnozstvi) AS mnozstvi, SUM(cena*mnozstvi) AS cena FROM love_eshop_nakupni_kosik, love_eshop_produkt WHERE love_eshop_nakupni_kosik.produkt = love_eshop_produkt.id AND uzivatel = '" .$_SESSION['user-id']. "' GROUP BY uzivatel");
 			$result = web::$db->single();
-			$produkt_mnozstvi = $result['mnozstvi'];
-			$produkt_cena += $result['cena'];
+			if (!empty($result)) {
+				$produkt_mnozstvi = $result['mnozstvi'];
+				$produkt_cena += $result['cena'];
+			}
 		}
 		else if(!empty($_SESSION['nakupni_kosik'])){
 			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
@@ -113,6 +115,9 @@ class ShoppingCart {
 		$produkt_counter = 0;
 		$produkt_id = 0;
 		$produkt_mnozstvi = 0;
+
+		$objednavka_link = "";
+		$kosik_empty = true; 
 
 		if(isset($_GET['id']) && isset($_GET['action']))
 			if(isset($_SESSION['user-id'])) {
@@ -173,6 +178,7 @@ class ShoppingCart {
 			foreach($result as $row) {
 				$produkt_id = $row['id'];
 				$produkt_cena_celkem += $row['cam'];
+				$kosik_empty = false;
 
 				$this->output .=
 				"<tr>
@@ -185,10 +191,10 @@ class ShoppingCart {
 						<a href=\"/skola/iis_eshop/kosik/id/" .$produkt_id. "/action/0" . "\">-</a>
 					</td>
 					<td>
-						".$row['cena']."
+						".$row['cena'].",- Kč
 					</td>
 					<td>
-						".$row['cam']."
+						".$row['cam'].",- Kč
 					</td>
 				</tr>";
 			}
@@ -198,7 +204,7 @@ class ShoppingCart {
 				web::$db->query("SELECT jmeno_produktu, cena, id FROM ".database::$prefix."eshop_produkt WHERE id = '" .$key. "'");
 				$result = web::$db->single();
 				$produkt_cena_celkem += $value*$result['cena'];
-
+				$kosik_empty = false;
 				$this->output .= "
 				<tr>
 					<td>
@@ -210,25 +216,28 @@ class ShoppingCart {
 						<a href=\"/skola/iis_eshop/kosik/id/" .$result['id']."/action/0\">-</a>
 					</td>
 					<td>
-						".$result['cena']."
+						".$result['cena'].",- Kč
 					</td>
 					<td>
-						".$value*$result['cena']."
+						".$value*$result['cena'].",- Kč
 					</td>
 				</tr>
 				";
 			}
 		}
 
+		if (!$kosik_empty)
+			$objednavka_link = "<a href=\"".web::$serverDir. "objednavky/section/dorucovaci-udaje\">Přejít na objednávku</a>";
+
 		$this->output .= "
 			<tr>
 				<td>
-					Suma: " .$produkt_cena_celkem. "
+					Celková cena položek v košíku: " .$produkt_cena_celkem. ",- Kč
 				</td>
 			</tr>
 		</table>
 
-		<a href=\"".web::$serverDir. "objednavky\">Přejít na objednávku</a>
+		".$objednavka_link."
 		";
 
 		return $this->output;
@@ -236,6 +245,7 @@ class ShoppingCart {
 
 
 	public static function preklop() {
+
 		if(!empty($_SESSION['nakupni_kosik'])){
 			foreach ($_SESSION['nakupni_kosik'] as $key => $value) {
 				web::$db->query("SELECT mnozstvi FROM love_eshop_nakupni_kosik WHERE produkt = '" .$key. "' AND uzivatel = '" .$_SESSION['user-id']. "'");

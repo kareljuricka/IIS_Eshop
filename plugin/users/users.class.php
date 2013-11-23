@@ -79,6 +79,7 @@ class Users extends Plugin {
 				<ul>
 					<li><a href='".web::$serverDir."upravit-osobni-udaje' title='upravit'>Upravit osobní údaje</a></li>
 					<li><a href='".web::$serverDir."zmena-hesla' title='zmenit heslo'>Změnit heslo</a></li>
+					<li><a href='".web::$serverDir."objednavky' title='zobrazit objednavky'>Zobrazit své objednávky</a></li>
 					<li><a href='".web::$serverDir.$act_page."/action/logout' title='log out'>Odhlásit</a></li>
 				</ul>
 			</div>";
@@ -142,9 +143,16 @@ class Users extends Plugin {
 
 				// Check errors
 				if (empty($_POST['email'])) $this->errors['register'][] = "Nevyplněná emailová adresa";
+				else {
+					web::$db->query("SELECT COUNT(*) AS pocet_uzivatelu FROM ".database::$prefix."eshop_uzivatel WHERE email='".$_POST['email']."'");
+					$dbdata = web::$db->single();
+					if ($dbdata	['pocet_uzivatelu'] != 0)
+						$this->errors['register'][] = "Účet s tímto emailem již existuje";
+
+				}
 				if (empty($_POST['heslo']) || empty($_POST['heslo2'])) $this->errors['register'][] = "Nevyplněné heslo nebo heslo pro kontrolu";
 				if ($_POST['heslo'] != $_POST['heslo2']) $this->errors['register'][] = "Zadané hesla se liší";	
-			
+
 
 				// If no errors
 				if (!empty($this->errors['register']))
@@ -368,13 +376,13 @@ class Users extends Plugin {
 				if (empty($_POST['heslo_old']) || empty($_POST['heslo']) || empty($_POST['heslo2'])) $this->errors['password-change'][] = "Nejsou vyplněny všechny položky";
 				if ($_POST['heslo'] != $_POST['heslo2']) $this->errors['password-change'][] = "Zadané hesla se liší";	
 					
-				if (!empty($_POST['heslo_old']) && $passwordData['heslo'] != $_POST['heslo_old']) $this->errors['password-change'][] = "Chybné původní heslo";
+				if (!empty($_POST['heslo_old']) && $passwordData['heslo'] != hash("sha256", $_POST['heslo_old'])) $this->errors['password-change'][] = "Chybné původní heslo";
 					
 				if (!empty($this->errors['password-change']))
 					$error_output = $this->getErrors();
 				else {
 					web::$db->query("UPDATE ". database::$prefix ."eshop_uzivatel SET heslo = :heslo WHERE id = '".$_SESSION['user-id']."'");		
-					web::$db->bind(":heslo", $_POST['heslo']);
+					web::$db->bind(":heslo", hash("sha256", $_POST['heslo']));
 					
 					web::$db->execute();
 					$output = "Heslo bylo úspěšně změněno";
@@ -435,7 +443,9 @@ class Users extends Plugin {
 			}
 			else {
 					$_SESSION['user-id'] = $userLoginData['id'];
+					//ShoppingCart::preklop();
 					globals::redirect(web::$serverDir);
+
 			}
 
 		}

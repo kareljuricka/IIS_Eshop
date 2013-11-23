@@ -37,20 +37,19 @@ class ProductsAdmin extends Plugin {
 			<div class=\"def-footer\"></div>
 		</div>";
 
-		if (isset($action))
-			switch($action) {
-				case 'add':
-					$this->output .= $this->addProduct();
-					break;
-			}
-		
-		else if (!empty($_GET['edit']))
-			$this->output .= $this->editProduct($_GET['edit']);
+		switch($action) {
+			case 'add':
+				$this->output .= $this->addProduct();
+				break;
+			case 'edit':
+				$this->output .= $this->editProduct($_GET['id']);
+				break;
+			case 'delete':
+				$this->output .= $this->deleteProduct($_GET['id']);
+				break;	
+		}
 
-		else if (!empty($_GET['delete']))
-			$this->output .= $this->deleteProduct();
-		
-		else 
+		if ($action != 'add' && $action !='edit')
 			$this->output .= $this->productList();
 	}
 
@@ -182,7 +181,7 @@ class ProductsAdmin extends Plugin {
 
 			else {
 
-				web::$db->query("UPDATE love_eshop_produkt SET
+				web::$db->query("UPDATE ".database::$prefix."eshop_produkt SET
 				jmeno_produktu=:jmeno_produktu, vyrobce=:vyrobce, kategorie=:kategorie,
 				popis_produktu=:popis_produktu, akce=:akce, novinka=:novinka,
 				mnozstvi_na_sklade=:mnozstvi_na_sklade, cena=:cena WHERE id='" .$product_id. "'");
@@ -208,7 +207,7 @@ class ProductsAdmin extends Plugin {
 
 		if ($state == UPDATE_FORM) {
 
-			web::$db->query("SELECT * FROM love_eshop_produkt WHERE id='" .$product_id. "'");		
+			web::$db->query("SELECT * FROM ".database::$prefix."eshop_produkt WHERE id='" .$product_id. "'");		
 			web::$db->execute();
 
 			$result = web::$db->single();
@@ -274,7 +273,7 @@ class ProductsAdmin extends Plugin {
 
 	function deleteProduct() {
 
-		web::$db->query("DELETE FROM love_eshop_produkt WHERE id='" .$_GET['delete']. "'");
+		web::$db->query("DELETE FROM ".database::$prefix."eshop_produkt WHERE id='" .$_GET['delete']. "'");
 		web::$db->execute();
 		globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
 
@@ -285,7 +284,7 @@ class ProductsAdmin extends Plugin {
 
 		$vypis = "";
 
-		web::$db->query("SELECT * FROM love_eshop_produkt");		
+		web::$db->query("SELECT * FROM ".database::$prefix."eshop_produkt");		
 		web::$db->execute();
 		$result = web::$db->resultset();
 
@@ -333,7 +332,7 @@ class ProductsAdmin extends Plugin {
 					" .$row['mnozstvi_na_sklade']. "
 				</td>
 				<td>
-					<a href=\"".admin::$serverAdminDir."plugins/type/Products/edit/" .$row['id']. "\">Editovat</a>
+					<a href=\"".admin::$serverAdminDir."plugins/type/Products/action/edit/id/" .$row['id']. "\">Editovat</a>
 				</td>
 			</tr>
 			";

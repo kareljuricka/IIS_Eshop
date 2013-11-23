@@ -10,10 +10,16 @@ class OrdersAdmin extends Plugin {
 	public static $instance = "";
 	public static $instanceCount = 0;
 
-	private $state_array = array(
+	private $state_types = array(
 		0 => "Nezpracováno",
 		1 => "Zpracováno",
 		2 => "Doručeno"
+	);
+
+	private $doprava_types = array(
+		"osobne"	=> "Osobně na prodejně",
+		"posta"		=> "Poštou",
+		"ppl" 		=> "PPL"
 	);
 
 	private $platba_types = array(
@@ -22,12 +28,10 @@ class OrdersAdmin extends Plugin {
 		"ucet" 		=> "Převodem z účtu"
 	);
 
-	private $doprava_types = array(
-				"osobne"	=> "Osobně na prodejně",
-				"posta"		=> "Poštou (+120 Kč)",
-				"ppl" 		=> "PPL (+130 Kč)"
-			);
-
+	private $cenik = array (
+		"posta" => 120,
+		"ppl" => 130
+	);
 
 	public function __construct() {
 
@@ -51,8 +55,12 @@ class OrdersAdmin extends Plugin {
 
 		if (!empty($_GET['edit']))
 			$this->output .= $this->editOrder($_GET['edit']);
-		else if (!empty($_GET['detail']))
-			$this->output .= $this->detailOrder($_GET['detail']);
+		else if (!empty($_GET['detail'])) {
+			if (!empty($_GET['item']))
+				$this->output .= $this->detailItem($_GET['item']);
+			else
+				$this->output .= $this->detailOrder($_GET['detail']);
+		}
 		else 
 			$this->output .= $this->orderList();
 
@@ -139,7 +147,7 @@ class OrdersAdmin extends Plugin {
 
 			$result = web::$db->single();
 
-			foreach($this->state_array as $key => $value) {
+			foreach($this->state_types as $key => $value) {
 				$state_li .= "<option value='".$key."' ".(($key == $result['stav']) ? "selected" : "").">".$value."</option>";
 			}
 
@@ -280,7 +288,7 @@ class OrdersAdmin extends Plugin {
 		
 		$items_data = "";
 
-		web::$db->query("SELECT produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_produkt.id as product_id
+		web::$db->query("SELECT produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
 			FROM ".database::$prefix."eshop_objednavka_produkt
 			LEFT JOIN ".database::$prefix."eshop_produkt
 			ON ".database::$prefix."eshop_produkt.id = produkt
@@ -289,8 +297,11 @@ class OrdersAdmin extends Plugin {
 
 		$order_items = web::$db->resultset();
 
+		$produkt_cena_celkem = 0;
+
 		foreach($order_items as $item) {
 
+			$produkt_cena_celkem += $item['cena_celkem'];
 
 			$items_data .= "
 			<tr>
@@ -298,10 +309,22 @@ class OrdersAdmin extends Plugin {
 				<td>".$item['jmeno_produktu']."</td>
 				<td>".$item['cena']."</td>
 				<td>".$item['mnozstvi']."</td>
+				<td>".$item['cena_celkem']."</td>
 				<td><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/12\" title=\"Editovat položku\">Editovat položku</a></td>
 				<td></td>
 			</tr>";
 
+		}
+
+		$cena_celkem = 0;
+
+		if (array_key_exists($result['doprava'], $this->cenik)) {
+			$cena_celkem = $produkt_cena_celkem + $this->cenik[$result['doprava']];
+			$cena_out = "(+".$this->cenik[$result['doprava']].",- Kč)";
+
+		}
+		else {
+			$cena_celkem = $produkt_cena_celkem;
 		}
 
 
@@ -311,7 +334,7 @@ class OrdersAdmin extends Plugin {
 				<h4>Obecné informace k objednávce</h4>
 				<div>
 					<strong>Stav:</strong>
-					<span>".$this->state_array[$result['stav']]."</span>
+					<span>".$this->state_types[$result['stav']]."</span>
 				</div>
 				<div>
 					<strong>Datum vytvoření:</strong>
@@ -359,7 +382,7 @@ class OrdersAdmin extends Plugin {
 				<h4>Doprava a platba</h4>
 				<div>
 					<strong>Doprava:</strong>
-					<span>".$this->doprava_types[$result['doprava']]."</span>
+					<span>".$this->doprava_types[$result['doprava']]." ".$cena_out."</span>
 				</div>
 				<div>
 					<strong>Platba:</strong>
@@ -372,13 +395,18 @@ class OrdersAdmin extends Plugin {
 					<tr>
 						<th>ID produktu</th>
 						<th>Název produktu</th>
-						<th>Cena</th>
+						<th>Cena / kus</th>
 						<th>Množství</th>
+						<th>Celková cena produktu</th>
 						<th>Upravit</th>
 						<th>Smazat</th>
 					</tr>
 					".$items_data."
 				</table>
+				<hr />
+				<br />
+				<strong>Cena Celkem: </strong>
+				<span>".$cena_celkem.",- Kč</span>
 			</div>
 		";
 
@@ -439,7 +467,7 @@ class OrdersAdmin extends Plugin {
 					" .$row['jmeno']." ".$row['prijmeni']."
 				</td>
 				<td>
-					" .$this->state_array[$row['stav']] ."
+					" .$this->state_types[$row['stav']] ."
 				</td>
 				<td style=\"min-width: 60px\">
 					" .$row['datum_vytvoreni']. "
@@ -500,6 +528,13 @@ class OrdersAdmin extends Plugin {
 		$vypis .= "</div>";
 
 		return $vypis;
+	}
+
+	private function detailItem() {
+
+		$output = "Detail editace polozky";
+
+		return $output;	
 	}
 
 	public function getOutput() {

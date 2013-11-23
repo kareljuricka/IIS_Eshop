@@ -74,6 +74,8 @@ class Web {
 		// Inicialize theme
 		$this->theme = $this->webThemeInit();
 
+		//$this->pluginInit();
+
 		// Inicialize modules
 		$this->ModulesInit();
 
@@ -162,6 +164,25 @@ class Web {
 
 		return $missingPage;
 
+	}
+
+	/* Plugins init
+	*/
+	private function pluginInit() {
+
+		self::$db->query("SELECT name FROM ".database::$prefix."plugin");
+		$result = self::$db->resultset();
+
+		foreach($result as $pluginInfo) {	
+			if (!class_exists($pluginInfo['name'])) { 	
+				autoLoading::$basedir = self::$dir;
+				autoLoading::$classPluginDir = "plugin/".strtolower($pluginInfo['name']);	
+
+				echo autoLoading::$classPluginDir."<br />";
+				// Autoload plugin files
+				spl_autoload_register(array('autoLoading', 'classPluginLoader'));
+			}
+		}
 	}
 
 	/* Init modules on webpage

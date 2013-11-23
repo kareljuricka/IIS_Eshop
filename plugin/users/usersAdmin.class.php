@@ -37,30 +37,26 @@ class UsersAdmin extends Plugin {
 			<div class=\"def-footer\"></div>
 		</div>";
 
-		if (!empty($_GET['activate'])) {
-			$this->setUserStatus($_GET['activate'], 1);
+		switch($action) {
+			case 'add':
+				$this->output .= $this->addUser();
+				break;
+			case 'edit':
+				$this->output .= $this->editUser($_GET['id']);
+				break;
+			case 'activate':
+				$this->setUserStatus($_GET['id'], 1);
+				break;
+			case 'deactivate':
+				$this->setUserStatus($_GET['id'], 0);
+				break;
+			case 'delete':
+				$this->output .= $this->deleteUser();
+				break;	
 		}
 
-		else if (!empty($_GET['deactivate'])) {
-			$this->setUserStatus($_GET['deactivate'], 0);
-		}
-
-		if (isset($action))
-			switch($action) {
-				case 'add':
-					$this->output .= $this->addUser();
-					break;
-			}
-
-		else if (!empty($_GET['edit']))
-			$this->output .= $this->editUser($_GET['edit']);
-
-		else if (!empty($_GET['delete']))
-			$this->output .= $this->deleteUser();
-		
-		else 
+		if ($action != 'add' && $action !='edit')
 			$this->output .= $this->usersList();
-		
 
 	}
 
@@ -80,13 +76,13 @@ class UsersAdmin extends Plugin {
 			if ($user_data['aktivni'] == 0)
 				$aktivni_output = "
 					<span>Neaktivní</span><br/>
-					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/activate/".$user_data['id']."\" title=\"aktivovat\">Aktivovat</a>
+					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/activate/id/".$user_data['id']."\" title=\"aktivovat\">Aktivovat</a>
 				";
 
 			else {
 				$aktivni_output = "
 					<span>Aktivni</span><br />
-					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/deactivate/".$user_data['id']."\" title=\"aktivovat\">Deaktivovat</a>
+					<a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/deactivate/id/".$user_data['id']."\" title=\"aktivovat\">Deaktivovat</a>
 				";
 			}
 
@@ -98,7 +94,7 @@ class UsersAdmin extends Plugin {
 					<td>".$user_data['novinky']."</td>
 					<td>Objednávky</td>
 					<td>
-						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/edit/".$user_data['id']."' title='add user'>Upravit</a>
+						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/edit/id/".$user_data['id']."' title='add user'>Upravit</a>
 					</td>
 
 				</tr>
