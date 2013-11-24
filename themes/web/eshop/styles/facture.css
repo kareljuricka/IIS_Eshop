@@ -1,0 +1,83 @@
+body {
+font-size: 12px	;
+width: 100%;
+}
+
+div.def-footer {
+clear: both;
+}
+
+div.faktura {
+width: 100%;
+padding-top: 20px;
+}
+
+div.adresa-dodavatel {
+float: left;
+width: 300px;
+}
+
+
+div.adresa-klient {
+float: right;
+width: 175px;
+}
+
+
+div.adresa-udaje {
+margin-top: 10px;
+}
+
+div.adresa-udaje div {
+line-height: 20px;
+
+}
+
+div.adresa-polozky {
+margin-top: 20px;
+}
+
+div.faktura-polozky {
+margin-top: 30px;
+}
+
+div.faktura-polozky table {
+margin-top: 10px;
+padding: 0px;
+border: 1px solid black;
+border-collapse: collapse;
+width: 100%;
+}
+
+div.faktura-polozky table th {
+text-align: left;
+border: 1px solid black;
+padding: 5px;
+}
+
+div.faktura-polozky table td {
+padding: 5px;
+border: 1px solid black;
+}
+
+div.celkova-cena {
+margin-top: 20px;
+vertical-align: bottom;
+}
+
+div.doprava-platba {
+margin-top: 30px;
+margin-bottom: 20px;
+}
+
+div.doprava-platba div.doprava {
+float: left;
+width: 50%;
+}
+
+div.doprava-platba div.platba {
+float: right;
+width: 50%;
+text-align: right;
+}
+

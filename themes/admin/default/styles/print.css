@@ -1,0 +1,7 @@
+header, h2.subtitle, div.sub-nav, div.action-nav, .notprintable {
+display: none;
+}
+
+div.printable {
+display: block;
+}

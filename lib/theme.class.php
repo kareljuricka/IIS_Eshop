@@ -21,6 +21,8 @@ class Theme {
 	// Full path to admin theme
 	public static $completeThemeAdminDir = "";
 
+	public static $absoluteThemeWebDir = "";
+
 
 	// Filename of page theme
 	private $filename = '';
@@ -52,6 +54,7 @@ class Theme {
 
 
 		self::$completeThemeWebDir = web::$serverDir . theme::$themesWebDir . "/" . theme::$activeTheme;
+		self::$absoluteThemeWebDir = web::$dir . theme::$themesWebDir . "/" . theme::$activeTheme;
 		self::$completeThemeAdminDir = admin::$serverDir . theme::$themesAdminDir . "/" . theme::$activeAdminTheme;
 		
 		// Set theme full directory

@@ -10,7 +10,7 @@
 			$submenu = self::generateAdminSubMenu();
 
 			$output = "
-				<h2>".$title."</h2>
+				<h2 class=\"subtitle\">".$title."</h2>
 	  			<div class=\"sub-nav\">
 	  				".$submenu."
 	  			</div>

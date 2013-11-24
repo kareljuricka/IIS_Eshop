@@ -13,7 +13,8 @@
 	    <meta name="copyright" content="(c)2013 design & code by Karel Juřička">
 	    
 	    <link rel="stylesheet" href="<% absolute_path %>/styles/styles.css" type="text/css" media="screen"/>
-			  
+			<link rel="stylesheet" href="<% absolute_path %>/styles/print.css" type="text/css" media="print"/> 
+
 	    <title>Admin</title>
   	</head>
   	<body>

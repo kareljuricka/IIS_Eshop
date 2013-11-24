@@ -83,7 +83,9 @@ class Orders extends Plugin {
 
 
 				if (empty($section)) {
-					if (isset($_GET['detail']))
+					if (isset($_GET['faktura'])) 
+						$this->genFacture();
+					else if (isset($_GET['detail']))
 						$output = $this->orderDetail($_GET['detail']);
 					else
 						$output = $this->ordersData();
@@ -131,7 +133,7 @@ class Orders extends Plugin {
 
 		$rows = "";
 
-		web::$db->query("SELECT id, uzivatel, stav, datum_vytvoreni, datum_zaplaceni, datum_odeslani, doprava, platba,
+		web::$db->query("SELECT id, uzivatel, stav, datum_vytvoreni, datum_zaplaceni, datum_odeslani, doprava,
 		dodaci_jmeno, dodaci_prijmeni,
 		dodaci_mesto, dodaci_ulice, dodaci_cislo_popisne, dodaci_PSC
 		FROM ".database::$prefix."eshop_objednavka
@@ -144,7 +146,9 @@ class Orders extends Plugin {
 
 			web::$db->query("SELECT SUM(cena * mnozstvi) AS celkova_cena FROM ".database::$prefix."eshop_objednavka_produkt WHERE objednavka = '".$orders['id']."'");
 
-			$cena = web::$db->single();
+			$cena_db = web::$db->single();
+
+			$cena = (array_key_exists($orders['doprava'], $this->cenik)) ? $cena_db['celkova_cena'] + $this->cenik[$orders['doprava']] : $cena_db['celkova_cena'];
 
 			$rows .= "
 			<tr>
@@ -153,7 +157,7 @@ class Orders extends Plugin {
 				<td>".$orders['datum_vytvoreni']."</td>
 				<td>".$orders['datum_zaplaceni']."</td>
 				<td>".$orders['datum_odeslani']."</td>
-				<td>".$cena['celkova_cena'].",- Kč</td>
+				<td>".$cena.",- Kč</td>
 				<td><a href=\"".web::$serverDir."objednavky/detail/".$orders['id']."\" title=\"Detail\">Detail</a></td>
 			</tr>";
 			
@@ -234,8 +238,10 @@ class Orders extends Plugin {
 		$faktura_link = "";
 
 		if (isset($result['datum_zaplaceni']))
-			$faktura_link = "<a href=\"\" title=\"faktura\">Faktura</a>";
+			$faktura_link = "<a href=\"".web::$serverDir."objednavky/faktura/".$result['id']."\" title=\"faktura\">Faktura</a>";
 
+
+		$cena_out = "";
 
 
 		if (array_key_exists($result['doprava'], $this->cenik)) {
@@ -348,6 +354,15 @@ class Orders extends Plugin {
 		$result = web::$db->single();
 
 		return $output;
+	}
+
+	private function genFacture() {
+
+
+		require(web::$dir."plugin/orders/ordersFacture.class.php");
+
+		$facture = new Facture($_GET['faktura']);
+		$facture->showFacture();
 	}
 
 	private function personalData() {

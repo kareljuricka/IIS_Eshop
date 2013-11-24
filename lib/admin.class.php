@@ -245,7 +245,8 @@ class Admin extends Web {
 	public static function settingContent()	{
 
 		$settingsOutput = "
-			<h2>Základní nastavení</h2>
+
+			<h2 class=\"subtitle\">Základní nastavení</h2>
   			<div class=\"sub-nav\">
   				<ul>
   					<li><a href=\"\" title=\"Obecné nastavení\">Obecné nastavení</a></li>

@@ -53,7 +53,9 @@ class OrdersAdmin extends Plugin {
 			<div class=\"def-footer\"></div>
 		</div>";
 
-		if (!empty($_GET['edit']))
+		if (isset($_GET['faktura'])) 
+			$this->genFacture();
+		else if (!empty($_GET['edit']))
 			$this->output .= $this->editOrder($_GET['edit']);
 		else if (!empty($_GET['detail'])) {
 			if (!empty($_GET['item']))
@@ -307,16 +309,17 @@ class OrdersAdmin extends Plugin {
 			<tr>
 				<td>".$item['product_id']."</td>
 				<td>".$item['jmeno_produktu']."</td>
-				<td>".$item['cena']."</td>
+				<td>".$item['cena'].",- Kč</td>
 				<td>".$item['mnozstvi']."</td>
-				<td>".$item['cena_celkem']."</td>
-				<td><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/12\" title=\"Editovat položku\">Editovat položku</a></td>
-				<td></td>
+				<td>".$item['cena_celkem'].",- Kč</td>
+				<td class=\"notprintable\"><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/12\" title=\"Editovat položku\">Editovat položku</a></td>
+				<td class=\"notprintable\"></td>
 			</tr>";
 
 		}
 
 		$cena_celkem = 0;
+		$cena_out = "";
 
 		if (array_key_exists($result['doprava'], $this->cenik)) {
 			$cena_celkem = $produkt_cena_celkem + $this->cenik[$result['doprava']];
@@ -329,86 +332,89 @@ class OrdersAdmin extends Plugin {
 
 
 		$output = "
-			<h3>Detail objednávky</h3>
-			<div class=\"section-detail\">
-				<h4>Obecné informace k objednávce</h4>
-				<div>
-					<strong>Stav:</strong>
-					<span>".$this->state_types[$result['stav']]."</span>
+			<div class=\"printable\">
+				<a href=\"\" onClick=\"window.print();return false\" class=\"printlink notprintable\">Tisknout</a>
+				<a href=\"".admin::$serverAdminDir."plugins/type/Orders/faktura/".$result['id']."\" class=\"printlink notprintable\">Faktura</a>
+				<h3>Detail objednávky: OBJ-".$result['id']."</h3>
+				<div class=\"section-detail\">
+					<h4>Obecné informace k objednávce</h4>
+					<div>
+						<strong>Stav:</strong>
+						<span>".$this->state_types[$result['stav']]."</span>
+					</div>
+					<div>
+						<strong>Datum vytvoření:</strong>
+						<span>".$result['datum_vytvoreni']."</span>
+					</div>
+					<div>
+						<strong>Datum odeslání:</strong>
+						<span>".$result['datum_odeslani']."</span>
+					</div>
+					<div>
+						<strong>Datum zaplacení:</strong>
+						<span>".$result['datum_zaplaceni']."</span>
+					</div>
 				</div>
-				<div>
-					<strong>Datum vytvoření:</strong>
-					<span>".$result['datum_vytvoreni']."</span>
+				<div class=\"section-detail\">
+					<h4>Základní údaje</h4>
+					<div>
+						<strong>Uživatel:</strong>
+						<span>".$result['jmeno']."</span>
+					</div>
+					<div>
+						<strong>Email:</strong>
+						<span>".$result['email']."</span>
+						<strong>Tel. číslo:</strong>
+						<span>".$result['mobil']."</span>
+					</div>
+				</div>	
+				<div class=\"section-detail\">
+					<h4>Fakturační adresa</h4>
+					<div>
+						<strong>Ulice:</strong>
+						<span>".$result['ulice']."</span>
+						<strong>Číslo popisné:</strong>
+						<span>".$result['cislo_popisne']."</span>
+					</div>
+					<div>
+						<strong>Město:</strong>
+						<span>".$result['mesto']."</span>
+						<strong>PSČ:</strong>
+						<span>".$result['psc']."</span>
+					</div>
 				</div>
-				<div>
-					<strong>Datum odeslání:</strong>
-					<span>".$result['datum_odeslani']."</span>
+				".$dodaci_adresa."
+				<div class=\"section-detail\">
+					<h4>Doprava a platba</h4>
+					<div>
+						<strong>Doprava:</strong>
+						<span>".$this->doprava_types[$result['doprava']]." ".$cena_out."</span>
+					</div>
+					<div>
+						<strong>Platba:</strong>
+						<span>".$this->platba_types[$result['platba']]."</span>
+					</div>
 				</div>
-				<div>
-					<strong>Datum zaplacení:</strong>
-					<span>".$result['datum_zaplaceni']."</span>
+				<div class=\"db-output-scroll\">
+					<h4>Položky objednávky</h4>
+					<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
+						<tr>
+							<th>ID produktu</th>
+							<th>Název produktu</th>
+							<th>Cena / kus</th>
+							<th>Množství</th>
+							<th>Celková cena produktu</th>
+							<th class=\"notprintable\">Upravit</th>
+							<th class=\"notprintable\">Smazat</th>
+						</tr>
+						".$items_data."
+					</table>
+					<hr />
+					<br />
+					<strong>Cena Celkem: </strong>
+					<span>".$cena_celkem.",- Kč</span>
 				</div>
-			</div>
-			<div class=\"section-detail\">
-				<h4>Základní údaje</h4>
-				<div>
-					<strong>Uživatel:</strong>
-					<span>".$result['jmeno']."</span>
-				</div>
-				<div>
-					<strong>Email:</strong>
-					<span>".$result['email']."</span>
-					<strong>Tel. číslo:</strong>
-					<span>".$result['mobil']."</span>
-				</div>
-			</div>	
-			<div class=\"section-detail\">
-				<h4>Fakturační adresa</h4>
-				<div>
-					<strong>Ulice:</strong>
-					<span>".$result['ulice']."</span>
-					<strong>Číslo popisné:</strong>
-					<span>".$result['cislo_popisne']."</span>
-				</div>
-				<div>
-					<strong>Město:</strong>
-					<span>".$result['mesto']."</span>
-					<strong>PSČ:</strong>
-					<span>".$result['psc']."</span>
-				</div>
-			</div>
-			".$dodaci_adresa."
-			<div class=\"section-detail\">
-				<h4>Doprava a platba</h4>
-				<div>
-					<strong>Doprava:</strong>
-					<span>".$this->doprava_types[$result['doprava']]." ".$cena_out."</span>
-				</div>
-				<div>
-					<strong>Platba:</strong>
-					<span>".$this->platba_types[$result['platba']]."</span>
-				</div>
-			</div>
-			<div class=\"db-output-scroll\">
-				<h4>Položky objednávky</h4>
-				<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
-					<tr>
-						<th>ID produktu</th>
-						<th>Název produktu</th>
-						<th>Cena / kus</th>
-						<th>Množství</th>
-						<th>Celková cena produktu</th>
-						<th>Upravit</th>
-						<th>Smazat</th>
-					</tr>
-					".$items_data."
-				</table>
-				<hr />
-				<br />
-				<strong>Cena Celkem: </strong>
-				<span>".$cena_celkem.",- Kč</span>
-			</div>
-		";
+			</div>";
 
 		return $output;
 
@@ -427,6 +433,8 @@ class OrdersAdmin extends Plugin {
 			ON uzivatel = ".database::$prefix."eshop_uzivatel.id");		
 
 		$result = web::$db->resultset();
+
+
 
 		$vypis .= "
 			<h3>Výpis objednávek</h3>
@@ -451,6 +459,7 @@ class OrdersAdmin extends Plugin {
 						<th>Dodaci cislo popisne</th>
 						<th>Dodaci mesto</th>
 						<th>Dodaci PSC</th>
+						<th>Celkova cena</th>
 						<th>Detail objednávky</th>
 						<th>Editovat objednavku</th>
 					</tr>
@@ -458,6 +467,13 @@ class OrdersAdmin extends Plugin {
 		";
 
 		foreach ($result as $row) {
+
+			web::$db->query("SELECT SUM(cena * mnozstvi) AS celkova_cena FROM ".database::$prefix."eshop_objednavka_produkt WHERE objednavka = '".$row['id']."'");
+
+			$cena_db = web::$db->single();
+
+			$cena = (array_key_exists($row['doprava'], $this->cenik)) ? $cena_db['celkova_cena'] + $this->cenik[$row['doprava']] : $cena_db['celkova_cena'];
+
 			$vypis .= "
 			<tr>
 				<td>
@@ -514,7 +530,10 @@ class OrdersAdmin extends Plugin {
 				<td>
 					" .$row['dodaci_PSC']. "
 				</td>
-				<td>
+				<td style=\"min-width: 90px\">
+					" .$cena .",- Kč
+				</td>	
+				<td> 
 					<a href=\"".admin::$serverAdminDir."plugins/type/Orders/detail/" .$row['id']. "\">Detail objednávky</a>
 				</td>
 				<td>
@@ -528,6 +547,15 @@ class OrdersAdmin extends Plugin {
 		$vypis .= "</div>";
 
 		return $vypis;
+	}
+
+	private function genFacture() {
+
+
+		require(web::$dir."plugin/orders/ordersFacture.class.php");
+
+		$facture = new Facture($_GET['faktura']);
+		$facture->showFacture();
 	}
 
 	private function detailItem() {
