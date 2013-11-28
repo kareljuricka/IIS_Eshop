@@ -613,9 +613,9 @@ class OrdersAdmin extends Plugin {
 					</form>
 				";
 
-			return $output;	
 		}
 
+		return $output;	
 	}
 
 	public function getOutput() {

@@ -129,6 +129,10 @@ margin-right: 30px;
 margin-top: 60px;
 }
 
+header div.title a {
+text-decoration: none;
+}
+
 header div.title h1 {
 font-size: 18px;
 color: #00bfff;
@@ -297,5 +301,35 @@ color: red;
 
 div.main div.content div.error-block ul li {
 line-height: 20px;
+}
+
+div.admin-status {
+float: right;
+margin: 30px 30px;
+}
+
+div.admin-status h3 {
+font-size: 12px;
+margin: 0px;
+}
+
+div.admin-status div.admin-user-panel ul {
+margin: 5px 0px 0px 0px;
+padding: 0px;
+list-style: none;
+}
+
+div.admin-status div.admin-user-panel ul li {
+float: left;
+margin-left: 5px;
+}
+
+div.admin-status div.admin-user-panel ul li a {
+display: block;
+padding: 10px;
+background: #323e48;
+color: #fff;
+font-size: 11px;
+text-decoration: none;
 }
 

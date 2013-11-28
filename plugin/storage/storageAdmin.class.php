@@ -296,7 +296,7 @@ class StorageAdmin extends Plugin {
 
 		web::$db->query("SELECT love_eshop_objednavka_dodavky.id AS id, love_eshop_produkt.jmeno_produktu AS produkt, love_eshop_objednavka_dodavky.mnozstvi AS mnozstvi, love_eshop_dodavatel.jmeno AS jmeno, love_eshop_dodavatel.doba_dostupnosti AS dostupnost, love_eshop_objednavka_dodavky.stav AS stav, love_eshop_objednavka_dodavky.datum_vytvoreni AS vytvoreni, love_eshop_objednavka_dodavky.datum_zpracovani AS zpracovani, love_eshop_objednavka_dodavky.datum_odeslani AS odeslani, love_eshop_objednavka_dodavky.datum_doruceni AS doruceni
 			FROM ".database::$prefix."eshop_objednavka_dodavky,".database::$prefix."eshop_dodavatel, ".database::$prefix."eshop_produkt
-			WHERE love_eshop_objednavka_dodavky.dodavatel = love_eshop_dodavatel.id AND love_eshop_dodavatel.produkt = love_eshop_produkt.id");		
+			WHERE love_eshop_objednavka_dodavky.dodavatel = love_eshop_dodavatel.id AND love_eshop_dodavatel.produkt = love_eshop_produkt.id ORDER BY id DESC");		
 
 		$result = web::$db->resultset();
 

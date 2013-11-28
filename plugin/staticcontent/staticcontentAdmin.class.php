@@ -110,7 +110,7 @@ class StaticContentAdmin extends Plugin {
 					$output = "Údaje byly úspěšně upraveny";
 
 					web::$db->bind(":static_name", htmlspecialchars($_POST['static_name']));
-					web::$db->bind(":static_data", htmlspecialchars($_POST['static_data']));
+					web::$db->bind(":static_data", $_POST['static_data']);
 			
 					web::$db->execute();
 
@@ -131,10 +131,12 @@ class StaticContentAdmin extends Plugin {
 						<legend>Editace statického obsahu</legend>
 						<div>
 							<label for=\"static_name\">*Název:</label><input type=\"text\" name=\"static_name\" id=\"static_name\" value=\"".$static_data['name']."\"/>
+							<div class=\"def-footer\"></div>
 						</div>
 						<div>
 							<label for=\"static_data\">*Data:</label>
-							<textarea align=\"left\" name=\"static_data\" id=\"static_data\">".$static_data['data']."</textarea>
+							<div class=\"def-footer\"></div>
+							<textarea align=\"left\" name=\"static_data\" id=\"static_data\" class=\"ckeditor\">".$static_data['data']."</textarea>
 						</div>
 					</fieldset>
 					<div><input type='submit' value='Upravit' name='static_content_update'/></div>

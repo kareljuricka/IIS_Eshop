@@ -29,12 +29,19 @@ class Module {
 				break;
 
 			case 'menu':
-
 				$this->moduleOutput[$modulename] .= (!$admin) ? web::genMenu() : admin::genMenu(); 
 				break;
 
 			case 'admin_user_status':
 				$this->moduleOutput[$modulename] .= admin::adminUserStatus();
+				break;
+
+			case 'admin_url':
+				$this->moduleOutput[$modulename] .= admin::$adminUrl;
+				break;
+			case 'web_path':
+				$this->moduleOutput[$modulename] .= admin::$serverDir;
+				break;
 
 			// others modules -> get plugins	
 			default:

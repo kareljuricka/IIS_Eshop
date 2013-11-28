@@ -231,7 +231,7 @@ class UsersAdmin extends Plugin {
 	}
 
 
-		/* Update formular */
+	/* Update formular */
 	protected function editUser($user_id) {
 
 		$state = UPDATE_FORM;

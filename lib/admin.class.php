@@ -12,7 +12,9 @@ class Admin extends Web {
 		'admin_login' => '',
 		'content' => '',
 		'menu' => '',
-		'admin_user_status' => ''
+		'admin_user_status' => '',
+		'admin_url' => '',
+		'web_path' => ''
 	);
 
 	private $adminUserData;
@@ -74,7 +76,7 @@ class Admin extends Web {
 	 */
 	public static function adminUserStatus() {
 
-		$userStatus = "Admin user status <br />";
+		$userStatus = "<h3>Admin user status </h3>";
 
 		$userStatus .= "
 		<div class=\"admin-user-panel\">
@@ -104,7 +106,7 @@ class Admin extends Web {
 
 				$adminLoginData = self::$db->single();
 
-				if ($_POST['password'] != $adminLoginData['password']) {
+				if (hash('sha256', htmlspecialchars($_POST['password'])) != $adminLoginData['password']) {
 					$errors .= "Wrong password";
 				}
 
@@ -140,70 +142,18 @@ class Admin extends Web {
 		return $formOutput;
 	}
 
-
-	/* Generate menu
-	 * @return menu output
-	 */
-
-	/* autoload from DB
-	public static function genMenu()	{
-
-		$menuLi = "";
-
-		self::$db->query("SELECT id, name, title, parent_id, rank FROM ".database::$prefix . "admin_menu ORDER BY rank");
-
-		$data = self::$db->resultset();
-
-		self::$db->query("SELECT id, name, title FROM ".database::$prefix . "plugin WHERE admin != 0");
-
-		$plugindata = self::$db->resultset();
-
-		foreach($data as $key => $value) {
-			// Prvně zobrazí všechny rodiče
-			if (is_null($value['parent_id'])) {
-				$menuLi .= "<li><a href=\"". admin::$adminUrl . "/" . $value['name']."\" title=\"". $value['title']."\">" . $value['title'] . "</a>";
-				$submenuLi = "";
-
-				// Vypis pluginu
-				if ($value['name'] == 'plugins')
-					foreach($plugindata as $key_child => $value_child) {
-						$submenuLi .= "<li><a href=\"". admin::$adminUrl . "/plugins/type/" . $value_child['name']."\" title=\"\">" . $value_child['title'] ."</a></li>";
-					}
-				// Vypis ostatnich submenu
-				else
-					foreach ($data as $key_child => $value_child) {
-						if ($value_child['parent_id'] == $value['id'])
-							$submenuLi .= "<li><a href=\"". admin::$adminUrl . "/" . $value_child['name']."\" title=\"\">" . $value_child['title'] ."</a></li>";
-							
-					}
-				$menuLi .= (!empty($submenuLi)) ? "<ul>" . $submenuLi . "</ul>" : "";
-
-				$menuLi .= "</li>";
-			}
-
-		}
-
-		$menuOutput = "
-			<ul>
-				"
-					. $menuLi .
-				"
-			</ul>";
-
-		return $menuOutput;
-	}
-	*/
-
 	public static function genMenu() {
 		return "
 			<ul>
+
+  				<!--
   				<li class=\"basic-settings-button\">
   					<a href=\"".admin::$adminUrl ."/basic-settings\" title=\"zakladní nastavení\">
   						<img src=\"". theme::$completeThemeAdminDir . "/images/basic_settings_icon.png\" alt=\"basic settings\"/>
 						<span>Základní nastavení</span>
   					</a>
   				</li>
-  				<li class=\"theme-settings-button\">
+  				<!--<li class=\"theme-settings-button\">
   					<a href=\"".admin::$adminUrl ."/template\" title=\"nastavení vzhledu\">
   						<img src=\"". theme::$completeThemeAdminDir . "/images/theme_settings_icon.png\" alt=\"themes settings\"/>
 						<span>Nastavení vzhledu</span>
@@ -215,10 +165,11 @@ class Admin extends Web {
 						<span>Nastavení modulů</span>
   					</a>
   				</li>
+  				-->
   				<li class=\"plugin-settings-button\">
   					<a href=\"".admin::$adminUrl ."/plugins\" title=\"nastavení pluginů\">
   						<img src=\"". theme::$completeThemeAdminDir . "/images/plugins_settings_icon.png\" alt=\"plugin settings\"/>
-						<span>Nastavení pluginů</span>
+						<span>Nastavení eshopu</span>
   					</a>
   				</li>
   			</ul>";
@@ -249,8 +200,7 @@ class Admin extends Web {
 			<h2 class=\"subtitle\">Základní nastavení</h2>
   			<div class=\"sub-nav\">
   				<ul>
-  					<li><a href=\"\" title=\"Obecné nastavení\">Obecné nastavení</a></li>
-  					<li><a href=\"\" title=\"Obecné nastavení\">Nastavení databáze</a></li>
+  					<li><a href=\"".admin::$adminUrl ."/plugins/type/AdminUser\" title=\"Obecné nastavení\">Správa administrátorů</a></li>
   				</ul>
   			</div>
   			<div class=\"content\">

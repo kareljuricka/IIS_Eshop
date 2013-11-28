@@ -1,7 +1,6 @@
 Options +FollowSymLinks
 
 RewriteEngine On
-RewriteCond $2 !^admin
 
 RewriteRule ^([a-zA-Z0-9]/)*([a-zA-Z0-9\-]+)(/site-([a-zA-Z0-9]+))?/?$ index.php?page=$2&site=$4
 RewriteRule ^([a-zA-Z0-9]/)*([a-zA-Z0-9\-]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)(/site-([a-zA-Z0-9]+))?/?$ index.php?page=$2&$3=$4&site=$5
