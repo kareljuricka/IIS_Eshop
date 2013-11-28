@@ -290,7 +290,7 @@ class OrdersAdmin extends Plugin {
 		
 		$items_data = "";
 
-		web::$db->query("SELECT produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
+		web::$db->query("SELECT ".database::$prefix."eshop_objednavka_produkt.id, produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
 			FROM ".database::$prefix."eshop_objednavka_produkt
 			LEFT JOIN ".database::$prefix."eshop_produkt
 			ON ".database::$prefix."eshop_produkt.id = produkt
@@ -312,7 +312,7 @@ class OrdersAdmin extends Plugin {
 				<td>".$item['cena'].",- Kč</td>
 				<td>".$item['mnozstvi']."</td>
 				<td>".$item['cena_celkem'].",- Kč</td>
-				<td class=\"notprintable\"><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/12\" title=\"Editovat položku\">Editovat položku</a></td>
+				<td class=\"notprintable\"><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/" .$item['id']. "\" title=\"Editovat položku\">Editovat položku</a></td>
 				<td class=\"notprintable\"></td>
 			</tr>";
 
@@ -558,11 +558,64 @@ class OrdersAdmin extends Plugin {
 		$facture->showFacture();
 	}
 
-	private function detailItem() {
+	private function detailItem($item) {
 
-		$output = "Detail editace polozky";
+		$state = UPDATE_FORM;
 
-		return $output;	
+		if(isset($_POST['submit-edit-order'])) {
+
+			web::$db->query("UPDATE ". database::$prefix ."eshop_objednavka_produkt SET cena = :cena, mnozstvi = :mnozstvi WHERE id = '".$item."'");
+
+			web::$db->bind(":cena", htmlspecialchars($_POST['cena']));
+			web::$db->bind(":mnozstvi", htmlspecialchars($_POST['mnozstvi']));
+
+			web::$db->execute();
+
+			$this->success = "Položka byla úspěšně upravena";
+
+			$output = $this->getSuccess();
+
+			$state = UPDATE_SUCCESS;
+		}
+
+		if($state == UPDATE_FORM) {
+			web::$db->query("
+				SELECT ".database::$prefix."eshop_objednavka_produkt.cena AS cena, ".database::$prefix."eshop_objednavka_produkt.mnozstvi AS mnozstvi, ".database::$prefix."eshop_produkt.jmeno_produktu AS nazev
+				FROM ".database::$prefix."eshop_objednavka_produkt, ".database::$prefix."eshop_produkt
+				WHERE ".database::$prefix."eshop_objednavka_produkt.produkt = ".database::$prefix."eshop_produkt.id
+				AND ".database::$prefix."eshop_objednavka_produkt.id = " .$item. "
+			");
+
+			$result = web::$db->single();
+
+				$output = "
+					<h3>Upravit položku</h3>
+					<form method=\"POST\">
+						<fieldset>
+							<legend>Detail položky</legend>
+							<div>
+								<label for='nazev'>Název:</label>
+								<input type='text' name='nazev' id='datum_odeslani' value='" .$result['nazev']. "'/>
+								<div class='def-footer'></div>
+							</div>
+							<div>
+								<label for='mnozstvi'>Množství:</label>
+								<input type='text' name='mnozstvi' id='datum_odeslani' value='" .$result['mnozstvi']. "'/>
+							</div>
+							<div>
+								<label for='cena'>Cena:</label>
+								<input type='text' name='cena' id='datum_zaplaceni' value='" .$result['cena']. "'/>
+							</div>
+						</fieldset>
+						<div>
+							<input type='submit' name='submit-edit-order' id='submit'/>
+						</div>
+					</form>
+				";
+
+			return $output;	
+		}
+
 	}
 
 	public function getOutput() {
