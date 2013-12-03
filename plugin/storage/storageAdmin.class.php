@@ -66,12 +66,18 @@ class StorageAdmin extends Plugin {
 
 		if (isset($_POST['order_update'])) {	
 
+			if(empty($_POST['mnozstvi'])){
+
+				$output = "Vytvoření selaho";
+				$state = REGISTER_SUCCESS;
+				return;
+			}
+
 			web::$db->query("SELECT id FROM ".database::$prefix ."eshop_dodavatel WHERE produkt = '" .$_POST['produkt']."'");
 
 			$result = web::$db->single();
 
-			web::$db->query("INSERT INTO " .database::$prefix. "eshop_objednavka_dodavky (mnozstvi, dodavatel)
-				VALUES (:mnozstvi, :dodavatel)");
+			web::$db->query("INSERT INTO " .database::$prefix. "eshop_objednavka_dodavky (mnozstvi, dodavatel) VALUES (:mnozstvi, :dodavatel)");
 						
 			$output = "Vytvoření bylo úspěšné";
 			$state = REGISTER_SUCCESS;
@@ -83,7 +89,10 @@ class StorageAdmin extends Plugin {
 		if ($state == REGISTER_FORM) {
 			$produkt = "";
 
-			web::$db->query("SELECT id, jmeno_produktu FROM ".database::$prefix."eshop_produkt ORDER BY jmeno_produktu DESC");
+			web::$db->query("SELECT ".database::$prefix."eshop_produkt.id, jmeno_produktu
+			FROM ".database::$prefix."eshop_produkt, ".database::$prefix."eshop_dodavatel
+			WHERE ".database::$prefix."eshop_produkt.id = ".database::$prefix."eshop_dodavatel.produkt
+			ORDER BY jmeno_produktu DESC");
 
 			$result = web::$db->resultset();
 

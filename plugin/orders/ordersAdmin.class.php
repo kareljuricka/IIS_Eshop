@@ -290,7 +290,25 @@ class OrdersAdmin extends Plugin {
 		
 		$items_data = "";
 
-		web::$db->query("SELECT ".database::$prefix."eshop_objednavka_produkt.id, produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
+		if(isset($_GET['delete'])) {
+			web::$db->query("DELETE FROM ".database::$prefix."eshop_objednavka_produkt WHERE id='".$_GET['delete']."'");
+			web::$db->execute();
+
+			web::$db->query("SELECT COUNT(*) AS count FROM ".database::$prefix."eshop_objednavka_produkt WHERE objednavka='".$result['id']."'");
+			$count = web::$db->single();
+
+			if($count['count'] == 0) {
+				web::$db->query("DELETE FROM ".database::$prefix."eshop_objednavka WHERE id='".$result['id']."'");
+				web::$db->execute();
+
+				$output = "Smazana cela objednavka";
+
+				return $output;
+			}
+
+		}
+
+		web::$db->query("SELECT ".database::$prefix."eshop_objednavka_produkt.id AS id, produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
 			FROM ".database::$prefix."eshop_objednavka_produkt
 			LEFT JOIN ".database::$prefix."eshop_produkt
 			ON ".database::$prefix."eshop_produkt.id = produkt
@@ -313,7 +331,7 @@ class OrdersAdmin extends Plugin {
 				<td>".$item['mnozstvi']."</td>
 				<td>".$item['cena_celkem'].",- Kč</td>
 				<td class=\"notprintable\"><a href=\"".admin::$serverAdminDir."plugins/type/".$_GET['type']."/detail/15/item/" .$item['id']. "\" title=\"Editovat položku\">Editovat položku</a></td>
-				<td class=\"notprintable\"></td>
+				<td class=\"notprintable\"><a href=\"".admin::$serverAdminDir."plugins/type/Orders/detail/" .$result['id']. "/delete/".$item['id']."\" title=\"Smazat položku\">Smazat položku</a></td>
 			</tr>";
 
 		}

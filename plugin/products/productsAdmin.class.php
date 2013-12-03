@@ -167,6 +167,8 @@ class ProductsAdmin extends Plugin {
 
 		$state = UPDATE_FORM;
 
+		$state_li = "";
+
 		$error_output = "";
 
 		if(isset($_POST['submit-edit-product'])) {
@@ -212,6 +214,14 @@ class ProductsAdmin extends Plugin {
 
 			$result = web::$db->single();
 
+			web::$db->query("SELECT id, jmeno_kategorie FROM ".database::$prefix."eshop_produkt_kategorie");		
+			web::$db->execute();
+
+			$temp = web::$db->resultSet();
+
+			foreach($temp as $item) {
+				$state_li .= "<option value='".$item['id']."' ".(($item['id'] == $result['kategorie']) ? "selected" : "").">".$item['jmeno_kategorie']."</option>";
+			}
 
 			$output = "
 				<h3>Upravit informace o produktu</h3>
@@ -231,7 +241,9 @@ class ProductsAdmin extends Plugin {
 						</div>
 						<div>
 							<label for='kategorie'>Kategorie:</label>
-							<input type='text' name='kategorie' id='kategorie' value='" .$result['kategorie']. "'/>
+							<select name='kategorie' id='kategorie'>
+								".$state_li."
+							</select>
 							<div class='def-footer'></div>
 						</div>
 						<div>
