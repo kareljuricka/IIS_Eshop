@@ -42,42 +42,34 @@ class Products {
 			</div>
 		";
 		
-		$td_counter = 0;
-		$id_produktu = 0;
-
-		web::$db->query("
-			SELECT nadkategorie.id AS nad, kategorie.id AS kat
-			FROM love_eshop_produkt_kategorie AS nadkategorie
-			RIGHT JOIN love_eshop_produkt_kategorie AS kategorie
-			ON nadkategorie.id = kategorie.nadkategorie
-		");
-
-		$result = web::$db->resultset();
-
-		foreach ($result as $value)
-			echo "kategorie:" .$value['kat']. "ma nadkategorii:". $value['nad'] ."</br>";
-
-
 		if(isset($_GET['id'])) {
-			if(is_null($result[$_GET['id']]['nad']))
-				web::$db->query("SELECT id, jmeno_produktu, kategorie FROM love_eshop_produkt WHERE kategorie =" .$_GET['id']);
-			else {
-				web::$db->query("SELECT id, jmeno_kategorie FROM love_eshop_produkt_kategorie WHERE nadkategorie = '" .$result[$_GET['id']]['nad']. "'");
 
-				$cats = web::$db->resultset();
+			web::$db->query("SELECT nadkategorie FROM love_eshop_produkt_kategorie WHERE id ='" .$_GET['id']. "'");
+			$nadkategorie = web::$db->single();
 
-				foreach ($cats as $value)
-					$output .= "<a href=\"".web::$serverDir."kategorie/id/".$value['id']."\">". $value['jmeno_kategorie'] ."</a></br>";
+			if(is_null($nadkategorie['nadkategorie'])) {
+
+				web::$db->query("SELECT id, jmeno_kategorie FROM love_eshop_produkt_kategorie WHERE nadkategorie='" .$_GET['id']."'");
+				$podkategorie = web::$db->resultset();
+
+				foreach ($podkategorie as $row)
+					$output .= "<a href=\"".web::$serverDir."kategorie/id/".$row['id']."\">".$row['jmeno_kategorie']."</a></br>";
 
 				return $output;
+			}
+			else {
+				web::$db->query("SELECT love_eshop_produkt.id, love_eshop_produkt.jmeno_produktu, love_eshop_produkt.kategorie
+				FROM  love_eshop_produkt, love_eshop_produkt_kategorie
+				WHERE love_eshop_produkt.kategorie = love_eshop_produkt_kategorie.id 
+				AND love_eshop_produkt_kategorie.id ='" .$_GET['id']."'");
 			}
 		}
 		else
 			web::$db->query("SELECT id, jmeno_produktu, kategorie FROM love_eshop_produkt");
-		
 
-
-
+		$td_counter = 0;
+		$id_produktu = 0;
+	
 		$this->resultSet = web::$db->resultset();
 
 		$output .= "<table class=\"products\" cellspacing=\"0\" celpading=\"0\">";
