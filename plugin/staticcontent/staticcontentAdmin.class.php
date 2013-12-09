@@ -28,8 +28,13 @@ class StaticContentAdmin extends Plugin {
 		$action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 		$this->output = "
-			<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add user'>Výpis statických obsahů</a><br />
-		";
+			<div class=\"action-nav\">
+				<ul>
+					<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add user'>Výpis statických obsahů</a></li>
+				</ul>
+				<div class=\"def-footer\"></div>
+			</div>";
+
 
 		if (isset($action))
 			switch($action) {
@@ -70,14 +75,16 @@ class StaticContentAdmin extends Plugin {
 		}
 
 		$output = "
-		<h2>Výpis statických pluginů</h2>
-		<table>
-			<tr>
-				<th>Název</th>
-				<th>Editovat</th>
-				<th>Smazat</th>
-			</tr>
-				".$static_content_output."				
+		<h3>Výpis statických pluginů</h3>
+			<div class=\"db-output-scroll\">
+				<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
+					<tr>
+						<th width=\"80%\">Název</th>
+						<th>Editovat</th>
+						<th>Smazat</th>
+					</tr>
+				".$static_content_output."			
+			</div>	
 		</table>";
 
 		return $output;
@@ -107,12 +114,16 @@ class StaticContentAdmin extends Plugin {
 						
 				
 					web::$db->query("UPDATE ". database::$prefix ."plugin_static_content SET name = :static_name, data = :static_data WHERE id = '".$static_id."'");
-					$output = "Údaje byly úspěšně upraveny";
+					
 
 					web::$db->bind(":static_name", htmlspecialchars($_POST['static_name']));
 					web::$db->bind(":static_data", $_POST['static_data']);
 			
 					web::$db->execute();
+
+					$this->success = "Údaje byly úspěšně upraveny";
+
+					$output = $this->getSuccess();
 
 					$state = UPDATE_SUCCESS;
 				}
@@ -125,7 +136,7 @@ class StaticContentAdmin extends Plugin {
 			$static_data = web::$db->single();
 
 			$output = "
-				<h2>Static content</h2>
+				<h3>Static content</h3>
 				<form method=\"POST\">
 					<fieldset>
 						<legend>Editace statického obsahu</legend>

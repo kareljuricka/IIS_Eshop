@@ -13,8 +13,14 @@
 	    <meta name="copyright" content="(c)2013 design & code by Karel Juřička">
 	   
       <script src="<% web_path %>plugin/ckeditor/ckeditor.js"></script>
-	    <link rel="stylesheet" href="<% absolute_path %>/styles/styles.css" type="text/css" media="screen"/>
-			<link rel="stylesheet" href="<% absolute_path %>/styles/print.css" type="text/css" media="print"/> 
+      <script src="<% web_path %>themes/globals/libs/jquery-ui/js/jquery-1.9.1.js"></script>
+      <script src="<% web_path %>themes/globals/libs/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
+  
+      <script src="<% absolute_path %>js/myscripts.js"/></script>
+      <link rel="stylesheet" href="<% web_path %>themes/globals/libs/jquery-ui/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" type="text/css" media="screen"/>
+      <link rel="stylesheet" href="<% web_path %>themes/globals/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" type="text/css" media="screen"/>
+	    <link rel="stylesheet" href="<% absolute_path %>styles/styles.css" type="text/css" media="screen"/>
+			<link rel="stylesheet" href="<% absolute_path %>styles/print.css" type="text/css" media="print"/> 
 
 
 	    <title>Admin</title>
@@ -39,5 +45,7 @@
   		<div class="main">
   			<% content %>
   		</div>
+       <script src="<% web_path %>themes/globals/libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
   	</body>
 </html>

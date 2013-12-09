@@ -210,6 +210,7 @@ class Users extends Plugin {
 							<legend>Přihlašovací údaje</legend>
 							<div>
 								<label for='email'>*Email:</label><input type='text' name='email' id='email' value='".$userdata['email']."'/>
+								<div class='def-footer'></div>
 							</div>
 							<div>
 								<label for='heslo'>*Heslo:</label><input type='password' name='heslo' id='heslo'/>
@@ -225,6 +226,7 @@ class Users extends Plugin {
 							<div>
 								<label for='mobil'>Mobil:</label><input type='text' name='mobil' id='mobil' value='".$userdata['mobil']."'/>
 							</div>
+							<div class='def-footer'></div>
 							<div>
 								<label for='ulice'>Ulice:</label><input type='text' name='ulice' id='ulice' value='".$userdata['ulice']."' />
 								<label for='cislo_popisne'>Číslo popisné</label><input type='text' name='cislo_popisne' id='cislo_popisne' value='".$userdata['cislo_popisne']."'/>
@@ -237,7 +239,7 @@ class Users extends Plugin {
 						<fieldset>
 							<legend>Nastavení</legend>
 							<div>
-								<label for='novinky'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
+								<label for='novinky' class='longer'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
 							</div>
 						</fieldset>
 						<div><input type='submit' value='Registrovat' name='register_update'/></div>
@@ -319,6 +321,7 @@ class Users extends Plugin {
 							<div>
 								<label for='email'>*Email:</label><input type='text' name='email' id='email' value='".$userdata['email']."'/>
 							</div>
+							<div class='def-footer'></div>
 						</fieldset>
 						<fieldset>
 							<legend>Osobní údaje</legend>
@@ -326,9 +329,11 @@ class Users extends Plugin {
 								<label for='jmeno'>Jméno:</label><input type='text' name='jmeno' id='jmeno' value='".$userdata['jmeno']."'/>
 								<label for='prijmeni'>Přijmení:</label><input type='text' name='prijmeni' id='prijmeni' value='".$userdata['prijmeni']."'/>
 							</div>
+							<div class='def-footer'></div>
 							<div>
 								<label for='mobil'>Mobil:</label><input type='text' name='mobil' id='mobil' value='".$userdata['mobil']."'/>
 							</div>
+							<div class='def-footer'></div>
 							<div>
 								<label for='ulice'>Ulice:</label><input type='text' name='ulice' id='ulice' value='".$userdata['ulice']."' />
 								<label for='cislo_popisne'>Číslo popisné</label><input type='text' name='cislo_popisne' id='cislo_popisne' value='".$userdata['cislo_popisne']."'/>
@@ -341,7 +346,7 @@ class Users extends Plugin {
 						<fieldset>
 							<legend>Nastavení</legend>
 							<div>
-								<label for='novinky'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
+								<label for='novinky' class='longer'>Přeji si přijímat novinky emailem:</label><input type='checkbox' name='novinky' id='novinky' ".($userdata['novinky'] ? "checked" : "")."/>
 							</div>
 						</fieldset>
 						<div><input type='submit' value='Upravit' name='register_update'/></div>

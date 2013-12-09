@@ -153,6 +153,8 @@ class OrdersAdmin extends Plugin {
 				$state_li .= "<option value='".$key."' ".(($key == $result['stav']) ? "selected" : "").">".$value."</option>";
 			}
 
+
+
 			$output = "
 				<h3>Upravit osobní údaje</h3>
 					".$error_output."
@@ -168,18 +170,20 @@ class OrdersAdmin extends Plugin {
 						</div>
 						<div>
 							<label for='datum_vytvoreni'>Datum vytvoreni:</label>
-							<input type='text' name='datum_vytvoreni' id='datum_vytvoreni' value='" .$result['datum_vytvoreni']. "'/>
-							
+							<input type='text' name='datum_vytvoreni' id='datum_vytvoreni' value='" .$result['datum_vytvoreni']. "' class=\"\" style=\"width: 125px\"/>
+							<div class='popis-input'>Formát vstupu: YYYY-MM-DD HH:MM:S</div>
 						</div>
 						<div>
 							<label for='datum_zaplaceni'>Datum zaplaceni:</label>
-							<input type='text' name='datum_zaplaceni' id='datum_zaplaceni' value='" .$result['datum_zaplaceni']. "'/>
+							<input type='text' name='datum_zaplaceni' id='datum_zaplaceni' value='" .$result['datum_zaplaceni']."' style=\"width: 125px\"/>
+							<div class='popis-input'>Formát vstupu: YYYY-MM-DD HH:MM:S</div>
 							<div class='def-footer'></div>
+						
 						</div>
 						<div>
 							<label for='datum_odeslani'>Datum odeslani:</label>
-							<input type='text' name='datum_odeslani' id='datum_odeslani' value='" .$result['datum_odeslani']. "'/>
-
+							<input type='text' name='datum_odeslani' id='datum_odeslani' value='" .$result['datum_odeslani']. "' style=\"width: 125px\"/>
+							<div class='popis-input'>Formát vstupu: YYYY-MM-DD HH:MM:S</div>
 						</div>
 					</fieldset>
 					<fieldset>
@@ -613,16 +617,16 @@ class OrdersAdmin extends Plugin {
 							<legend>Detail položky</legend>
 							<div>
 								<label for='nazev'>Název:</label>
-								<input type='text' name='nazev' id='datum_odeslani' value='" .$result['nazev']. "'/>
+								<input type='text' name='nazev' id='nazev' value='" .$result['nazev']. "'/>
 								<div class='def-footer'></div>
 							</div>
 							<div>
 								<label for='mnozstvi'>Množství:</label>
-								<input type='text' name='mnozstvi' id='datum_odeslani' value='" .$result['mnozstvi']. "'/>
+								<input type='text' name='mnozstvi' id='mnozstvi' value='" .$result['mnozstvi']. "'/>
 							</div>
 							<div>
 								<label for='cena'>Cena:</label>
-								<input type='text' name='cena' id='datum_zaplaceni' value='" .$result['cena']. "'/>
+								<input type='text' name='cena' id='cena' value='" .$result['cena']. "'/>
 							</div>
 						</fieldset>
 						<div>

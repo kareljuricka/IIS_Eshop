@@ -333,3 +333,10 @@ font-size: 11px;
 text-decoration: none;
 }
 
+div.popis-input {
+font-size: 10px;
+position: relative;
+left: -215px;
+top: 32px;
+color: orange;
+}

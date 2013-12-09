@@ -48,7 +48,8 @@ class Web {
 		'header' => '',
 		'left-column' => '',
 		'right-column' => '',
-		'footer' => ''
+		'footer' => '',
+		'web_path' => ''
 	);
 
 	/* WEB inicialization

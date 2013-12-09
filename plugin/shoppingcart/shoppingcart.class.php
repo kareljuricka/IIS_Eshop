@@ -158,20 +158,21 @@ class ShoppingCart {
 			}
 
 		$this->output .= "
-		<table>
+		<h4>Obsah Nákupního košíku</h4>
+		<table cellpadding=\"0\" cellspacing=\"0\">
 			<tr>
-				<td>
+				<th>
 					Nazev produktu
-				</td>
-				<td>
+				</th>
+				<th>
 					Mnozstvi
-				</td>
-				<td>
+				</th>
+				<th>
 					Cena/kus
-				</td>
-				<td>
+				</th>
+				<th>
 					Cena celkem
-				</td>
+				</th>
 			</tr>
 		";
 
@@ -242,14 +243,9 @@ class ShoppingCart {
 			$objednavka_link = "<a href=\"".web::$serverDir. "objednavky/section/dorucovaci-udaje\">Přejít na objednávku</a>";
 
 		$this->output .= "
-			<tr>
-				<td>
-					Celková cena položek v košíku: " .$produkt_cena_celkem. ",- Kč
-				</td>
-			</tr>
 		</table>
-
-		".$objednavka_link."
+		<span class='celkova-cena'>Celková cena položek v košíku: " .$produkt_cena_celkem. ",- Kč</span>
+		<div class='objednavka-link'>".$objednavka_link."</div>
 		";
 
 		return $this->output;

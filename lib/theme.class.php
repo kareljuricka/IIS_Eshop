@@ -64,7 +64,7 @@ class Theme {
 		$this->themeData = $this->loadTemplateData($this->filename);
 
 		// Add absolute path to template
-		$this->themeData = $this->templateReplace('absolute_path',  web::$serverDir . '/' . $this->themedir . '/', $this->themeData);
+		$this->themeData = $this->templateReplace('absolute_path',  web::$serverDir . '' . $this->themedir . '/', $this->themeData);
 	}
 
 	/* Method to get theme string

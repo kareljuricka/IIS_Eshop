@@ -165,7 +165,7 @@ class Orders extends Plugin {
 
 		$output = "
 		<h3>Výpis objednávek</h3>
-		<table>
+		<table cellspacing='0' cellpadding='0'>
 			<tr>
 				<th>ID</th>
 				<th>Stav</th>

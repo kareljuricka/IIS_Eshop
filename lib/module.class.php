@@ -37,10 +37,10 @@ class Module {
 				break;
 
 			case 'admin_url':
-				$this->moduleOutput[$modulename] .= admin::$adminUrl;
+				$this->moduleOutput[$modulename] .= web::$adminUrl;
 				break;
 			case 'web_path':
-				$this->moduleOutput[$modulename] .= admin::$serverDir;
+				$this->moduleOutput[$modulename] .= web::$serverDir;
 				break;
 
 			// others modules -> get plugins	

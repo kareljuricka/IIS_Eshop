@@ -23,6 +23,94 @@ p
 text-align: left;
 }
 
+a {
+color: #66bc29;
+}
+
+a:hover {
+color: #8ef13c;	
+}
+
+
+form fieldset {
+border: 0px;
+margin: 10px 0px;
+padding: 0px;
+}
+
+form fieldset legend {
+margin: 0px 0px 10px 0px;
+background: #f8f8f8;
+width: 100%;
+padding: 7px;
+}
+
+label {
+float: left;
+width: 100px;
+margin-top: 3px;
+}
+
+label.longer {
+width: 200px;
+}
+
+input {
+float: left;
+width: 110px;
+margin-right: 20px;
+margin-bottom: 10px;
+border: 1px dotted #323232;
+padding: 3px 5px;
+}
+
+input[type=submit] {
+cursor: pointer;
+background: #323232;
+color: #fff;
+margin-top: 20px;
+padding: 10px;
+width: auto;
+}
+
+table {
+margin: 0px 0px 30px 0px;
+padding: 0px;
+background: #f8f8f8;
+font-size: 11px;
+width: 100%;
+border-collapse: collapse;	
+}
+
+table tr th, table tr td {
+padding: 7px 8px;
+}
+
+table tr td {
+background: #fff;
+border-bottom: 1px dotted #323232;
+}
+
+span.celkova-cena {
+display: block;
+color: red;
+font-size: 11px;
+padding-top: 10px;
+}
+
+div.objednavka-link a {
+display: block;
+padding: 10px;
+background: #323232;
+float: left;
+color: #fff;
+text-decoration: none;
+font-size: 11px;
+
+margin: 20px 0px;
+}
+
+
 div.def-footer
 {
 clear: both;
@@ -87,12 +175,15 @@ display: block;
 margin-bottom: 5px;
 color: #c5fdbd;
 font-size: 11px;
+margin: 0px;
+float: none;
 }
 
 div.header div.header-content div.login input {
 padding: 6px 3px;
 width: 130px;
 border: 0px;
+margin: 0px;
 }
 
 div.header div.header-content div.login div.login-password {
@@ -119,6 +210,8 @@ font-weight: bold;
 cursor: pointer;
 padding-left: 33px;
 text-align: left;
+float: none;
+margin-top: 10px;
 }
 
 div.header div.header-content div.login div.user-links {
@@ -483,4 +576,28 @@ display: block;
 float: left;
 margin-left: 25px;
 margin-top: 2px;
+}
+
+
+div.main div.content div.success-block {
+margin: 30px 0px;
+}
+
+div.main div.content div.error-block {
+margin: 30px 0px;
+border: 1px solid red;
+padding: 10px;
+}
+
+div.main div.content div.error-block h3 {
+margin: 10px 10px;
+color: red;
+}
+
+div.main div.content div.error-block ul {
+color: red;
+}
+
+div.main div.content div.error-block ul li {
+line-height: 20px;
 }
