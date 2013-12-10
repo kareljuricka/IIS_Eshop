@@ -312,14 +312,20 @@ class OrdersAdmin extends Plugin {
 
 		}
 
-		web::$db->query("SELECT ".database::$prefix."eshop_objednavka_produkt.id AS id, produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
+		/*web::$db->query("SELECT ".database::$prefix."eshop_objednavka_produkt.id AS id, produkt, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id
 			FROM ".database::$prefix."eshop_objednavka_produkt
 			LEFT JOIN ".database::$prefix."eshop_produkt
 			ON ".database::$prefix."eshop_produkt.id = produkt
 			WHERE objednavka = '".$result['id']."'
-			");
+			");*/
 
-		$order_items = web::$db->resultset();
+		web::$db->query("SELECT ".database::$prefix."eshop_objednavka_produkt.id AS id, ".database::$prefix."eshop_produkt.jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena, mnozstvi, jmeno_produktu, ".database::$prefix."eshop_objednavka_produkt.cena * mnozstvi AS cena_celkem, ".database::$prefix."eshop_produkt.id as product_id 
+			             FROM ".database::$prefix."eshop_objednavka_produkt, ".database::$prefix."eshop_produkt, ".database::$prefix."eshop_historie_cen
+			             WHERE ".database::$prefix."eshop_objednavka_produkt.produkt = ".database::$prefix."eshop_produkt.id 
+			             AND ".database::$prefix."eshop_produkt.id = ".database::$prefix."eshop_historie_cen.produkt
+			             AND objednavka = '".$result['id']."'");
+
+		$order_items = web::$db->resultset(); 
 
 		$produkt_cena_celkem = 0;
 
