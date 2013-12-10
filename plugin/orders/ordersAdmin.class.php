@@ -446,13 +446,18 @@ class OrdersAdmin extends Plugin {
 
 		$vypis = "";
 
+		$where = "";
+
+		if (isset($_GET['userid']))
+			$where = "WHERE uzivatel = ".$_GET['userid'];
+
 		web::$db->query("SELECT ".database::$prefix."eshop_objednavka.id, stav, datum_vytvoreni, datum_zaplaceni, datum_odeslani, doprava, platba,
 			dodaci_jmeno, dodaci_prijmeni, dodaci_mesto, dodaci_ulice, dodaci_cislo_popisne, dodaci_PSC,
 			".database::$prefix."eshop_uzivatel.jmeno, ".database::$prefix."eshop_uzivatel.prijmeni, ".database::$prefix."eshop_uzivatel.ulice,
 			".database::$prefix."eshop_uzivatel.cislo_popisne, ".database::$prefix."eshop_uzivatel.mesto, ".database::$prefix."eshop_uzivatel.psc
 			FROM ".database::$prefix."eshop_objednavka
 			LEFT JOIN ".database::$prefix."eshop_uzivatel
-			ON uzivatel = ".database::$prefix."eshop_uzivatel.id");		
+			ON uzivatel = ".database::$prefix."eshop_uzivatel.id " . $where);		
 
 		$result = web::$db->resultset();
 
@@ -488,6 +493,7 @@ class OrdersAdmin extends Plugin {
 	
 		";
 
+		if (!empty($result))
 		foreach ($result as $row) {
 
 			web::$db->query("SELECT SUM(cena * mnozstvi) AS celkova_cena FROM ".database::$prefix."eshop_objednavka_produkt WHERE objednavka = '".$row['id']."'");

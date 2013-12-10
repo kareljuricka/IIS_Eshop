@@ -31,6 +31,8 @@ class ProductsAdmin extends Plugin {
 		$this->output = "
 		<div class=\"action-nav\">
 			<ul>
+				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/addCategory' title='add product'>Přidat kategorii</a></li>
+				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/categoryList' title='add product'>Výpis kategorií</a></li>
 				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/add' title='add product'>Přidat produkt</a></li>
 				<li><a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."' title='add product'>Výpis produktů</a></li>
 			</ul>	
@@ -38,19 +40,26 @@ class ProductsAdmin extends Plugin {
 		</div>";
 
 		switch($action) {
+			case 'addCategory':
+				$this->output .= $this->addCategory();
+				break;
+			case 'deleteCategory':
+				$this->output .= $this->deleteCategory();
+				break;
 			case 'add':
 				$this->output .= $this->addProduct();
 				break;
 			case 'edit':
 				$this->output .= $this->editProduct($_GET['id']);
-				break;
-			case 'delete':
-				$this->output .= $this->deleteProduct($_GET['id']);
 				break;	
-		}
+			case 'categoryList':
+				$this->output .= $this->categoryList();
+				break;
+			default:
+				$this->output .= $this->productList();
+				break;
 
-		if ($action != 'add' && $action !='edit')
-			$this->output .= $this->productList();
+		}
 	}
 
 	function addProduct() {
@@ -355,6 +364,16 @@ class ProductsAdmin extends Plugin {
 
 		return $vypis;
 
+	}
+
+	function categoryList() {
+
+		return "test";
+	}
+
+	function addCategory() {
+
+		return "add";
 	}
 
 	public function getOutput() {

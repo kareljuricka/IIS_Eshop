@@ -92,7 +92,7 @@ class UsersAdmin extends Plugin {
 					<td>".$user_data['jmeno']." ".$user_data['prijmeni']."</td>
 					<td>".$aktivni_output."</td>
 					<td>".$user_data['novinky']."</td>
-					<td>Objednávky</td>
+					<td><a href=\"".admin::$serverAdminDir."plugins/type/Orders/userid/".$user_data['id']."\">Objednávky</a></td>
 					<td>
 						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/edit/id/".$user_data['id']."' title='add user'>Upravit</a>
 					</td>
