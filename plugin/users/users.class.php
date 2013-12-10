@@ -167,7 +167,7 @@ class Users extends Plugin {
 						VALUES (:email, :heslo, :jmeno, :prijmeni, :mobil, :ulice, :cislo_popisne, :mesto, :psc,
 						:aktivni, :novinky)");
 							
-        	$this->success = "Registrace byla úspěšná";
+        			$this->success = "Registrace byla úspěšná";
 
 					$state = REGISTER_SUCCESS;
 
@@ -187,7 +187,7 @@ class Users extends Plugin {
 
 					$last_id = web::$db->lastInsertid();
 
-					$active_url = "http://localhost/skola/iis_eshop/aktivace-uctu/id/".$last_id."/data/".hash('sha256', htmlspecialchars($_POST['email']).htmlspecialchars($_POST['jmeno']).htmlspecialchars($_POST['prijmeni']));
+					$active_url = web::$webUrl."/aktivace-uctu/id/".$last_id."/data/".hash('sha256', htmlspecialchars($_POST['email']).htmlspecialchars($_POST['jmeno']).htmlspecialchars($_POST['prijmeni']));
 
 					$message = "
 						<strong>Byl vám vytvořen nový účet na jméno ".htmlspecialchars($_POST['jmeno'])." ".htmlspecialchars($_POST['prijmeni'])."</strong>
