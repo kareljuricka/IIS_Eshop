@@ -329,7 +329,9 @@ class ProductsAdmin extends Plugin {
 
 		$vypis = "";
 
-		web::$db->query("SELECT * FROM ".database::$prefix."eshop_produkt");		
+		web::$db->query("SELECT * 
+			             FROM ".database::$prefix."eshop_produkt, ".database::$prefix."eshop_produkt_kategorie
+			             WHERE ".database::$prefix."eshop_produkt.kategorie = ".database::$prefix."eshop_produkt_kategorie.id");		
 		web::$db->execute();
 		$result = web::$db->resultset();
 
@@ -357,7 +359,7 @@ class ProductsAdmin extends Plugin {
 					" .$row['jmeno_produktu']. "
 				</td>
 				<td>
-					" .$row['kategorie']. "
+					" .$row['jmeno_kategorie']. "
 				</td>
 				<td>
 					" .$row['vyrobce']. "
