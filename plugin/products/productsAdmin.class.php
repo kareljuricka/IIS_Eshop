@@ -114,6 +114,15 @@ class ProductsAdmin extends Plugin {
 		}
 
 		if ($state == REGISTER_FORM) {
+			$state_li = "";
+
+			web::$db->query("SELECT id, jmeno_kategorie FROM ".database::$prefix."eshop_produkt_kategorie");		
+			$temp = web::$db->resultSet();
+
+			foreach($temp as $item) {
+				$state_li .= "<option value='".$item['id']."'>".$item['jmeno_kategorie']."</option>";
+			}
+
 			$output = "
 			<h3>Přidat nový produkt</h3>
 			".$error_output."
@@ -131,7 +140,9 @@ class ProductsAdmin extends Plugin {
 					</div>
 					<div>
 						<label for='kategorie'>Kategorie:</label>
-						<input type='text' name='kategorie' id='kategorie' value='".$product_data['kategorie']."'/>
+							<select name='kategorie' id='kategorie'>
+								".$state_li."
+							</select>
 						<div class='def-footer'></div>
 					</div>
 					<div>
@@ -219,13 +230,9 @@ class ProductsAdmin extends Plugin {
 		if ($state == UPDATE_FORM) {
 
 			web::$db->query("SELECT * FROM ".database::$prefix."eshop_produkt WHERE id='" .$product_id. "'");		
-			web::$db->execute();
-
 			$result = web::$db->single();
 
 			web::$db->query("SELECT id, jmeno_kategorie FROM ".database::$prefix."eshop_produkt_kategorie");		
-			web::$db->execute();
-
 			$temp = web::$db->resultSet();
 
 			foreach($temp as $item) {
@@ -368,12 +375,113 @@ class ProductsAdmin extends Plugin {
 
 	function categoryList() {
 
-		return "test";
+		$vypis = "";
+
+		web::$db->query("SELECT A.id AS id, A.jmeno_kategorie AS kat, B.jmeno_kategorie AS nadkat
+		                 FROM ".database::$prefix."eshop_produkt_kategorie AS A LEFT JOIN ".database::$prefix."eshop_produkt_kategorie AS B
+		                 ON B.id=A.nadkategorie
+		                 ");		
+		$result = web::$db->resultset();
+
+		$vypis .= "
+		<h3>Výpis Kategorií</h3>
+		<table class=\"db-output\" cellspacing=\"0\" cellpading=\"0\">
+			<tr>
+				<th>Id</th>
+				<th>Jméno kategorie</th>
+				<th>Nadkategorie</th>
+			</tr>
+		";
+
+		foreach ($result as $row) {
+			$vypis .= "
+			<tr>
+				<td>
+					" .$row['id']. "
+				</td>
+				<td>
+					" .$row['kat']. "
+				</td>
+				<td>
+					" .$row['nadkat']. " 
+				</td>
+			</tr>
+			";
+		}
+
+		$vypis .= "</table>";
+		$vypis .= "</div>";
+
+		return $vypis;
 	}
 
 	function addCategory() {
 
-		return "add";
+$state = REGISTER_FORM;
+
+		$error_output = "";
+
+		if(isset($_POST['submit-add-category'])) {
+
+			if (empty($_POST['jmeno_kategorie'])) $this->errors['produkt'][] = "Nevyplněné jméno";
+
+			if (!empty($this->errors))
+				$error_output = $this->getErrors();
+
+			else {
+				web::$db->query("INSERT INTO love_eshop_produkt_kategorie (jmeno_kategorie, nadkategorie)
+				                 VALUES(:jmeno_kategorie, :nadkategorie)");
+
+				web::$db->bind(":jmeno_kategorie", htmlspecialchars($_POST['jmeno_kategorie']));
+				web::$db->bind(":nadkategorie", htmlspecialchars($_POST['nadkategorie']));
+				
+				web::$db->execute();
+
+				$this->success = "Kategorie byla úspěšně přidán do databáze";
+
+				$output = $this->getSuccess();
+
+				$state = REGISTER_SUCCESS;
+			}
+
+			//globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
+		}
+
+		if ($state == REGISTER_FORM) {
+			$state_li = "";
+
+			web::$db->query("SELECT id, jmeno_kategorie
+				             FROM ".database::$prefix."eshop_produkt_kategorie
+				             WHERE nadkategorie IS NULL");		
+			$temp = web::$db->resultSet();
+
+			foreach($temp as $item) {
+				$state_li .= "<option value='".$item['id']."'>".$item['jmeno_kategorie']."</option>";
+			}
+
+			$output = "
+			<h3>Přidat novou kategorii</h3>
+			".$error_output."
+			<form method=\"POST\">
+				<fieldset>
+					<legend>Informace</legend>
+					<div>
+						<label for='jmeno_kategorie'>Jmeno:</label>
+						<input type='text' name='jmeno_kategorie' id='jmeno_produktu'/>
+					</div>
+						<label for='nadkategorie'>Nadkategorie:</label>
+						<select name='nadkategorie' id='kategorie'>
+							".$state_li."
+						</select>
+						<div class='def-footer'></div>
+				</fieldset>
+				<div>
+					<input type='submit' name='submit-add-category' id='submit'/>
+				</div>
+			</form>";
+		}
+
+		return $output;
 	}
 
 	public function getOutput() {
