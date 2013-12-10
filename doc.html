@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavièce dokumentu 
+     podle pou¾itého editoru -->
+
+<h1>Název zadání</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Karel Juřička <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
+	    <a href="mailto:xautor01@stud.fit.vutbr.cz">xjuric21@stud.fit.vutbr.cz</a> -
+		jádro systemu, design, kód, klientská část eshopu
+	</dd>
+	<dd>Jan Koriťák <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
+	    <a href="mailto:xautor02@stud.fit.vutbr.cz">xkorit01@stud.fit.vutbr.cz</a> - 
+		správa databáze, správa administrace eshopu
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="http://www.stud.fit.vutbr.cz/~xjuric21/IIS">http://www.stud.fit.vutbr.cz/~xjuric21/IIS</a></dd>
+	<dt>URL administrace</dt>
+	<dd><a href="http://www.stud.fit.vutbr.cz/~xjuric21/IIS">http://www.stud.fit.vutbr.cz/~xjuric21/IIS/admin</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<table>
+	<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+	<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
+	<tr><td>franta</td><td>franta</td><td>Zákazník</td></tr>
+</table>
+
+<h2>Implementace</h2>
+<p>Při tvorbě projektu bylo využito CMS Love_CMS, jehož autorem je jeden z tvůrců tohoto projektu. Jednotlivé funkcionality eshopu
+byli implementovány jako pluginy do tohoto systému.</p>
+<p>Jednotlivé PHP skripty eshopu jsou k nalezení ve složce 'plugin'. Každý plugin se skládá v základu ze 2 souborů. První z nich tvoří webovou část a druhý administrační (sufix Admin). Jelikož né všechny pluginy vyžadují administraci, je tento soubor nepovinný.</p>
+<h3>Uživatelé (users)</h3>
+<p>Registrace uživatelů, aktivace účtu, jejich přihlašování a správa údajů zpravuje plugin Users. Administrační část tohoto pluginu tvoří správa uživatelů, možnost jejich aktivace, editace a odstranění.
+<h3>Produkty (products)</h3>
+<p>Prohlížení produktů v kategoriích. V administraci je to přidávání nových produktů, mazání, editace. Stejně tak správa kategorií produktů</p>
+<h3>Nákupní košík (shoppingcart)</h3>
+<p>V tomto pluginu se nachází správa nákupního košíku. Přidáváná položek do něj, mazání z něj, případně úpravy počtu položek v košíku. Košík smí používat jak přihlášený tak nepřihlášený uživatel.</p>
+<h3>Objednávky (orders)</h3>
+<p>Tento plugin spravuje proces vytváření objednávek. Dále také sledování stavu již uskutečněných objednávek. Obsahuje také třídu pro generování faktur. Administrační část se stará o správu objednávek, změnu jejich stavu či tisk již uskutečněných objednávek. Objednávky je v administraci možné upravovat</p>
+<h3>Sklad (storage)</h3>
+<p>Plugin spravující kontrolu skladu položek v eshopu. Důležitá je především jeho administrační část, která má na starost správu objednávek dodávky konkrétního zboží.
+<h3>Administrátor (adminUser)</h3>
+<p>Skript pro správu administrátoru, především pro přidávání jejich účtu.</p>
+<h3>Statický obsah (staticcontent)</h3>
+<p>Skript pro správu textů na webové stránce.</p>
+
+
+<h2>Instalace</h2>
+<ul>
+	<li>Pro správný chod aplikace je vyžadována podpora serveru minimálně PHP verze 5 a databáze MySQL verze 5.</li>
+	<li>Postup při instalaci je následující:
+		<ol>
+			<li>Nahrajte celý projekt na ftp server webové služby</li>
+			<li>Importujte přiložený SQL skript do Vámi vytvořené databáze. Tento skript se jmenuje database_install.sql a nachází se ve složce 'sql' v kořenovém adresáři projektu</li>
+			<li>Otevřete konfigurační soubor 'config.php' a nastavte v něm údaje pro připojení k databází. Dále v tomto souboru nastavte umístení adresáře s projektem a administrace. Stejně tak nastavte i http link na web, na kterém je práce umístěna.
+			<li>V posledním kroku upravte v souboru httaccess RewriteBase. Tento soubor se nachází jak v kořenové složce projektu, tak ve složce admin.</li>
+			<li>Nyní již by na Vašem konkrétním url měla webová stránka fungovat</li> 
+		</ol>
+	</li>
+</ul>
+
+<h2>Známé problémy</h2>
+<p>Zde popi¹te, které body zadání (IDS a IIS) nejsou implementovány a z jakého dùvodu. Napø. &bdquo;Z èasových dùvodù nebyla implementována správa u¾ivatelù.&rdquo; Pomù¾ete tím zrychlit opravování, kdy¾ neimplementované funkce nebudeme muset dlouze hledat.</p>
+
+</body>
+</html>

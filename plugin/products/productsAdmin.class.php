@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 define("REGISTER_FORM", 0);
 define("UPDATE_FORM", 1);
@@ -320,9 +320,10 @@ class ProductsAdmin extends Plugin {
 
 		web::$db->query("DELETE FROM ".database::$prefix."eshop_produkt WHERE id='" .$_GET['id']. "'");
 		web::$db->execute();
-		globals::redirect(admin::$serverAdminDir . "plugins/type/Users");
+		
+		globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
 
-		return "";
+	
 	}
 
 	function productList() {
