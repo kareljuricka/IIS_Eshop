@@ -96,7 +96,9 @@ class UsersAdmin extends Plugin {
 					<td>
 						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/edit/id/".$user_data['id']."' title='add user'>Upravit</a>
 					</td>
-
+					<td>
+						<a href='".admin::$serverAdminDir."plugins/type/".$_GET['type']."/action/delete/id/".$user_data['id']."' title='delete user'>Smazat</a>
+					</td>
 				</tr>
 			";
 		}
@@ -111,7 +113,7 @@ class UsersAdmin extends Plugin {
 				<th>Novinky mailem</th>
 				<th>Objednávky uživatele</th>
 				<th>Editovat</th>
-
+				<th>Smazat</th>
 			</tr>
 				".$users_output."				
 		</table>";
@@ -344,7 +346,22 @@ class UsersAdmin extends Plugin {
 
 	private function DeleteUser() {
 
+		web::$db->query("SELECT COUNT(*) AS CNT FROM ".database::$prefix."eshop_nakupni_kosik WHERE ".database::$prefix."eshop_nakupni_kosik.uzivatel ='" .$_GET['id']. "'");
+		$result = web::$db->single();
+		if($result['CNT'])
+			return "Chyba: Uzivatel je soucasti aspoň jednoho košíku.";
 
+		web::$db->query("SELECT COUNT(*) AS CNT FROM ".database::$prefix."eshop_objednavka WHERE ".database::$prefix."eshop_objednavka.uzivatel ='" .$_GET['id']. "'");
+		$result = web::$db->single();
+		if($result['CNT'])
+			return "Chyba: Uzivatel je soucasti aspoň jedné objednávky.";
+
+
+		web::$db->query("DELETE FROM ".database::$prefix."eshop_uzivatel WHERE id='" .$_GET['id']. "'");
+		web::$db->execute();
+		globals::redirect(admin::$serverAdminDir . "plugins/type/Users");
+
+		return "";
 
 	}
 

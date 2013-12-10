@@ -40,12 +40,18 @@ class ProductsAdmin extends Plugin {
 		</div>";
 
 		switch($action) {
+			case 'deleteProduct':
+				$this->output .= $this->deleteProduct();
+				break;
 			case 'addCategory':
 				$this->output .= $this->addCategory();
 				break;
 			case 'deleteCategory':
 				$this->output .= $this->deleteCategory();
 				break;
+			case 'editCategory':
+				$this->output .= $this->editCategory();
+				break;	
 			case 'add':
 				$this->output .= $this->addProduct();
 				break;
@@ -301,9 +307,20 @@ class ProductsAdmin extends Plugin {
 
 	function deleteProduct() {
 
-		web::$db->query("DELETE FROM ".database::$prefix."eshop_produkt WHERE id='" .$_GET['delete']. "'");
+		web::$db->query("SELECT COUNT(*) AS CNT FROM ".database::$prefix."eshop_nakupni_kosik WHERE ".database::$prefix."eshop_nakupni_kosik.produkt ='" .$_GET['id']. "'");
+		$result = web::$db->single();
+		if($result['CNT'])
+			return "Chyba: Produkt je soucasti aspoň jednoho košíku.";
+
+		web::$db->query("SELECT COUNT(*) AS CNT FROM ".database::$prefix."eshop_objednavka_produkt WHERE ".database::$prefix."eshop_objednavka_produkt.produkt ='" .$_GET['id']. "'");
+		$result = web::$db->single();
+		if($result['CNT'])
+			return "Chyba: Produkt je soucasti aspoň jedné objednávky.";
+
+
+		web::$db->query("DELETE FROM ".database::$prefix."eshop_produkt WHERE id='" .$_GET['id']. "'");
 		web::$db->execute();
-		globals::redirect(admin::$serverAdminDir . "plugins/type/Products");
+		globals::redirect(admin::$serverAdminDir . "plugins/type/Users");
 
 		return "";
 	}
@@ -329,6 +346,7 @@ class ProductsAdmin extends Plugin {
 				<th>Cena</th>
 				<th>Mnozstvi na skladě</th>
 				<th>Upravit</th>
+				<th>Smazat</th>
 			</tr>
 		";
 
@@ -362,6 +380,9 @@ class ProductsAdmin extends Plugin {
 				<td>
 					<a href=\"".admin::$serverAdminDir."plugins/type/Products/action/edit/id/" .$row['id']. "\">Editovat</a>
 				</td>
+				<td>
+					<a href=\"".admin::$serverAdminDir."plugins/type/Products/action/deleteProduct/id/" .$row['id']. "\">Smazat</a>
+				</td>
 			</tr>
 			";
 		}
@@ -390,6 +411,8 @@ class ProductsAdmin extends Plugin {
 				<th>Id</th>
 				<th>Jméno kategorie</th>
 				<th>Nadkategorie</th>
+				<th>Upravit</th>
+				<th>Smazat</th>
 			</tr>
 		";
 
@@ -405,6 +428,12 @@ class ProductsAdmin extends Plugin {
 				<td>
 					" .$row['nadkat']. " 
 				</td>
+				<td>
+					<a href=\"".admin::$serverAdminDir."plugins/type/Products/action/editCategory/id/" .$row['id']. "\">Editovat</a>
+				</td>
+				<td>
+					<a href=\"".admin::$serverAdminDir."plugins/type/Products/action/deleteCategory/id/" .$row['id']. "\">Smazat</a>
+				</td>
 			</tr>
 			";
 		}
@@ -417,7 +446,7 @@ class ProductsAdmin extends Plugin {
 
 	function addCategory() {
 
-$state = REGISTER_FORM;
+	$state = REGISTER_FORM;
 
 		$error_output = "";
 
@@ -429,12 +458,19 @@ $state = REGISTER_FORM;
 				$error_output = $this->getErrors();
 
 			else {
-				web::$db->query("INSERT INTO love_eshop_produkt_kategorie (jmeno_kategorie, nadkategorie)
+				if($_POST['nadkategorie'] != 0) {
+					web::$db->query("INSERT INTO love_eshop_produkt_kategorie (jmeno_kategorie, nadkategorie)
 				                 VALUES(:jmeno_kategorie, :nadkategorie)");
 
-				web::$db->bind(":jmeno_kategorie", htmlspecialchars($_POST['jmeno_kategorie']));
-				web::$db->bind(":nadkategorie", htmlspecialchars($_POST['nadkategorie']));
-				
+					web::$db->bind(":jmeno_kategorie", htmlspecialchars($_POST['jmeno_kategorie']));
+					web::$db->bind(":nadkategorie", htmlspecialchars($_POST['nadkategorie']));
+				}
+				else {
+					web::$db->query("INSERT INTO love_eshop_produkt_kategorie (jmeno_kategorie)
+				                 VALUES(:jmeno_kategorie)");
+
+					web::$db->bind(":jmeno_kategorie", htmlspecialchars($_POST['jmeno_kategorie']));
+				}
 				web::$db->execute();
 
 				$this->success = "Kategorie byla úspěšně přidán do databáze";
@@ -454,6 +490,8 @@ $state = REGISTER_FORM;
 				             FROM ".database::$prefix."eshop_produkt_kategorie
 				             WHERE nadkategorie IS NULL");		
 			$temp = web::$db->resultSet();
+
+			$state_li .= "<option value='0'>"."Žádná"."</option>";
 
 			foreach($temp as $item) {
 				$state_li .= "<option value='".$item['id']."'>".$item['jmeno_kategorie']."</option>";
@@ -482,6 +520,90 @@ $state = REGISTER_FORM;
 		}
 
 		return $output;
+	}
+
+	function editCategory() {
+
+		$state = UPDATE_FORM;
+
+		$error_output = "";
+
+		if(isset($_POST['submit-edit-category'])) {
+
+			if (empty($_POST['jmeno_kategorie'])) $this->errors['produkt'][] = "Nevyplněné jméno";
+
+			if (!empty($this->errors))
+				$error_output = $this->getErrors();
+
+			else {
+
+				web::$db->query("UPDATE ".database::$prefix."eshop_produkt_kategorie SET jmeno_kategorie=:jmeno_kategorie WHERE id='" .$_GET['id']. "'");
+
+				web::$db->bind(":jmeno_kategorie", htmlspecialchars($_POST['jmeno_kategorie']));			
+
+				web::$db->execute();
+
+				$this->success = "Kategorie byla úspěšně upravena v databázi";
+				$output = $this->getSuccess();
+
+				$state = UPDATE_SUCCESS;
+			}
+
+		}
+
+		if ($state == UPDATE_FORM) {
+
+			$state_li = "";
+
+			web::$db->query("SELECT A.id AS id, A.jmeno_kategorie AS kat, B.jmeno_kategorie AS nadkat
+		                 FROM ".database::$prefix."eshop_produkt_kategorie AS A LEFT JOIN ".database::$prefix."eshop_produkt_kategorie AS B
+		                 ON B.id=A.nadkategorie
+		                 WHERE A.id = '" .$_GET['id']. "'
+		                 ");	
+			$result = web::$db->single();
+
+			$output = "
+				<h3>Upravit informace o produktu</h3>
+				".$error_output."
+				<form method=\"POST\">
+					<fieldset>
+						<legend>Informace</legend>
+						<div>
+							<label for='jmeno_kategorie'>Jmeno:</label>
+							<input type='text' name='jmeno_kategorie' id='jmeno_produktu' value='" .$result['kat']. "'/>
+						</div>
+						<div>
+							<label for='nadkategorie'>Nadkategorie:</label>
+							<input type='text' name='nadkategorie' id='jmeno_produktu' value='" .$result['nadkat']. "' />
+							<div class='def-footer'></div>
+						</div>
+					</fieldset>
+					<div>
+						<input type='submit' name='submit-edit-category' id='submit'/>
+					</div>
+				</form>";
+		}
+
+		return $output;
+
+	}
+
+	function deleteCategory() {
+
+		web::$db->query("SELECT COUNT(*) AS CNT
+		                 FROM ".database::$prefix."eshop_produkt_kategorie, ".database::$prefix."eshop_produkt
+		                 WHERE ".database::$prefix."eshop_produkt.kategorie = ".database::$prefix."eshop_produkt_kategorie.id
+		                 AND ".database::$prefix."eshop_produkt_kategorie.id = '" .$_GET['id']. "'");
+
+		$result = web::$db->single();
+		if($result['CNT'])
+			return "Chyba: Kategorie obsahuje aspoň jeden produkt";
+
+		web::$db->query("DELETE FROM ".database::$prefix."eshop_produkt_kategorie WHERE id='" .$_GET['id']. "'");
+		web::$db->execute();
+		globals::redirect(admin::$serverAdminDir . "plugins/type/Products/action/categoryList");
+
+		return "";
 	}
 
 	public function getOutput() {
